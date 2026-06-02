@@ -46,13 +46,9 @@
             Watch a 90-second overview of my background, projects and creative
             work.
           </p>
-          <a
-            class="btn"
-            href="https://youtube.com/shorts/JJZnswDj0YA?feature=share"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Watch Video</a
-          >
+          <button type="button" class="btn" id="video-cv-open">
+            Watch Video
+          </button>
         </article>
         <article class="card cta-card cta-card--featured">
           <h2 class="cta-card__title">Game CV</h2>
@@ -97,5 +93,63 @@
         </ul>
       </section>
     </main>
+
+    <dialog class="video-modal" id="video-cv-modal" aria-labelledby="video-cv-title">
+      <div class="video-modal__panel">
+        <div class="video-modal__header">
+          <h2 class="video-modal__title" id="video-cv-title">Video CV</h2>
+          <button
+            type="button"
+            class="video-modal__close"
+            id="video-cv-close"
+            aria-label="Close video"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="video-modal__frame">
+          <iframe
+            class="video-modal__iframe"
+            id="video-cv-iframe"
+            title="Quentin Guignard — Video CV"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      (function () {
+        const modal = document.getElementById("video-cv-modal");
+        const openBtn = document.getElementById("video-cv-open");
+        const closeBtn = document.getElementById("video-cv-close");
+        const iframe = document.getElementById("video-cv-iframe");
+        const embedUrl =
+          "https://www.youtube-nocookie.com/embed/JJZnswDj0YA?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&fs=0&disablekb=1";
+
+        function openModal() {
+          iframe.src = embedUrl;
+          modal.showModal();
+        }
+
+        function closeModal() {
+          iframe.src = "";
+          if (modal.open) modal.close();
+        }
+
+        openBtn.addEventListener("click", openModal);
+        closeBtn.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) closeModal();
+        });
+
+        modal.addEventListener("cancel", (e) => {
+          e.preventDefault();
+          closeModal();
+        });
+      })();
+    </script>
   </body>
 </html>
