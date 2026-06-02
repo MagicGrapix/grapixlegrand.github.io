@@ -46,9 +46,7 @@
             Watch a 90-second overview of my background, projects and creative
             work.
           </p>
-          <button type="button" class="btn" id="video-cv-open">
-            Watch Video
-          </button>
+          <button type="button" class="btn" id="video-cv-open">Watch Video</button>
         </article>
         <article class="card cta-card cta-card--featured">
           <h2 class="cta-card__title">Game CV</h2>
@@ -66,52 +64,85 @@
         </article>
       </section>
 
-      <section class="card projects">
-        <h2>Projects</h2>
-        <ul class="project-list">
-          <li>
-            <a href="./cg22/report.html" target="_blank" rel="noopener noreferrer"
-              >Raytracing project</a
-            >
-          </li>
-          <li>
-            <a
-              href="./SuperVoxel/index.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              >SuperVoxel</a
-            >
-          </li>
-          <li>
-            <a
-              href="./shuffling/story.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              >A small study of shuffling</a
-            >
-          </li>
-        </ul>
+      <section class="pro-work" aria-labelledby="pro-work-heading">
+        <header class="work__header">
+          <p class="eyebrow">OZWE Games</p>
+          <h2 id="pro-work-heading">Professional Work</h2>
+          <p class="work__subtitle">
+            Team projects shipped on Meta Horizon — VR and mobile.
+          </p>
+        </header>
+        <div class="pro-work__grid" id="pro-work-grid" role="list"></div>
+      </section>
+
+      <section class="work" aria-labelledby="work-heading">
+        <header class="work__header">
+          <p class="eyebrow">Portfolio</p>
+          <h2 id="work-heading">Selected Work</h2>
+          <p class="work__subtitle">
+            A selection of professional work, personal prototypes, visual
+            experiments, and technical projects.
+          </p>
+        </header>
+
+        <div class="work-panel">
+          <div class="work-grid" id="work-grid" role="list"></div>
+        </div>
+      </section>
+
+      <section class="card contact" id="contact" aria-labelledby="contact-heading">
+        <p class="eyebrow">Contact</p>
+        <h2 id="contact-heading">Let's build something</h2>
+        <p class="contact__text">
+          Open to game dev roles, prototypes, and technical art collaborations.
+        </p>
+        <div class="contact__links">
+          <a
+            class="btn"
+            href="https://github.com/grapixlegrand"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+          <a
+            class="btn"
+            href="https://grapixlegrand.itch.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            >itch.io</a
+          >
+        </div>
       </section>
     </main>
 
-    <dialog class="video-modal" id="video-cv-modal" aria-labelledby="video-cv-title">
-      <div class="video-modal__panel">
+    <div class="work-overlay" id="work-overlay" hidden>
+      <div
+        class="work-detail"
+        id="work-detail"
+        role="dialog"
+        aria-modal="true"
+        aria-live="polite"
+      ></div>
+    </div>
+
+    <dialog class="video-modal" id="youtube-modal" aria-labelledby="youtube-modal-title">
+      <div class="video-modal__panel" id="youtube-modal-panel">
         <div class="video-modal__header">
-          <h2 class="video-modal__title" id="video-cv-title">Video CV</h2>
+          <h2 class="video-modal__title" id="youtube-modal-title">Video</h2>
           <button
             type="button"
             class="video-modal__close"
-            id="video-cv-close"
+            id="youtube-modal-close"
             aria-label="Close video"
           >
             &times;
           </button>
         </div>
-        <div class="video-modal__frame">
+        <div class="video-modal__frame" id="youtube-modal-frame">
           <iframe
             class="video-modal__iframe"
-            id="video-cv-iframe"
-            title="Quentin Guignard — Video CV"
+            id="youtube-modal-iframe"
+            title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
@@ -121,33 +152,269 @@
 
     <script>
       (function () {
-        const modal = document.getElementById("video-cv-modal");
-        const openBtn = document.getElementById("video-cv-open");
-        const closeBtn = document.getElementById("video-cv-close");
-        const iframe = document.getElementById("video-cv-iframe");
-        const embedUrl =
-          "https://www.youtube-nocookie.com/embed/JJZnswDj0YA?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&fs=0&disablekb=1";
+        const CARDS_BASE = "./cards/";
+        const YOUTUBE_EMBED =
+          "https://www.youtube-nocookie.com/embed/VIDEO_ID?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&fs=0&disablekb=1";
 
-        function openModal() {
-          iframe.src = embedUrl;
-          modal.showModal();
+        const workGrid = document.getElementById("work-grid");
+        const proWorkGrid = document.getElementById("pro-work-grid");
+        const workOverlay = document.getElementById("work-overlay");
+        const workDetail = document.getElementById("work-detail");
+
+        const youtubeModal = document.getElementById("youtube-modal");
+        const youtubeTitle = document.getElementById("youtube-modal-title");
+        const youtubeFrame = document.getElementById("youtube-modal-frame");
+        const youtubeIframe = document.getElementById("youtube-modal-iframe");
+        const youtubeClose = document.getElementById("youtube-modal-close");
+
+        let projectOrder = [];
+        let projects = {};
+        let proProjectOrder = [];
+        let proProjects = {};
+        const fragmentCache = new Map();
+
+        let activeProjectId = null;
+        let activeSubId = null;
+
+        function chipsHtml(items) {
+          return items.map((chip) => `<span>${chip}</span>`).join("");
         }
 
-        function closeModal() {
-          iframe.src = "";
-          if (modal.open) modal.close();
+        function backButton(label, action) {
+          return `<button type="button" class="btn btn--back" data-back="${action}">${label}</button>`;
         }
 
-        openBtn.addEventListener("click", openModal);
-        closeBtn.addEventListener("click", closeModal);
+        async function loadCardFragment(path) {
+          if (fragmentCache.has(path)) return fragmentCache.get(path);
 
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal) closeModal();
+          const response = await fetch(CARDS_BASE + path);
+          if (!response.ok) {
+            throw new Error("Could not load card: " + path);
+          }
+
+          const html = await response.text();
+          fragmentCache.set(path, html);
+          return html;
+        }
+
+        async function showDetailFromFile(path, backLabel, backAction) {
+          workDetail.innerHTML =
+            backButton(backLabel, backAction) +
+            '<p class="work-detail__loading">Loading…</p>';
+          showDetailPanel();
+
+          try {
+            const html = await loadCardFragment(path);
+            workDetail.innerHTML = backButton(backLabel, backAction) + html;
+            const title = workDetail.querySelector(".work-detail__title");
+            if (title) workDetail.setAttribute("aria-labelledby", title.id || "");
+            bindYoutubeButtons(workDetail);
+          } catch (error) {
+            workDetail.innerHTML =
+              backButton(backLabel, backAction) +
+              '<p class="work-detail__error">Could not load this project. Check that the file exists in the cards folder.</p>';
+            console.error(error);
+          }
+        }
+
+        function renderCardGrid(container, order, projectMap, extraClass) {
+          container.innerHTML = order
+            .map((id) => {
+              const project = projectMap[id];
+              if (!project) return "";
+
+              const classes = [
+                "work-card",
+                extraClass || "",
+                project.feature ? "work-card--feature" : "",
+                project.creative ? "work-card--creative" : "",
+                project.archive ? "work-card--archive" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+
+              return `
+            <button type="button" class="${classes}" data-detail="${project.detail}" role="listitem">
+              <div class="work-card__media" aria-hidden="true"></div>
+              <div class="work-card__body">
+                <h3 class="work-card__title">${project.title}</h3>
+                <p class="work-card__meta">${project.meta}</p>
+                <p class="work-card__desc">${project.summary}</p>
+                <div class="work-card__chips">${chipsHtml(project.chips)}</div>
+              </div>
+            </button>
+          `;
+            })
+            .join("");
+        }
+
+        function renderGrid() {
+          renderCardGrid(workGrid, projectOrder, projects, "");
+        }
+
+        function renderProGrid() {
+          renderCardGrid(proWorkGrid, proProjectOrder, proProjects, "work-card--pro");
+        }
+
+        function openYoutubeModal(title, videoId, layout) {
+          youtubeTitle.textContent = title;
+          youtubeFrame.classList.toggle(
+            "video-modal__frame--wide",
+            layout === "wide"
+          );
+          youtubeIframe.title = title;
+          youtubeIframe.src = YOUTUBE_EMBED.replace("VIDEO_ID", videoId);
+          youtubeModal.showModal();
+        }
+
+        function closeYoutubeModal() {
+          youtubeIframe.src = "";
+          if (youtubeModal.open) youtubeModal.close();
+        }
+
+        function bindYoutubeButtons(root) {
+          root.querySelectorAll("[data-youtube]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              openYoutubeModal(
+                btn.dataset.youtubeTitle || "Video",
+                btn.dataset.youtube,
+                btn.dataset.youtubeLayout || "wide"
+              );
+            });
+          });
+        }
+
+        function showGrid() {
+          activeProjectId = null;
+          activeSubId = null;
+          workOverlay.hidden = true;
+          workDetail.innerHTML = "";
+          workDetail.removeAttribute("aria-labelledby");
+          document.body.classList.remove("work-overlay-open");
+        }
+
+        function showDetailPanel() {
+          workOverlay.hidden = false;
+          document.body.classList.add("work-overlay-open");
+        }
+
+        function openProjectDetail(detailPath, backLabel) {
+          activeProjectId = null;
+          activeSubId = null;
+          showDetailFromFile(detailPath, backLabel, "grid");
+        }
+
+        function openProject(id) {
+          const project = projects[id];
+          if (!project) return;
+
+          activeProjectId = id;
+          activeSubId = null;
+          showDetailFromFile(
+            project.detail,
+            "&larr; Back to Selected Work",
+            "grid"
+          );
+        }
+
+        function openSubProject(detailPath) {
+          activeSubId = detailPath;
+          showDetailFromFile(detailPath, "&larr; Back to archive", "archive");
+        }
+
+        async function openArchive() {
+          const project = projects[activeProjectId];
+          if (!project) return;
+          activeSubId = null;
+          await showDetailFromFile(
+            project.detail,
+            "&larr; Back to Selected Work",
+            "grid"
+          );
+        }
+
+        workGrid.addEventListener("click", (e) => {
+          const card = e.target.closest("[data-detail]");
+          if (!card) return;
+          const id = projectOrder.find(
+            (key) => projects[key].detail === card.dataset.detail
+          );
+          if (id) openProject(id);
         });
 
-        modal.addEventListener("cancel", (e) => {
+        proWorkGrid.addEventListener("click", (e) => {
+          const card = e.target.closest("[data-detail]");
+          if (!card) return;
+          openProjectDetail(card.dataset.detail, "&larr; Back");
+        });
+
+        workOverlay.addEventListener("click", (e) => {
+          if (e.target === workOverlay) showGrid();
+        });
+
+        workDetail.addEventListener("click", (e) => {
+          const back = e.target.closest("[data-back]");
+          if (back) {
+            if (back.dataset.back === "archive") {
+              openArchive();
+              return;
+            }
+            showGrid();
+            return;
+          }
+
+          const subCard = e.target.closest("[data-sub-id]");
+          if (subCard && subCard.dataset.detail) {
+            openSubProject(subCard.dataset.detail);
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key !== "Escape") return;
+          if (youtubeModal.open) {
+            closeYoutubeModal();
+            return;
+          }
+          if (!workOverlay.hidden) showGrid();
+        });
+
+        function loadJson(path) {
+          return fetch(CARDS_BASE + path).then((response) => {
+            if (!response.ok) throw new Error("Could not load " + path);
+            return response.json();
+          });
+        }
+
+        Promise.all([
+          loadJson("projects.json"),
+          loadJson("professional-work.json"),
+        ])
+          .then(([workData, proData]) => {
+            projectOrder = workData.order;
+            projects = workData.projects;
+            proProjectOrder = proData.order;
+            proProjects = proData.projects;
+            renderGrid();
+            renderProGrid();
+          })
+          .catch((error) => {
+            workGrid.innerHTML =
+              '<p class="work-grid__error">Could not load projects. Run the site with a local server (e.g. py -m http.server).</p>';
+            proWorkGrid.innerHTML = workGrid.innerHTML;
+            console.error(error);
+          });
+
+        document.getElementById("video-cv-open").addEventListener("click", () => {
+          openYoutubeModal("Video CV", "JJZnswDj0YA", "vertical");
+        });
+
+        youtubeClose.addEventListener("click", closeYoutubeModal);
+        youtubeModal.addEventListener("click", (e) => {
+          if (e.target === youtubeModal) closeYoutubeModal();
+        });
+        youtubeModal.addEventListener("cancel", (e) => {
           e.preventDefault();
-          closeModal();
+          closeYoutubeModal();
         });
       })();
     </script>

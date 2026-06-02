@@ -1,0 +1,56 @@
+{
+  "order": [
+    "knockback",
+    "visual",
+    "byteguardians",
+    "thesis",
+    "backroom",
+    "technical"
+  ],
+  "projects": {
+    "knockback": {
+      "title": "Knockback Arena",
+      "meta": "2026–now · Personal prototype",
+      "summary": "Roblox arena prototype built around knockback combat and match flow.",
+      "chips": ["Roblox", "TypeScript", "Combat", "Multiplayer", "Gameplay"],
+      "detail": "knockback.html"
+    },
+    "visual": {
+      "title": "Visual Experiments",
+      "meta": "2024–2026 · VFX / creative tests",
+      "summary": "Real-time VFX and painting experiments with playful motion and atmosphere.",
+      "chips": ["PopcornFX", "Unity", "VFX", "Painting", "Real-time"],
+      "creative": true,
+      "detail": "visual.html"
+    },
+    "byteguardians": {
+      "title": "Byte Guardians",
+      "meta": "2025–now · Unity game prototype",
+      "summary": "Unity prototype focused on art direction, characters, and world mood.",
+      "chips": ["Unity", "C#", "Art direction", "Characters", "Prototype"],
+      "detail": "byteguardians.html"
+    },
+    "thesis": {
+      "title": "Master Thesis Prototype",
+      "meta": "2024 · AI / interaction prototype",
+      "summary": "ETH research prototype exploring LLM-driven conversational interaction.",
+      "chips": ["LLMs", "AI", "Interaction", "Research", "ETH Zurich"],
+      "detail": "thesis.html"
+    },
+    "backroom": {
+      "title": "Backroom Level 2",
+      "meta": "2023 · Unity game prototype",
+      "summary": "Short atmospheric Unity exploration prototype inspired by liminal spaces.",
+      "chips": ["Unity", "C#", "Level design", "Ambience", "Exploration"],
+      "detail": "backroom.html"
+    },
+    "technical": {
+      "title": "Technical & Academic Projects",
+      "meta": "2020–2022 · Rendering / simulation / research",
+      "summary": "Archive of rendering, simulation, and graphics research projects.",
+      "chips": ["C++", "OpenGL", "Rendering", "Simulation", "Research"],
+      "archive": true,
+      "detail": "technical.html"
+    }
+  }
+}
