@@ -13,6 +13,8 @@
       "meta": "2026–now · Personal prototype",
       "summary": "Roblox arena prototype built around knockback combat and match flow.",
       "chips": ["Roblox", "TypeScript", "Combat", "Multiplayer", "Gameplay"],
+      "preview": "./resources/knockback_arena/logo.png",
+      "previewFit": "contain",
       "detail": "knockback.html"
     },
     "visual": {

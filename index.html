@@ -209,6 +209,7 @@
             const title = workDetail.querySelector(".work-detail__title");
             if (title) workDetail.setAttribute("aria-labelledby", title.id || "");
             bindYoutubeButtons(workDetail);
+            bindGalleries(workDetail);
           } catch (error) {
             workDetail.innerHTML =
               backButton(backLabel, backAction) +
@@ -233,9 +234,16 @@
                 .filter(Boolean)
                 .join(" ");
 
+              const mediaClass = project.previewFit
+                ? `work-card__media work-card__media--${project.previewFit}`
+                : "work-card__media";
+              const mediaHtml = project.preview
+                ? `<div class="${mediaClass}"><img src="${project.preview}" alt="${project.title} preview" /></div>`
+                : `<div class="work-card__media" aria-hidden="true"></div>`;
+
               return `
             <button type="button" class="${classes}" data-detail="${project.detail}" role="listitem">
-              <div class="work-card__media" aria-hidden="true"></div>
+              ${mediaHtml}
               <div class="work-card__body">
                 <h3 class="work-card__title">${project.title}</h3>
                 <p class="work-card__meta">${project.meta}</p>
@@ -280,6 +288,40 @@
                 btn.dataset.youtube,
                 btn.dataset.youtubeLayout || "wide"
               );
+            });
+          });
+        }
+
+        function bindGalleries(root) {
+          root.querySelectorAll("[data-gallery]").forEach((gallery) => {
+            const slides = [...gallery.querySelectorAll(".media-gallery__slide")];
+            const prevBtn = gallery.querySelector(".media-gallery__btn--prev");
+            const nextBtn = gallery.querySelector(".media-gallery__btn--next");
+            const counter = gallery.querySelector("[data-gallery-counter]");
+            if (!slides.length) return;
+
+            let index = slides.findIndex((slide) =>
+              slide.classList.contains("is-active")
+            );
+            if (index < 0) index = 0;
+
+            function showSlide(nextIndex) {
+              index = (nextIndex + slides.length) % slides.length;
+              slides.forEach((slide, i) => {
+                slide.classList.toggle("is-active", i === index);
+              });
+              if (counter) {
+                counter.textContent = `${index + 1} / ${slides.length}`;
+              }
+            }
+
+            prevBtn?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              showSlide(index - 1);
+            });
+            nextBtn?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              showSlide(index + 1);
             });
           });
         }

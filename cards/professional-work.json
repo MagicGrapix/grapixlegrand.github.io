@@ -3,16 +3,18 @@
   "projects": {
     "citadel": {
       "title": "Citadel",
-      "meta": "2024 · VR · Meta Horizon · Team project",
-      "summary": "A VR project developed as part of the OZWE Games team.",
-      "chips": ["Unity", "C#", "VR", "VFX", "UI"],
+      "meta": "2024 · VR · Desktop · Mobile · Team project",
+      "summary": "Meta Horizon game shipped on VR, desktop, and mobile with the OZWE Games team.",
+      "chips": ["Meta Horizon Engine", "TypeScript", "VR", "Desktop", "Mobile"],
+      "preview": "./resources/Citadel.png",
       "detail": "citadel.html"
     },
     "village": {
       "title": "The Village",
-      "meta": "2025 · Mobile · Meta Horizon · Team project",
-      "summary": "A mobile project with simulation / management-inspired gameplay, developed as part of the OZWE Games team.",
-      "chips": ["Unity", "C#", "Mobile", "UI", "VFX"],
+      "meta": "2025 · Desktop · Mobile · Team project",
+      "summary": "Meta Horizon simulation / management-inspired game on desktop and mobile with OZWE Games.",
+      "chips": ["Meta Horizon Engine", "TypeScript", "Desktop", "Mobile", "UI"],
+      "preview": "./resources/TheVillage.png",
       "detail": "village.html"
     }
   }
