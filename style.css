@@ -1,0 +1,216 @@
+:root {
+  --bg: #0f172a;
+  --bg-accent: #111827;
+  --card: rgba(15, 23, 42, 0.82);
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --accent: #60a5fa;
+  --accent-strong: #3b82f6;
+  --border: rgba(148, 163, 184, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top right, #1d4ed8 0%, transparent 35%),
+    radial-gradient(circle at bottom left, #0ea5e9 0%, transparent 30%),
+    linear-gradient(140deg, var(--bg) 0%, var(--bg-accent) 100%);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.page {
+  width: min(920px, 100%);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.4);
+}
+
+.intro {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.profile-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 2px solid rgba(96, 165, 250, 0.45);
+}
+
+.intro-text h1 {
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.7rem, 2.2vw, 2.2rem);
+}
+
+.intro-text p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.intro-text p + p {
+  margin-top: 0.75rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.45rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.cta-card {
+  padding: 1.35rem 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cta-card--featured {
+  border-color: rgba(96, 165, 250, 0.45);
+  background:
+    linear-gradient(155deg, rgba(30, 58, 138, 0.35) 0%, var(--card) 55%),
+    var(--card);
+  box-shadow:
+    0 16px 40px rgba(2, 6, 23, 0.4),
+    0 0 0 1px rgba(96, 165, 250, 0.12),
+    0 8px 32px rgba(59, 130, 246, 0.15);
+}
+
+.cta-card__badge {
+  margin: 0 0 0.5rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(96, 165, 250, 0.15);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+}
+
+.cta-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.cta-card__subtitle {
+  margin: 0 0 1.15rem;
+  flex-grow: 1;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  border-color: rgba(96, 165, 250, 0.6);
+  background: rgba(30, 41, 59, 0.55);
+}
+
+.btn--primary {
+  color: #eff6ff;
+  border-color: rgba(96, 165, 250, 0.7);
+  background: linear-gradient(135deg, var(--accent-strong) 0%, #2563eb 100%);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-color: rgba(147, 197, 253, 0.8);
+}
+
+.projects {
+  padding: 1.4rem 1.5rem 1.6rem;
+}
+
+.projects h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.project-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.project-list a {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.project-list a:hover,
+.project-list a:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  border-color: rgba(96, 165, 250, 0.6);
+  background: rgba(30, 41, 59, 0.55);
+}
+
+@media (max-width: 720px) {
+  .intro {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .profile-image {
+    max-width: 270px;
+    margin: 0 auto;
+  }
+
+  .cta-row {
+    grid-template-columns: 1fr;
+  }
+}
