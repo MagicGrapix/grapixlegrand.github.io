@@ -5,7 +5,7 @@
     "thesis",
     "backroom",
     "raytracer",
-    "technical"
+    "painting"
   ],
   "projects": {
     "knockback": {
@@ -54,13 +54,15 @@
       "previewFit": "cover",
       "detail": "backroom.html"
     },
-    "technical": {
-      "title": "Technical & Academic Projects",
-      "meta": "2020–2025 · Rendering / simulation / research",
-      "summary": "Archive of rendering, simulation, graphics research, and ongoing visual prototypes.",
-      "chips": ["C++", "OpenGL", "Rendering", "Simulation", "Research"],
-      "archive": true,
-      "detail": "technical.html"
+    "painting": {
+      "title": "Art & Visual Work",
+      "meta": "2024–2026 · Personal creative work",
+      "summary": "A small collection of acrylic paintings and visual studies.",
+      "chips": ["Acrylic", "Painting", "Color", "Personal work"],
+      "preview": "./assets/paintings/painting-01.jpg",
+      "previewFit": "cover",
+      "creative": true,
+      "detail": "painting.html"
     }
   }
 }
