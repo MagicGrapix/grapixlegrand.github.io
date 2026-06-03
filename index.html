@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=10" />
+    <link rel="stylesheet" href="./style.css?v=11" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -177,10 +177,9 @@
       ></div>
     </div>
 
-    <dialog class="video-modal" id="youtube-modal" aria-labelledby="youtube-modal-title">
+    <dialog class="video-modal" id="youtube-modal" aria-label="Video player">
       <div class="video-modal__panel" id="youtube-modal-panel">
-        <div class="video-modal__header">
-          <h2 class="video-modal__title" id="youtube-modal-title">Video</h2>
+        <div class="video-modal__frame" id="youtube-modal-frame">
           <button
             type="button"
             class="video-modal__close"
@@ -189,8 +188,6 @@
           >
             &times;
           </button>
-        </div>
-        <div class="video-modal__frame" id="youtube-modal-frame">
           <iframe
             class="video-modal__iframe"
             id="youtube-modal-iframe"
@@ -214,7 +211,7 @@
         const workDetail = document.getElementById("work-detail");
 
         const youtubeModal = document.getElementById("youtube-modal");
-        const youtubeTitle = document.getElementById("youtube-modal-title");
+        const youtubePanel = document.getElementById("youtube-modal-panel");
         const youtubeFrame = document.getElementById("youtube-modal-frame");
         const youtubeIframe = document.getElementById("youtube-modal-iframe");
         const youtubeClose = document.getElementById("youtube-modal-close");
@@ -320,12 +317,16 @@
         }
 
         function openYoutubeModal(title, videoId, layout) {
-          youtubeTitle.textContent = title;
+          const isVertical = layout === "vertical";
+          youtubePanel.classList.toggle("video-modal__panel--vertical", isVertical);
+          youtubePanel.classList.toggle("video-modal__panel--wide", layout === "wide");
+          youtubeFrame.classList.toggle("video-modal__frame--wide", layout === "wide");
           youtubeFrame.classList.toggle(
-            "video-modal__frame--wide",
-            layout === "wide"
+            "video-modal__frame--vertical",
+            isVertical
           );
-          youtubeIframe.title = title;
+          youtubeModal.setAttribute("aria-label", title || "Video player");
+          youtubeIframe.title = title || "YouTube video player";
           youtubeIframe.src = YOUTUBE_EMBED.replace("VIDEO_ID", videoId);
           youtubeModal.showModal();
         }
