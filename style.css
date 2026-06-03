@@ -633,6 +633,32 @@ body.work-overlay-open {
   right: 0.55rem;
 }
 
+.media-gallery__btn--mute {
+  left: 0.55rem;
+  bottom: 0.55rem;
+  top: auto;
+  transform: none;
+  font-size: 1.1rem;
+}
+
+.media-gallery__btn--mute:hover,
+.media-gallery__btn--mute:focus-visible {
+  transform: scale(1.05);
+}
+
+.media-gallery__mute-icon {
+  display: none;
+  line-height: 1;
+}
+
+.media-gallery__btn--mute.is-muted .media-gallery__mute-icon--off {
+  display: block;
+}
+
+.media-gallery__btn--mute:not(.is-muted) .media-gallery__mute-icon--on {
+  display: block;
+}
+
 .media-gallery__counter {
   position: absolute;
   right: 0.65rem;

@@ -311,9 +311,38 @@
                 : slide.querySelector("video");
             }
 
+            const videos = slides.map(getSlideVideo).filter(Boolean);
+            let isMuted = true;
+
+            videos.forEach((video) => {
+              video.muted = true;
+            });
+
+            let muteBtn = gallery.querySelector(".media-gallery__btn--mute");
+            if (videos.length && !muteBtn) {
+              muteBtn = document.createElement("button");
+              muteBtn.type = "button";
+              muteBtn.className =
+                "media-gallery__btn media-gallery__btn--mute is-muted";
+              muteBtn.setAttribute("aria-label", "Unmute");
+              muteBtn.setAttribute("aria-pressed", "true");
+              muteBtn.innerHTML =
+                '<span class="media-gallery__mute-icon media-gallery__mute-icon--off" aria-hidden="true">&#128263;</span>' +
+                '<span class="media-gallery__mute-icon media-gallery__mute-icon--on" aria-hidden="true">&#128266;</span>';
+              gallery.appendChild(muteBtn);
+            }
+
+            function updateMuteUi() {
+              if (!muteBtn) return;
+              muteBtn.classList.toggle("is-muted", isMuted);
+              muteBtn.setAttribute("aria-label", isMuted ? "Unmute" : "Mute");
+              muteBtn.setAttribute("aria-pressed", String(isMuted));
+            }
+
             function syncSlideMedia(slide, isActive) {
               const video = getSlideVideo(slide);
               if (!video) return;
+              video.muted = isMuted;
               if (isActive) {
                 video.play().catch(() => {});
               } else {
@@ -335,6 +364,18 @@
             }
 
             showSlide(index);
+            updateMuteUi();
+
+            muteBtn?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              isMuted = !isMuted;
+              videos.forEach((video) => {
+                video.muted = isMuted;
+              });
+              updateMuteUi();
+              const active = getSlideVideo(slides[index]);
+              if (active && !active.paused) active.play().catch(() => {});
+            });
 
             prevBtn?.addEventListener("click", (e) => {
               e.stopPropagation();
