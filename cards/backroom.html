@@ -1,24 +1,109 @@
-<div class="work-detail__media" aria-hidden="true"></div>
 <header class="work-detail__header">
   <h3 class="work-detail__title">Backroom Level 2</h3>
   <p class="work-detail__meta">2023 · Unity game prototype</p>
 </header>
+
+<div class="media-gallery media-gallery--images" data-gallery>
+  <div class="media-gallery__viewport">
+    <div class="media-gallery__slide is-active">
+      <img
+        src="./resources/backrooms_level2/1.jpg"
+        alt="Backroom Level 2 screenshot 1"
+      />
+    </div>
+    <div class="media-gallery__slide">
+      <img
+        src="./resources/backrooms_level2/2.jpg"
+        alt="Backroom Level 2 screenshot 2"
+      />
+    </div>
+    <div class="media-gallery__slide">
+      <img
+        src="./resources/backrooms_level2/3.jpg"
+        alt="Backroom Level 2 screenshot 3"
+      />
+    </div>
+    <div class="media-gallery__slide">
+      <img
+        src="./resources/backrooms_level2/4.jpg"
+        alt="Backroom Level 2 screenshot 4"
+      />
+    </div>
+  </div>
+  <button
+    type="button"
+    class="media-gallery__btn media-gallery__btn--prev"
+    aria-label="Previous screenshot"
+  >
+    &#8249;
+  </button>
+  <button
+    type="button"
+    class="media-gallery__btn media-gallery__btn--next"
+    aria-label="Next screenshot"
+  >
+    &#8250;
+  </button>
+  <p class="media-gallery__counter" data-gallery-counter>1 / 4</p>
+</div>
+
 <p class="work-detail__description">
-  A short atmospheric Unity prototype focused on exploration, mood, and
-  environmental tension inspired by liminal spaces.
+  A short atmospheric Unity prototype inspired by the Backrooms and liminal
+  spaces. The player explores a strange, oppressive environment, collects key
+  cards, avoids an AI monster roaming the level, and unlocks the final exit door.
+</p>
+<p class="work-detail__description">
+  The project includes a short cinematic introduction, a compact handcrafted
+  level built with ProBuilder, and a focus on mood, lighting, sound, and
+  environmental tension.
 </p>
 <section class="work-detail__section">
   <h3>What I built</h3>
   <ul>
-    <li>Built a compact level emphasizing mood and environmental storytelling</li>
-    <li>Tuned lighting and sound for tension and exploration pacing</li>
-    <li>Explored liminal-space aesthetics through layout and ambience</li>
+    <li>Created the full level layout in Unity using ProBuilder</li>
+    <li>
+      Designed the exploration flow around collecting key cards and unlocking
+      the exit
+    </li>
+    <li>Added an AI monster that searches for the player inside the level</li>
+    <li>Built a short cinematic introduction to set up the atmosphere</li>
+    <li>Tuned lighting, sound, and ambience to create tension and pacing</li>
+    <li>
+      Explored liminal-space aesthetics through layout, scale, and environmental
+      mood
+    </li>
   </ul>
 </section>
+
+<div class="work-detail__links">
+  <a
+    class="btn btn--primary"
+    href="https://grapixlegrand.itch.io/backrooms-level-two"
+    target="_blank"
+    rel="noopener noreferrer"
+    >Itch.io</a
+  >
+</div>
+<article class="video-card video-card--inline">
+  <h4 class="video-card__title">Gameplay video</h4>
+  <div class="video-wrapper">
+    <iframe
+      src="https://www.youtube.com/embed/Td4ioGZ6sdE"
+      title="Backroom Level 2 gameplay"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  </div>
+</article>
 <section class="work-detail__section">
   <h3>Technologies</h3>
   <div class="work-detail__chips">
-    <span>Unity</span><span>C#</span><span>Level design</span><span>Ambience</span
-    ><span>Exploration</span>
+    <span>Unity</span>
+    <span>C#</span>
+    <span>ProBuilder</span>
+    <span>AI</span>
+    <span>Level design</span>
+    <span>Ambience</span>
+    <span>Exploration</span>
   </div>
 </section>

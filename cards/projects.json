@@ -20,8 +20,10 @@
     "visual": {
       "title": "Visual Experiments",
       "meta": "2024–2026 · VFX / creative tests",
-      "summary": "Real-time VFX and painting experiments with playful motion and atmosphere.",
-      "chips": ["PopcornFX", "Unity", "VFX", "Painting", "Real-time"],
+      "summary": "A collection of real-time visual experiments using PopcornFX.",
+      "chips": ["PopcornFX", "VFX", "Painting", "Real-time"],
+      "preview": "./resources/visual_experiments/Butterflies.jpg",
+      "previewFit": "cover",
       "creative": true,
       "detail": "visual.html"
     },
@@ -42,8 +44,10 @@
     "backroom": {
       "title": "Backroom Level 2",
       "meta": "2023 · Unity game prototype",
-      "summary": "Short atmospheric Unity exploration prototype inspired by liminal spaces.",
-      "chips": ["Unity", "C#", "Level design", "Ambience", "Exploration"],
+      "summary": "Backrooms-inspired Unity prototype with key cards, AI monster, and liminal atmosphere.",
+      "chips": ["Unity", "C#", "ProBuilder", "AI", "Level design"],
+      "preview": "./resources/backrooms_level2/BackroomsLevel2.jpeg",
+      "previewFit": "cover",
       "detail": "backroom.html"
     },
     "technical": {

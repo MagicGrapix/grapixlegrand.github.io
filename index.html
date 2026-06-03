@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./style.css?v=7" />
   </head>
   <body>
     <main class="page">
@@ -171,8 +171,6 @@
         let projects = {};
         let proProjectOrder = [];
         let proProjects = {};
-        const fragmentCache = new Map();
-
         let activeProjectId = null;
         let activeSubId = null;
 
@@ -184,17 +182,21 @@
           return `<button type="button" class="btn btn--back" data-back="${action}">${label}</button>`;
         }
 
-        async function loadCardFragment(path) {
-          if (fragmentCache.has(path)) return fragmentCache.get(path);
+        function resolveFragmentUrls(html) {
+          const siteBase = new URL("./", window.location.href);
+          return html.replace(/(src|href)="(\.\/[^"]+)"/g, (_, attr, relPath) => {
+            const resolved = new URL(relPath, siteBase).href;
+            return `${attr}="${resolved}"`;
+          });
+        }
 
-          const response = await fetch(CARDS_BASE + path);
+        async function loadCardFragment(path) {
+          const response = await fetch(CARDS_BASE + path, { cache: "no-store" });
           if (!response.ok) {
             throw new Error("Could not load card: " + path);
           }
 
-          const html = await response.text();
-          fragmentCache.set(path, html);
-          return html;
+          return response.text();
         }
 
         async function showDetailFromFile(path, backLabel, backAction) {
@@ -204,7 +206,7 @@
           showDetailPanel();
 
           try {
-            const html = await loadCardFragment(path);
+            const html = resolveFragmentUrls(await loadCardFragment(path));
             workDetail.innerHTML = backButton(backLabel, backAction) + html;
             const title = workDetail.querySelector(".work-detail__title");
             if (title) workDetail.setAttribute("aria-labelledby", title.id || "");
@@ -483,7 +485,7 @@
         });
 
         function loadJson(path) {
-          return fetch(CARDS_BASE + path).then((response) => {
+          return fetch(CARDS_BASE + path, { cache: "no-store" }).then((response) => {
             if (!response.ok) throw new Error("Could not load " + path);
             return response.json();
           });
