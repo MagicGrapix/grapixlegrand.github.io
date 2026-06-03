@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=8" />
+    <link rel="stylesheet" href="./style.css?v=10" />
   </head>
   <body>
     <main class="page">
@@ -212,6 +212,7 @@
             if (title) workDetail.setAttribute("aria-labelledby", title.id || "");
             bindYoutubeButtons(workDetail);
             bindGalleries(workDetail);
+            bindPaintingGallery(workDetail);
           } catch (error) {
             workDetail.innerHTML =
               backButton(backLabel, backAction) +
@@ -290,6 +291,37 @@
                 btn.dataset.youtube,
                 btn.dataset.youtubeLayout || "wide"
               );
+            });
+          });
+        }
+
+        function bindPaintingGallery(root) {
+          const gallery = root.querySelector(".painting-gallery");
+          if (!gallery) return;
+
+          const items = [...gallery.querySelectorAll(".painting-gallery__item")];
+
+          items.forEach((item) => {
+            item.setAttribute("tabindex", "0");
+            item.setAttribute("aria-expanded", "false");
+
+            item.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const revealed = item.classList.contains("is-revealed");
+              items.forEach((el) => {
+                el.classList.remove("is-revealed");
+                el.setAttribute("aria-expanded", "false");
+              });
+              if (!revealed) {
+                item.classList.add("is-revealed");
+                item.setAttribute("aria-expanded", "true");
+              }
+            });
+
+            item.addEventListener("keydown", (e) => {
+              if (e.key !== "Enter" && e.key !== " ") return;
+              e.preventDefault();
+              item.click();
             });
           });
         }

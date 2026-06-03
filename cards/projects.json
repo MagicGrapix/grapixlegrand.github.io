@@ -59,7 +59,7 @@
       "meta": "2024–2026 · Personal creative work",
       "summary": "A small collection of acrylic paintings and visual studies.",
       "chips": ["Acrylic", "Painting", "Color", "Personal work"],
-      "preview": "./assets/paintings/painting-01.jpg",
+      "preview": "./resources/art/LightInTheStorm.jpg",
       "previewFit": "cover",
       "creative": true,
       "detail": "painting.html"
