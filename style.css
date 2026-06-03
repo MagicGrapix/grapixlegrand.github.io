@@ -73,6 +73,54 @@ body {
   margin-top: 0.75rem;
 }
 
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-links__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.32);
+  background: rgba(15, 23, 42, 0.65);
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.profile-links__chip i {
+  font-size: 0.95rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.profile-links__chip:hover,
+.profile-links__chip:focus-visible {
+  outline: none;
+  border-color: rgba(34, 211, 238, 0.65);
+  background: rgba(34, 211, 238, 0.12);
+  color: #f8fafc;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.22);
+}
+
+.profile-links__chip:hover i,
+.profile-links__chip:focus-visible i {
+  color: #67e8f9;
+}
+
 .eyebrow {
   margin: 0 0 0.45rem;
   color: var(--accent);
@@ -1244,6 +1292,10 @@ body.work-overlay-open {
   .profile-image {
     max-width: 270px;
     margin: 0 auto;
+  }
+
+  .profile-links {
+    justify-content: center;
   }
 
   .cta-row {
