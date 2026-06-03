@@ -2,16 +2,16 @@
   "order": [
     "knockback",
     "visual",
-    "byteguardians",
     "thesis",
     "backroom",
+    "raytracer",
     "technical"
   ],
   "projects": {
     "knockback": {
       "title": "Knockback Arena",
       "meta": "2026–now · Personal prototype",
-      "summary": "Roblox arena prototype built around knockback combat and match flow.",
+      "summary": "Personal Roblox arena prototype: knockback combat, weapons, match flow, and client/server structure.",
       "chips": ["Roblox", "TypeScript", "Combat", "Multiplayer", "Gameplay"],
       "preview": "./resources/knockback_arena/logo.png",
       "previewFit": "contain",
@@ -27,12 +27,14 @@
       "creative": true,
       "detail": "visual.html"
     },
-    "byteguardians": {
-      "title": "Byte Guardians",
-      "meta": "2025–now · Unity game prototype",
-      "summary": "Unity prototype focused on art direction, characters, and world mood.",
-      "chips": ["Unity", "C#", "Art direction", "Characters", "Prototype"],
-      "detail": "byteguardians.html"
+    "raytracer": {
+      "title": "Raytracer",
+      "meta": "2022 · Computer graphics project",
+      "summary": "CG22 path tracer at ETH Zurich; final scene presented at the section Disney renderer competition.",
+      "chips": ["C++", "Path tracing", "Rendering", "Computer graphics", "Open Image Denoise", "ETH Zurich"],
+      "preview": "./cg22/images/final_scene_full_denoised.jpeg",
+      "previewFit": "cover",
+      "detail": "raytracer.html"
     },
     "thesis": {
       "title": "Master Thesis Prototype",
@@ -54,8 +56,8 @@
     },
     "technical": {
       "title": "Technical & Academic Projects",
-      "meta": "2020–2022 · Rendering / simulation / research",
-      "summary": "Archive of rendering, simulation, and graphics research projects.",
+      "meta": "2020–2025 · Rendering / simulation / research",
+      "summary": "Archive of rendering, simulation, graphics research, and ongoing visual prototypes.",
       "chips": ["C++", "OpenGL", "Rendering", "Simulation", "Research"],
       "archive": true,
       "detail": "technical.html"

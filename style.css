@@ -1028,6 +1028,7 @@ body.work-overlay-open {
   color: inherit;
   font: inherit;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
   transition:
     transform 160ms ease,
