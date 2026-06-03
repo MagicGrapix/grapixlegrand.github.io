@@ -1,36 +1,114 @@
-<div class="work-detail__media work-detail__media--video">
-  <iframe
-    src="https://www.youtube-nocookie.com/embed/9QdINkVQV-c?rel=0&modestbranding=1&playsinline=1"
-    title="Citadel — Public trailer"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
+<div class="work-detail__media work-detail__media--image">
+  <img src="./resources/Citadel.png" alt="Citadel key art" />
 </div>
 <header class="work-detail__header">
   <h3 class="work-detail__title">Citadel</h3>
   <p class="work-detail__meta">2024 · VR · Desktop · Mobile · Team project</p>
 </header>
 <p class="work-detail__description">
-  A Meta Horizon game developed with the OZWE Games team, released on VR,
+  A Meta Horizon game developed at OZWE Games, released on Meta Horizon, VR,
   desktop, and mobile.
 </p>
 <section class="work-detail__section">
   <h3>Contributions</h3>
   <ul>
-    <li>Gameplay programming</li>
-    <li>VFX and visual feedback</li>
-    <li>UI systems</li>
-    <li>Interactive features</li>
+    <li>Gameplay programming &amp; debugging</li>
+    <li>
+      UI Systems
+      <ul>
+        <li>Armor shop logic and layout</li>
+        <li>Diverse informative player stats</li>
+      </ul>
+    </li>
+    <li>Performance investigation and optimization</li>
+    <li>VFX</li>
   </ul>
 </section>
-<section class="work-detail__section">
-  <h3>Media</h3>
-  <p class="work-detail__media-note">Screenshots / GIFs when available.</p>
-</section>
+
+<div class="media-gallery media-gallery--video" data-gallery>
+  <div class="media-gallery__viewport">
+    <div class="media-gallery__slide is-active">
+      <video
+        preload="none"
+        playsinline
+        loop
+        src="./resources/citadel/BombVFX.mp4"
+        aria-label="Gravity bomb VFX"
+      ></video>
+      <p class="media-gallery__caption">
+        Gravity bomb vfx (throw + blow up + respawn). Models and animations by
+        artists.
+      </p>
+    </div>
+    <div class="media-gallery__slide">
+      <video
+        preload="none"
+        playsinline
+        loop
+        src="./resources/citadel/EagleDeathVFX.mp4"
+        aria-label="Eagle boss death VFX"
+      ></video>
+      <p class="media-gallery__caption">
+        Eagle boss death vfx. Models and animations by artists.
+      </p>
+    </div>
+    <div class="media-gallery__slide">
+      <video
+        preload="none"
+        playsinline
+        loop
+        src="./resources/citadel/PortalVFX.mp4"
+        aria-label="Portal VFX"
+      ></video>
+      <p class="media-gallery__caption">Portal VFX with particles</p>
+    </div>
+    <div class="media-gallery__slide">
+      <video
+        preload="none"
+        playsinline
+        loop
+        src="./resources/citadel/RelicVFX.mp4"
+        aria-label="Relic collect VFX"
+      ></video>
+      <p class="media-gallery__caption">
+        Chest collect vfx (chest model made by artists)
+      </p>
+    </div>
+  </div>
+  <button
+    type="button"
+    class="media-gallery__btn media-gallery__btn--prev"
+    aria-label="Previous video"
+  >
+    &#8249;
+  </button>
+  <button
+    type="button"
+    class="media-gallery__btn media-gallery__btn--next"
+    aria-label="Next video"
+  >
+    &#8250;
+  </button>
+  <p class="media-gallery__counter" data-gallery-counter>1 / 4</p>
+  <p class="media-gallery__footnote">Public footage.</p>
+</div>
+
 <section class="work-detail__section">
   <h3>Technologies</h3>
   <div class="work-detail__chips">
     <span>Meta Horizon Engine</span><span>TypeScript</span><span>VR</span
     ><span>Desktop</span><span>Mobile</span><span>VFX</span><span>UI</span>
+  </div>
+</section>
+
+<section class="work-detail__section">
+  <h3>Trailer</h3>
+  <div class="work-detail__media work-detail__media--video work-detail__media--inline">
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/9QdINkVQV-c?rel=0&modestbranding=1&playsinline=1"
+      title="Citadel — Public trailer"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
   </div>
 </section>

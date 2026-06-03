@@ -305,15 +305,36 @@
             );
             if (index < 0) index = 0;
 
+            function getSlideVideo(slide) {
+              return slide.tagName === "VIDEO"
+                ? slide
+                : slide.querySelector("video");
+            }
+
+            function syncSlideMedia(slide, isActive) {
+              const video = getSlideVideo(slide);
+              if (!video) return;
+              if (isActive) {
+                video.play().catch(() => {});
+              } else {
+                video.pause();
+                video.currentTime = 0;
+              }
+            }
+
             function showSlide(nextIndex) {
               index = (nextIndex + slides.length) % slides.length;
               slides.forEach((slide, i) => {
-                slide.classList.toggle("is-active", i === index);
+                const isActive = i === index;
+                slide.classList.toggle("is-active", isActive);
+                syncSlideMedia(slide, isActive);
               });
               if (counter) {
                 counter.textContent = `${index + 1} / ${slides.length}`;
               }
             }
+
+            showSlide(index);
 
             prevBtn?.addEventListener("click", (e) => {
               e.stopPropagation();
