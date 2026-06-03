@@ -36,9 +36,11 @@
     },
     "thesis": {
       "title": "Master Thesis Prototype",
-      "meta": "2024 · AI / interaction prototype",
-      "summary": "ETH research prototype exploring LLM-driven conversational interaction.",
-      "chips": ["LLMs", "AI", "Interaction", "Research", "ETH Zurich"],
+      "meta": "2024 · AI / gameplay research prototype",
+      "summary": "ETH thesis prototype (Andrometica Cynus): LLM + MCTS for chat-driven NPC behavior in a 2D Bevy game.",
+      "chips": ["Bevy", "Rust", "LLMs", "MCTS", "ETH Zurich"],
+      "preview": "./resources/master_thesis/MasterThesis.jpg",
+      "previewFit": "cover",
       "detail": "thesis.html"
     },
     "backroom": {
