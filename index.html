@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=13" />
+    <link rel="stylesheet" href="./style.css?v=14" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -104,16 +104,14 @@
         <article class="card cta-card">
           <h2 class="cta-card__title">Video CV</h2>
           <p class="cta-card__subtitle">
-            Watch a 90-second overview of my background, projects and creative
-            work.
+            Watch a 90-second video where I present myself!
           </p>
           <button type="button" class="btn" id="video-cv-open">Watch Video</button>
         </article>
         <article class="card cta-card cta-card--featured">
           <h2 class="cta-card__title">Game CV</h2>
           <p class="cta-card__subtitle">
-            Play a short Unity WebGL experience where you shoot targets to
-            discover my profile.
+            Play a short experience to discover my profile.
           </p>
           <button type="button" class="btn btn--primary" id="game-cv-open">
             Play Game
@@ -153,22 +151,28 @@
         <p class="contact__text">
           Open to game dev roles, prototypes, and technical art collaborations.
         </p>
-        <div class="contact__links">
-          <a
-            class="btn"
-            href="https://github.com/grapixlegrand"
-            target="_blank"
-            rel="noopener noreferrer"
-            >GitHub</a
-          >
-          <a
-            class="btn"
-            href="https://grapixlegrand.itch.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            >itch.io</a
-          >
-        </div>
+        <ul class="profile-links" aria-label="Contact links">
+          <li>
+            <a
+              class="profile-links__chip"
+              href="https://www.linkedin.com/in/quentin-guignard-9b13a6301/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+              <span>LinkedIn</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="profile-links__chip"
+              href="mailto:quentin.guignard@outlook.com"
+            >
+              <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+              <span>quentin.guignard@outlook.com</span>
+            </a>
+          </li>
+        </ul>
       </section>
     </main>
 
@@ -209,6 +213,8 @@
         const CARDS_BASE = "./cards/";
         const YOUTUBE_EMBED =
           "https://www.youtube-nocookie.com/embed/VIDEO_ID?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&fs=0&disablekb=1";
+        const GAME_CV_URL =
+          "https://itch.io/embed-upload/17801082?color=333333";
 
         const workGrid = document.getElementById("work-grid");
         const proWorkGrid = document.getElementById("pro-work-grid");
@@ -500,8 +506,9 @@
             `<div class="game-cv-embed">
               <iframe
                 class="game-cv-embed__iframe"
-                src="https://itch.io/embed-upload/17801082?color=333333"
-                title="My CV is a Game! on itch.io"
+                src="${GAME_CV_URL}"
+                title="My CV is a Game!"
+                allow="fullscreen; gamepad; autoplay"
                 allowfullscreen
               ></iframe>
             </div>`;
