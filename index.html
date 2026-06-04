@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=11" />
+    <link rel="stylesheet" href="./style.css?v=13" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -115,13 +115,9 @@
             Play a short Unity WebGL experience where you shoot targets to
             discover my profile.
           </p>
-          <a
-            class="btn btn--primary"
-            href="https://grapixlegrand.itch.io/cv"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Play Game</a
-          >
+          <button type="button" class="btn btn--primary" id="game-cv-open">
+            Play Game
+          </button>
         </article>
       </section>
 
@@ -489,8 +485,28 @@
           activeSubId = null;
           workOverlay.hidden = true;
           workDetail.innerHTML = "";
+          workDetail.classList.remove("work-detail--game-cv");
           workDetail.removeAttribute("aria-labelledby");
+          workDetail.removeAttribute("aria-label");
           document.body.classList.remove("work-overlay-open");
+        }
+
+        function openGameCv() {
+          activeProjectId = null;
+          activeSubId = null;
+          workDetail.classList.add("work-detail--game-cv");
+          workDetail.innerHTML =
+            backButton("&larr; Back", "grid") +
+            `<div class="game-cv-embed">
+              <iframe
+                class="game-cv-embed__iframe"
+                src="https://itch.io/embed-upload/17801082?color=333333"
+                title="My CV is a Game! on itch.io"
+                allowfullscreen
+              ></iframe>
+            </div>`;
+          workDetail.setAttribute("aria-label", "Game CV");
+          showDetailPanel();
         }
 
         function showDetailPanel() {
@@ -607,6 +623,8 @@
         document.getElementById("video-cv-open").addEventListener("click", () => {
           openYoutubeModal("Video CV", "JJZnswDj0YA", "vertical");
         });
+
+        document.getElementById("game-cv-open").addEventListener("click", openGameCv);
 
         youtubeClose.addEventListener("click", closeYoutubeModal);
         youtubeModal.addEventListener("click", (e) => {
