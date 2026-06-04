@@ -6,7 +6,7 @@
       "meta": "2024 · VR · Desktop · Mobile · Team project",
       "summary": "Meta Horizon game developed at OZWE Games, released on Meta Horizon, VR, desktop, and mobile.",
       "chips": ["Meta Horizon Engine", "TypeScript", "VR", "Desktop", "Mobile"],
-      "preview": "./resources/Citadel.png",
+      "preview": "./resources/Citadel.jpg",
       "detail": "citadel.html"
     },
     "village": {
@@ -14,7 +14,7 @@
       "meta": "2025 · Desktop · Mobile · Team project",
       "summary": "Meta Horizon simulation game developed at OZWE Games, released on Meta Horizon, desktop, and mobile.",
       "chips": ["Meta Horizon Engine", "TypeScript", "Desktop", "Mobile", "UI"],
-      "preview": "./resources/TheVillage.png",
+      "preview": "./resources/TheVillage.jpg",
       "detail": "village.html"
     }
   }
