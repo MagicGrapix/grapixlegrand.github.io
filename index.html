@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=14" />
+    <link rel="stylesheet" href="./style.css?v=15" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -175,6 +175,24 @@
         </ul>
       </section>
     </main>
+
+    <div class="painting-lightbox" id="painting-lightbox" hidden>
+      <button
+        type="button"
+        class="painting-lightbox__close"
+        id="painting-lightbox-close"
+        aria-label="Close painting"
+      >
+        &times;
+      </button>
+      <figure class="painting-lightbox__figure">
+        <img class="painting-lightbox__img" id="painting-lightbox-img" alt="" />
+        <figcaption
+          class="painting-lightbox__caption"
+          id="painting-lightbox-caption"
+        ></figcaption>
+      </figure>
+    </div>
 
     <div class="work-overlay" id="work-overlay" hidden>
       <div
@@ -359,27 +377,50 @@
           });
         }
 
+        const paintingLightbox = document.getElementById("painting-lightbox");
+        const paintingLightboxImg = document.getElementById("painting-lightbox-img");
+        const paintingLightboxCaption = document.getElementById(
+          "painting-lightbox-caption"
+        );
+        const paintingLightboxClose = document.getElementById(
+          "painting-lightbox-close"
+        );
+
+        function openPaintingLightbox(src, title) {
+          paintingLightboxImg.src = src;
+          paintingLightboxImg.alt = title;
+          paintingLightboxCaption.textContent = title;
+          paintingLightbox.hidden = false;
+          document.body.classList.add("painting-lightbox-open");
+        }
+
+        function closePaintingLightbox() {
+          paintingLightbox.hidden = true;
+          paintingLightboxImg.removeAttribute("src");
+          document.body.classList.remove("painting-lightbox-open");
+        }
+
         function bindPaintingGallery(root) {
           const gallery = root.querySelector(".painting-gallery");
           if (!gallery) return;
 
-          const items = [...gallery.querySelectorAll(".painting-gallery__item")];
-
-          items.forEach((item) => {
+          gallery.querySelectorAll(".painting-gallery__item").forEach((item) => {
             item.setAttribute("tabindex", "0");
-            item.setAttribute("aria-expanded", "false");
+            item.setAttribute("role", "button");
+            item.setAttribute(
+              "aria-label",
+              `View ${item.querySelector(".painting-gallery__label")?.textContent || "painting"}`
+            );
 
             item.addEventListener("click", (e) => {
               e.stopPropagation();
-              const revealed = item.classList.contains("is-revealed");
-              items.forEach((el) => {
-                el.classList.remove("is-revealed");
-                el.setAttribute("aria-expanded", "false");
-              });
-              if (!revealed) {
-                item.classList.add("is-revealed");
-                item.setAttribute("aria-expanded", "true");
-              }
+              const img = item.querySelector("img");
+              const label = item.querySelector(".painting-gallery__label");
+              if (!img) return;
+              openPaintingLightbox(
+                img.currentSrc || img.src,
+                label?.textContent || img.alt || "Painting"
+              );
             });
 
             item.addEventListener("keydown", (e) => {
@@ -389,6 +430,14 @@
             });
           });
         }
+
+        paintingLightboxClose.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closePaintingLightbox();
+        });
+        paintingLightbox.addEventListener("click", (e) => {
+          if (e.target === paintingLightbox) closePaintingLightbox();
+        });
 
         function bindGalleries(root) {
           root.querySelectorAll("[data-gallery]").forEach((gallery) => {
@@ -594,6 +643,10 @@
 
         document.addEventListener("keydown", (e) => {
           if (e.key !== "Escape") return;
+          if (!paintingLightbox.hidden) {
+            closePaintingLightbox();
+            return;
+          }
           if (youtubeModal.open) {
             closeYoutubeModal();
             return;
