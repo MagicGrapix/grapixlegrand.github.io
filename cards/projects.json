@@ -6,6 +6,7 @@
     "backroom",
     "painting",
     "raytracer",
+    "catrine",
     "paradisland"
   ],
   "projects": {
@@ -58,11 +59,20 @@
     "paradisland": {
       "title": "Paradisland",
       "meta": "2020 · Academic project · EPFL",
-      "summary": "EPFL graphics project: water shader, screen-space reflections, shadows, and outlining.",
+      "summary": "EPFL team project: water shader, screen-space reflections, shadows, and outlining.",
       "chips": ["GLSL", "JavaScript", "Regl", "WebGL", "EPFL"],
       "preview": "https://img.youtube.com/vi/6Hjo8ENWcQE/hqdefault.jpg",
       "previewFit": "cover",
       "detail": "paradisland.html"
+    },
+    "catrine": {
+      "title": "Catrine",
+      "meta": "2022 · Academic project · ETH Game Lab",
+      "summary": "ETH Game Lab team project: voxel puzzle game with sand SPH simulation, Mixamo animations, and MagicaVoxel art.",
+      "chips": ["C++", "SPH", "MagicaVoxel", "MonoGame", "ETH Game Lab"],
+      "preview": "https://img.youtube.com/vi/Kc8jHOonkUY/hqdefault.jpg",
+      "previewFit": "cover",
+      "detail": "catrine.html"
     },
     "painting": {
       "title": "Art & Visual Work",
