@@ -1343,6 +1343,113 @@ body.painting-lightbox-open {
   letter-spacing: 0.02em;
 }
 
+.video-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: work-overlay-in 240ms ease;
+}
+
+.video-lightbox[hidden] {
+  display: none !important;
+}
+
+body.video-lightbox-open {
+  overflow: hidden;
+}
+
+.video-lightbox__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #f8fafc;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  backdrop-filter: blur(6px);
+  transition:
+    opacity 180ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.video-lightbox:hover .video-lightbox__close,
+.video-lightbox__close:focus-visible {
+  opacity: 1;
+}
+
+.video-lightbox__close:hover,
+.video-lightbox__close:focus-visible {
+  outline: none;
+  border-color: rgba(34, 211, 238, 0.75);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
+}
+
+.video-lightbox__figure {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  max-width: min(92vw, calc((90vh - 3rem) * 16 / 9));
+  max-height: 90vh;
+}
+
+.video-lightbox__video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(92vw, calc((90vh - 3rem) * 16 / 9));
+  max-height: calc(90vh - 3rem);
+  border-radius: 14px;
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  box-shadow: 0 24px 56px rgba(2, 6, 23, 0.6);
+  background: #000;
+  object-fit: contain;
+}
+
+.video-lightbox__caption {
+  margin: 0;
+  text-align: center;
+  color: #f8fafc;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.media-gallery--video .media-gallery__viewport--expandable {
+  cursor: zoom-in;
+}
+
+.media-gallery--video .media-gallery__viewport--expandable::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(2, 6, 23, 0.18);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+.media-gallery--video .media-gallery__viewport--expandable:hover::after,
+.media-gallery--video .media-gallery__viewport--expandable:focus-within::after {
+  opacity: 1;
+}
+
 @media (max-width: 900px) {
   .painting-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=24" />
+    <link rel="stylesheet" href="./style.css?v=25" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -190,6 +190,30 @@
         <figcaption
           class="painting-lightbox__caption"
           id="painting-lightbox-caption"
+        ></figcaption>
+      </figure>
+    </div>
+
+    <div class="video-lightbox" id="video-lightbox" hidden>
+      <button
+        type="button"
+        class="video-lightbox__close"
+        id="video-lightbox-close"
+        aria-label="Close video"
+      >
+        &times;
+      </button>
+      <figure class="video-lightbox__figure">
+        <video
+          class="video-lightbox__video"
+          id="video-lightbox-video"
+          playsinline
+          loop
+          muted
+        ></video>
+        <figcaption
+          class="video-lightbox__caption"
+          id="video-lightbox-caption"
         ></figcaption>
       </figure>
     </div>
@@ -439,6 +463,41 @@
           if (e.target === paintingLightbox) closePaintingLightbox();
         });
 
+        const videoLightbox = document.getElementById("video-lightbox");
+        const videoLightboxVideo = document.getElementById("video-lightbox-video");
+        const videoLightboxCaption = document.getElementById("video-lightbox-caption");
+        const videoLightboxClose = document.getElementById("video-lightbox-close");
+        let resumeGalleryVideo = null;
+
+        function openVideoLightbox({ src, title, muted, currentTime, onClose }) {
+          videoLightboxVideo.src = src;
+          videoLightboxVideo.muted = muted;
+          videoLightboxVideo.currentTime = currentTime || 0;
+          videoLightboxCaption.textContent = title;
+          videoLightbox.hidden = false;
+          document.body.classList.add("video-lightbox-open");
+          resumeGalleryVideo = onClose || null;
+          videoLightboxVideo.play().catch(() => {});
+        }
+
+        function closeVideoLightbox() {
+          videoLightboxVideo.pause();
+          videoLightboxVideo.removeAttribute("src");
+          videoLightboxVideo.load();
+          videoLightbox.hidden = true;
+          document.body.classList.remove("video-lightbox-open");
+          resumeGalleryVideo?.();
+          resumeGalleryVideo = null;
+        }
+
+        videoLightboxClose.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeVideoLightbox();
+        });
+        videoLightbox.addEventListener("click", (e) => {
+          if (e.target === videoLightbox) closeVideoLightbox();
+        });
+
         function bindGalleries(root) {
           root.querySelectorAll("[data-gallery]").forEach((gallery) => {
             const slides = [...gallery.querySelectorAll(".media-gallery__slide")];
@@ -522,9 +581,28 @@
             updateMuteUi();
 
             const viewport = gallery.querySelector(".media-gallery__viewport");
-            viewport?.addEventListener("click", () => {
-              tryPlayVideo(getSlideVideo(slides[index]));
-            });
+            if (videos.length && viewport) {
+              viewport.classList.add("media-gallery__viewport--expandable");
+              viewport.addEventListener("click", () => {
+                const activeSlide = slides[index];
+                const video = getSlideVideo(activeSlide);
+                if (!video) return;
+                const caption = activeSlide.querySelector(".media-gallery__caption");
+                const title =
+                  caption?.textContent?.trim() ||
+                  video.getAttribute("aria-label") ||
+                  "VFX";
+                const currentTime = video.currentTime;
+                video.pause();
+                openVideoLightbox({
+                  src: video.currentSrc || video.src,
+                  title,
+                  muted: isMuted,
+                  currentTime,
+                  onClose: () => tryPlayVideo(video),
+                });
+              });
+            }
 
             muteBtn?.addEventListener("click", (e) => {
               e.stopPropagation();
@@ -551,6 +629,7 @@
         function showGrid() {
           activeProjectId = null;
           activeSubId = null;
+          closeVideoLightbox();
           workOverlay.hidden = true;
           workDetail.innerHTML = "";
           workDetail.classList.remove("work-detail--game-cv");
@@ -656,6 +735,10 @@
 
         document.addEventListener("keydown", (e) => {
           if (e.key !== "Escape") return;
+          if (!videoLightbox.hidden) {
+            closeVideoLightbox();
+            return;
+          }
           if (!paintingLightbox.hidden) {
             closePaintingLightbox();
             return;
