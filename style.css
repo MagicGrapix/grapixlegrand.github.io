@@ -770,6 +770,9 @@ body.work-overlay-open {
   top: 50%;
   z-index: 2;
   transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
@@ -787,20 +790,20 @@ body.work-overlay-open {
     transform 160ms ease;
 }
 
-.media-gallery__btn:hover,
-.media-gallery__btn:focus-visible {
-  outline: none;
-  background: rgba(34, 211, 238, 0.22);
-  border-color: rgba(34, 211, 238, 0.65);
-  transform: translateY(-50%) scale(1.05);
-}
-
 .media-gallery__btn--prev {
   left: 0.55rem;
 }
 
 .media-gallery__btn--next {
   right: 0.55rem;
+}
+
+.media-gallery__btn:hover,
+.media-gallery__btn:focus-visible {
+  outline: none;
+  background: rgba(34, 211, 238, 0.22);
+  border-color: rgba(34, 211, 238, 0.65);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .media-gallery__btn--mute {
