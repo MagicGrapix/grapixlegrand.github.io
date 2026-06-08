@@ -753,9 +753,9 @@ body.work-overlay-open {
 }
 
 .media-gallery--video .media-gallery__viewport {
+  height: clamp(200px, 36vw, 380px);
+  min-height: 200px;
   aspect-ratio: 16 / 9;
-  height: auto;
-  min-height: 240px;
 }
 
 .media-gallery--images .media-gallery__viewport {
@@ -938,6 +938,10 @@ body.work-overlay-open {
 .work-detail__section .work-detail__media--inline {
   margin-top: 0.35rem;
   border-radius: 12px;
+}
+
+.work-detail__section .media-gallery {
+  margin-top: 0.35rem;
 }
 
 .work-detail__figure {

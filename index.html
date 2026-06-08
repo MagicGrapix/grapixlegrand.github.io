@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=23" />
+    <link rel="stylesheet" href="./style.css?v=24" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -486,12 +486,20 @@
               muteBtn.setAttribute("aria-pressed", String(isMuted));
             }
 
+            function tryPlayVideo(video) {
+              if (!video) return;
+              video.muted = isMuted;
+              if (video.readyState < 1) {
+                video.load();
+              }
+              video.play().catch(() => {});
+            }
+
             function syncSlideMedia(slide, isActive) {
               const video = getSlideVideo(slide);
               if (!video) return;
-              video.muted = isMuted;
               if (isActive) {
-                video.play().catch(() => {});
+                tryPlayVideo(video);
               } else {
                 video.pause();
                 video.currentTime = 0;
@@ -512,6 +520,11 @@
 
             showSlide(index);
             updateMuteUi();
+
+            const viewport = gallery.querySelector(".media-gallery__viewport");
+            viewport?.addEventListener("click", () => {
+              tryPlayVideo(getSlideVideo(slides[index]));
+            });
 
             muteBtn?.addEventListener("click", (e) => {
               e.stopPropagation();
