@@ -7,10 +7,37 @@
   --accent: #22d3ee;
   --accent-strong: #06b6d4;
   --border: rgba(148, 163, 184, 0.25);
+  --scrollbar-track: #020617;
+  --scrollbar-thumb: rgba(100, 145, 175, 0.55);
+  --scrollbar-thumb-hover: rgba(130, 170, 200, 0.72);
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+html::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: 2px solid var(--scrollbar-track);
+  border-radius: 999px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
 }
 
 body {
@@ -413,6 +440,27 @@ body.work-overlay-open {
     0 24px 56px rgba(2, 6, 23, 0.6),
     0 0 0 1px rgba(34, 211, 238, 0.1);
   animation: work-detail-in 280ms ease;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.work-detail::-webkit-scrollbar {
+  width: 12px;
+}
+
+.work-detail::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 0 18px 18px 0;
+}
+
+.work-detail::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: 2px solid var(--scrollbar-track);
+  border-radius: 999px;
+}
+
+.work-detail::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
 }
 
 @keyframes work-overlay-in {
