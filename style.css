@@ -1400,25 +1400,50 @@ body.video-lightbox-open {
   box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
 }
 
-.video-lightbox__figure {
+.video-lightbox__stage {
+  position: relative;
   display: grid;
   gap: 0.65rem;
-  margin: 0;
   max-width: min(92vw, calc((90vh - 3rem) * 16 / 9));
   max-height: 90vh;
 }
 
-.video-lightbox__video {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: min(92vw, calc((90vh - 3rem) * 16 / 9));
-  max-height: calc(90vh - 3rem);
+.video-lightbox__viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
   border-radius: 14px;
   border: 1px solid rgba(34, 211, 238, 0.28);
   box-shadow: 0 24px 56px rgba(2, 6, 23, 0.6);
   background: #000;
+}
+
+.video-lightbox__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: min(92vw, calc((90vh - 3rem) * 16 / 9));
+  max-height: calc(90vh - 3rem);
   object-fit: contain;
+  vertical-align: middle;
+}
+
+.video-lightbox__viewport .media-gallery__btn--prev {
+  left: 0.75rem;
+}
+
+.video-lightbox__viewport .media-gallery__btn--next {
+  right: 0.75rem;
+}
+
+.video-lightbox__viewport .media-gallery__btn--mute {
+  left: 0.75rem;
+  bottom: 0.75rem;
+}
+
+.video-lightbox__viewport .media-gallery__counter {
+  right: 0.75rem;
+  bottom: 0.75rem;
 }
 
 .video-lightbox__caption {

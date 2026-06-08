@@ -8,7 +8,7 @@
       name="description"
       content="Portfolio of Quentin Guignard, game developer from Switzerland."
     />
-    <link rel="stylesheet" href="./style.css?v=25" />
+    <link rel="stylesheet" href="./style.css?v=26" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -203,19 +203,45 @@
       >
         &times;
       </button>
-      <figure class="video-lightbox__figure">
-        <video
-          class="video-lightbox__video"
-          id="video-lightbox-video"
-          playsinline
-          loop
-          muted
-        ></video>
-        <figcaption
-          class="video-lightbox__caption"
-          id="video-lightbox-caption"
-        ></figcaption>
-      </figure>
+      <div class="video-lightbox__stage">
+        <div class="video-lightbox__viewport">
+          <button
+            type="button"
+            class="media-gallery__btn media-gallery__btn--prev"
+            id="video-lightbox-prev"
+            aria-label="Previous video"
+          >
+            &#8249;
+          </button>
+          <button
+            type="button"
+            class="media-gallery__btn media-gallery__btn--next"
+            id="video-lightbox-next"
+            aria-label="Next video"
+          >
+            &#8250;
+          </button>
+          <button
+            type="button"
+            class="media-gallery__btn media-gallery__btn--mute is-muted"
+            id="video-lightbox-mute"
+            aria-label="Unmute"
+            aria-pressed="true"
+          >
+            <span class="media-gallery__mute-icon media-gallery__mute-icon--off" aria-hidden="true">&#128263;</span>
+            <span class="media-gallery__mute-icon media-gallery__mute-icon--on" aria-hidden="true">&#128266;</span>
+          </button>
+          <p class="media-gallery__counter" id="video-lightbox-counter">1 / 1</p>
+          <video
+            class="video-lightbox__video"
+            id="video-lightbox-video"
+            playsinline
+            loop
+            muted
+          ></video>
+        </div>
+        <p class="video-lightbox__caption" id="video-lightbox-caption"></p>
+      </div>
     </div>
 
     <div class="work-overlay" id="work-overlay" hidden>
@@ -467,27 +493,82 @@
         const videoLightboxVideo = document.getElementById("video-lightbox-video");
         const videoLightboxCaption = document.getElementById("video-lightbox-caption");
         const videoLightboxClose = document.getElementById("video-lightbox-close");
-        let resumeGalleryVideo = null;
+        const videoLightboxPrev = document.getElementById("video-lightbox-prev");
+        const videoLightboxNext = document.getElementById("video-lightbox-next");
+        const videoLightboxMute = document.getElementById("video-lightbox-mute");
+        const videoLightboxCounter = document.getElementById("video-lightbox-counter");
+        let videoLightboxSession = null;
 
-        function openVideoLightbox({ src, title, muted, currentTime, onClose }) {
-          videoLightboxVideo.src = src;
-          videoLightboxVideo.muted = muted;
-          videoLightboxVideo.currentTime = currentTime || 0;
-          videoLightboxCaption.textContent = title;
-          videoLightbox.hidden = false;
-          document.body.classList.add("video-lightbox-open");
-          resumeGalleryVideo = onClose || null;
+        function getSlideTitle(slide, getSlideVideo) {
+          const caption = slide.querySelector(".media-gallery__caption");
+          const video = getSlideVideo(slide);
+          return (
+            caption?.textContent?.trim() ||
+            video?.getAttribute("aria-label") ||
+            "VFX"
+          );
+        }
+
+        function updateLightboxMuteUi() {
+          if (!videoLightboxSession) return;
+          const isMuted = videoLightboxSession.isMuted;
+          videoLightboxMute.classList.toggle("is-muted", isMuted);
+          videoLightboxMute.setAttribute("aria-label", isMuted ? "Unmute" : "Mute");
+          videoLightboxMute.setAttribute("aria-pressed", String(isMuted));
+        }
+
+        function updateLightboxSlide() {
+          const session = videoLightboxSession;
+          if (!session) return;
+
+          const slide = session.slides[session.index];
+          const video = session.getSlideVideo(slide);
+          if (!video) return;
+
+          videoLightboxVideo.src = video.currentSrc || video.src;
+          videoLightboxVideo.muted = session.isMuted;
+          videoLightboxCaption.textContent = getSlideTitle(slide, session.getSlideVideo);
+          videoLightboxCounter.textContent = `${session.index + 1} / ${session.slides.length}`;
+
+          const hasMultiple = session.slides.length > 1;
+          videoLightboxPrev.hidden = !hasMultiple;
+          videoLightboxNext.hidden = !hasMultiple;
+
+          updateLightboxMuteUi();
           videoLightboxVideo.play().catch(() => {});
         }
 
+        function openVideoLightbox(session) {
+          videoLightboxSession = session;
+          session.videos.forEach((video) => video.pause());
+          session.setGalleryIndex(session.index, { playMedia: false });
+          videoLightbox.hidden = false;
+          document.body.classList.add("video-lightbox-open");
+          updateLightboxSlide();
+        }
+
         function closeVideoLightbox() {
+          const session = videoLightboxSession;
           videoLightboxVideo.pause();
           videoLightboxVideo.removeAttribute("src");
           videoLightboxVideo.load();
           videoLightbox.hidden = true;
           document.body.classList.remove("video-lightbox-open");
-          resumeGalleryVideo?.();
-          resumeGalleryVideo = null;
+          videoLightboxSession = null;
+
+          if (session) {
+            const video = session.getSlideVideo(session.slides[session.index]);
+            session.tryPlayVideo(video);
+          }
+        }
+
+        function lightboxShowSlide(nextIndex) {
+          if (!videoLightboxSession) return;
+          const session = videoLightboxSession;
+          session.index =
+            (nextIndex + session.slides.length) % session.slides.length;
+          session.setGalleryIndex(session.index, { playMedia: false });
+          updateLightboxSlide();
         }
 
         videoLightboxClose.addEventListener("click", (e) => {
@@ -496,6 +577,29 @@
         });
         videoLightbox.addEventListener("click", (e) => {
           if (e.target === videoLightbox) closeVideoLightbox();
+        });
+        videoLightboxPrev.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (!videoLightboxSession) return;
+          lightboxShowSlide(videoLightboxSession.index - 1);
+        });
+        videoLightboxNext.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (!videoLightboxSession) return;
+          lightboxShowSlide(videoLightboxSession.index + 1);
+        });
+        videoLightboxMute.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (!videoLightboxSession) return;
+          const session = videoLightboxSession;
+          session.isMuted = !session.isMuted;
+          videoLightboxVideo.muted = session.isMuted;
+          session.videos.forEach((video) => {
+            video.muted = session.isMuted;
+          });
+          session.updateMuteUi();
+          updateLightboxMuteUi();
+          videoLightboxVideo.play().catch(() => {});
         });
 
         function bindGalleries(root) {
@@ -565,16 +669,28 @@
               }
             }
 
-            function showSlide(nextIndex) {
+            function setGalleryIndex(nextIndex, { playMedia = true } = {}) {
               index = (nextIndex + slides.length) % slides.length;
               slides.forEach((slide, i) => {
                 const isActive = i === index;
                 slide.classList.toggle("is-active", isActive);
-                syncSlideMedia(slide, isActive);
+                if (playMedia) {
+                  syncSlideMedia(slide, isActive);
+                } else if (!isActive) {
+                  const video = getSlideVideo(slide);
+                  if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                  }
+                }
               });
               if (counter) {
                 counter.textContent = `${index + 1} / ${slides.length}`;
               }
+            }
+
+            function showSlide(nextIndex) {
+              setGalleryIndex(nextIndex, { playMedia: true });
             }
 
             showSlide(index);
@@ -584,22 +700,15 @@
             if (videos.length && viewport) {
               viewport.classList.add("media-gallery__viewport--expandable");
               viewport.addEventListener("click", () => {
-                const activeSlide = slides[index];
-                const video = getSlideVideo(activeSlide);
-                if (!video) return;
-                const caption = activeSlide.querySelector(".media-gallery__caption");
-                const title =
-                  caption?.textContent?.trim() ||
-                  video.getAttribute("aria-label") ||
-                  "VFX";
-                const currentTime = video.currentTime;
-                video.pause();
                 openVideoLightbox({
-                  src: video.currentSrc || video.src,
-                  title,
-                  muted: isMuted,
-                  currentTime,
-                  onClose: () => tryPlayVideo(video),
+                  slides,
+                  videos,
+                  index,
+                  isMuted,
+                  getSlideVideo,
+                  setGalleryIndex,
+                  tryPlayVideo,
+                  updateMuteUi,
                 });
               });
             }
@@ -611,6 +720,11 @@
                 video.muted = isMuted;
               });
               updateMuteUi();
+              if (videoLightboxSession && videoLightboxSession.videos === videos) {
+                videoLightboxSession.isMuted = isMuted;
+                videoLightboxVideo.muted = isMuted;
+                updateLightboxMuteUi();
+              }
               const active = getSlideVideo(slides[index]);
               if (active && !active.paused) active.play().catch(() => {});
             });
