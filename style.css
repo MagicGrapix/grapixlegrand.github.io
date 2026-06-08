@@ -1073,7 +1073,12 @@ body.work-overlay-open {
   line-height: 1.45;
 }
 
-.work-detail:has(.visual-experiments),
+.work-detail:has(.visual-experiments) {
+  width: min(80vw, calc(100vw - 2.5rem));
+  max-width: min(80vw, calc(100vw - 2.5rem));
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
 .work-detail:has(.painting-page),
 .work-detail:has(.video-card--inline) {
   padding: clamp(1.5rem, 3vw, 2.5rem);
@@ -1122,6 +1127,31 @@ body.work-overlay-open {
   margin-top: 0.5rem;
 }
 
+.video-card--inline .video-card__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #000;
+  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.35);
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .visual-experiments {
   display: grid;
   gap: 1.25rem;
@@ -1134,7 +1164,7 @@ body.work-overlay-open {
   margin-top: 0.5rem;
 }
 
-.video-card {
+.visual-experiments .video-card {
   display: grid;
   grid-template-rows: auto auto auto;
   gap: 0.45rem;
@@ -1164,25 +1194,6 @@ body.work-overlay-open {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-.visual-experiments .video-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: #000;
-  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.35);
-}
-
-.video-wrapper iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
 }
 
 @media (max-width: 720px) {
