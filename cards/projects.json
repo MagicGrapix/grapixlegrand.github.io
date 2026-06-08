@@ -4,8 +4,9 @@
     "visual",
     "thesis",
     "backroom",
+    "painting",
     "raytracer",
-    "painting"
+    "paradisland"
   ],
   "projects": {
     "knockback": {
@@ -53,6 +54,15 @@
       "preview": "./resources/backrooms_level2/BackroomsLevel2.jpeg",
       "previewFit": "cover",
       "detail": "backroom.html"
+    },
+    "paradisland": {
+      "title": "Paradisland",
+      "meta": "2020 · Academic project · EPFL",
+      "summary": "EPFL graphics project: water shader, screen-space reflections, shadows, and outlining.",
+      "chips": ["GLSL", "JavaScript", "Regl", "WebGL", "EPFL"],
+      "preview": "https://img.youtube.com/vi/6Hjo8ENWcQE/hqdefault.jpg",
+      "previewFit": "cover",
+      "detail": "paradisland.html"
     },
     "painting": {
       "title": "Art & Visual Work",
