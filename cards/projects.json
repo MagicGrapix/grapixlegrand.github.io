@@ -13,7 +13,7 @@
     "knockback": {
       "title": "Knockback Arena",
       "meta": "2026–now · Personal prototype",
-      "summary": "Personal Roblox arena prototype: knockback combat, weapons, match flow, and client/server structure.",
+      "summary": "Fast-paced Roblox multiplayer arena: percentage-based knockback, weapon pickups, and last-one-standing combat.",
       "chips": ["Roblox", "TypeScript", "Combat", "Multiplayer", "Gameplay"],
       "preview": "./resources/knockback_arena/logo.jpg",
       "previewFit": "contain",
