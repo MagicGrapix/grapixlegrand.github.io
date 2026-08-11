@@ -340,11 +340,6 @@ button.btn {
 
 .pro-work {
   padding: 1.5rem 1.5rem 1.65rem;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--card);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.4);
 }
 
 .pro-work__grid {
@@ -368,11 +363,6 @@ button.btn {
 
 .work {
   padding: 1.5rem 1.5rem 1.65rem;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--card);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.4);
 }
 
 .work__header h2 {
@@ -489,7 +479,7 @@ body.work-overlay-open {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 0;
   background: rgba(15, 23, 42, 0.55);
   color: inherit;
   font: inherit;
