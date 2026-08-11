@@ -1,0 +1,32 @@
+{
+  "order": ["knockback", "backroom", "catrine"],
+  "projects": {
+    "knockback": {
+      "title": "Knockback Arena",
+      "meta": "2026–now · Personal prototype",
+      "summary": "Fast-paced Roblox multiplayer arena: percentage-based knockback, weapon pickups, and last-one-standing combat.",
+      "chips": ["Roblox", "TypeScript", "Combat", "Multiplayer", "Gameplay"],
+      "preview": "./resources/knockback_arena/logo.jpg",
+      "previewFit": "contain",
+      "detail": "knockback.html"
+    },
+    "backroom": {
+      "title": "Backrooms Level 2",
+      "meta": "2023 · Unity game prototype",
+      "summary": "Backrooms-inspired Unity prototype with key cards, AI monster, and liminal atmosphere.",
+      "chips": ["Unity", "C#", "ProBuilder", "AI", "Level design"],
+      "preview": "./resources/backrooms_level2/BackroomsLevel2.jpeg",
+      "previewFit": "cover",
+      "detail": "backroom.html"
+    },
+    "catrine": {
+      "title": "Catrine",
+      "meta": "2022 · Academic project · ETH Game Lab",
+      "summary": "ETH Game Lab team project: voxel puzzle game with sand SPH simulation, Mixamo animations, and MagicaVoxel art.",
+      "chips": ["C++", "SPH", "MagicaVoxel", "MonoGame", "ETH Game Lab"],
+      "preview": "https://img.youtube.com/vi/Kc8jHOonkUY/hqdefault.jpg",
+      "previewFit": "cover",
+      "detail": "catrine.html"
+    }
+  }
+}

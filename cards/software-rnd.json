@@ -1,0 +1,30 @@
+{
+  "order": ["genai", "thesis", "raytracer"],
+  "projects": {
+    "genai": {
+      "title": "Controlling Generative AI for Game Content",
+      "meta": "R&D · Generative AI · 2025",
+      "summary": "Research into structured generation, lore grounding, multimodal evaluation and feedback loops for controllable AI-generated game content.",
+      "chips": ["Generative AI", "LLMs", "RAG", "Computer Vision"],
+      "link": "./articles/generative-ai/"
+    },
+    "thesis": {
+      "title": "Master Thesis Prototype",
+      "meta": "2024 · AI / gameplay research prototype",
+      "summary": "ETH thesis prototype (Andrometica Cynus): LLM + MCTS for chat-driven NPC behavior in a 2D Bevy game.",
+      "chips": ["Bevy", "Rust", "LLMs", "MCTS", "ETH Zurich"],
+      "preview": "./resources/master_thesis/MasterThesis.jpg",
+      "previewFit": "cover",
+      "detail": "thesis.html"
+    },
+    "raytracer": {
+      "title": "Raytracer",
+      "meta": "2022 · Computer graphics project",
+      "summary": "CG22 path tracer at ETH Zurich; final scene presented at the section Disney renderer competition.",
+      "chips": ["C++", "Path tracing", "Rendering", "Computer graphics", "Open Image Denoise", "ETH Zurich"],
+      "preview": "./cg22/images/final_scene_full_denoised.jpeg",
+      "previewFit": "cover",
+      "detail": "raytracer.html"
+    }
+  }
+}

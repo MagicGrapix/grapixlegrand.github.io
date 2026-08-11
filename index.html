@@ -139,18 +139,57 @@
         <div class="pro-work__grid" id="pro-work-grid" role="list"></div>
       </section>
 
-      <section class="work" aria-labelledby="work-heading">
+      <section class="work" aria-labelledby="personal-games-heading">
         <header class="work__header">
-          <p class="eyebrow">Portfolio</p>
-          <h2 id="work-heading">Selected Work</h2>
+          <p class="eyebrow">Personal Projects</p>
+          <h2 id="personal-games-heading">Personal Games</h2>
           <p class="work__subtitle">
-            A selection of professional work, personal prototypes, visual
-            experiments, and technical projects.
+            Self-directed prototypes and personal gameplay experiments.
           </p>
         </header>
 
         <div class="work-panel">
-          <div class="work-grid" id="work-grid" role="list"></div>
+          <div
+            class="work-grid"
+            id="personal-games-grid"
+            role="list"
+          ></div>
+        </div>
+      </section>
+
+      <section class="work" aria-labelledby="software-rnd-heading">
+        <header class="work__header">
+          <p class="eyebrow">Software &amp; Research</p>
+          <h2 id="software-rnd-heading">Software Projects &amp; R&amp;D</h2>
+          <p class="work__subtitle">
+            Technical prototypes, research notes, and simulation/graphics work.
+          </p>
+        </header>
+
+        <div class="work-panel">
+          <div
+            class="work-grid"
+            id="software-rnd-grid"
+            role="list"
+          ></div>
+        </div>
+      </section>
+
+      <section class="work" aria-labelledby="art-visual-heading">
+        <header class="work__header">
+          <p class="eyebrow">Creative Work</p>
+          <h2 id="art-visual-heading">Art &amp; Visual Work</h2>
+          <p class="work__subtitle">
+            Visual experiments, art studies, and rendering-focused projects.
+          </p>
+        </header>
+
+        <div class="work-panel">
+          <div
+            class="work-grid"
+            id="art-visual-grid"
+            role="list"
+          ></div>
         </div>
       </section>
 
@@ -293,7 +332,11 @@
         const GAME_CV_URL =
           "https://itch.io/embed-upload/17801082?color=333333";
 
-        const workGrid = document.getElementById("work-grid");
+        const personalGamesGrid = document.getElementById(
+          "personal-games-grid"
+        );
+        const softwareRndGrid = document.getElementById("software-rnd-grid");
+        const artVisualGrid = document.getElementById("art-visual-grid");
         const proWorkGrid = document.getElementById("pro-work-grid");
         const workOverlay = document.getElementById("work-overlay");
         const workDetail = document.getElementById("work-detail");
@@ -304,8 +347,26 @@
         const youtubeIframe = document.getElementById("youtube-modal-iframe");
         const youtubeClose = document.getElementById("youtube-modal-close");
 
-        let projectOrder = [];
-        let projects = {};
+        const CATEGORY_SECTIONS = [
+          {
+            file: "personal-games.json",
+            grid: personalGamesGrid,
+            backLabel: "&larr; Back to Personal Games",
+          },
+          {
+            file: "software-rnd.json",
+            grid: softwareRndGrid,
+            backLabel:
+              "&larr; Back to Software Projects &amp; R&amp;D",
+          },
+          {
+            file: "art-visual.json",
+            grid: artVisualGrid,
+            backLabel: "&larr; Back to Art &amp; Visual Work",
+          },
+        ];
+
+        const projectRegistry = {}; // id -> { project, backLabel }
         let proProjectOrder = [];
         let proProjects = {};
         let activeProjectId = null;
@@ -381,8 +442,25 @@
                 ? `<div class="${mediaClass}"><img src="${project.preview}" alt="${project.title} preview" /></div>`
                 : `<div class="work-card__media" aria-hidden="true"></div>`;
 
+              // Support two card types:
+              // 1) overlay projects (button with data-detail)
+              // 2) external/standalone links (anchor with href)
+              if (project.link) {
+                return `
+            <a class="${classes}" href="${project.link}" role="listitem" data-project-id="${id}">
+              ${mediaHtml}
+              <div class="work-card__body">
+                <h3 class="work-card__title">${project.title}</h3>
+                <p class="work-card__meta">${project.meta}</p>
+                <p class="work-card__desc">${project.summary}</p>
+                <div class="work-card__chips">${chipsHtml(project.chips)}</div>
+              </div>
+            </a>
+          `;
+              }
+
               return `
-            <button type="button" class="${classes}" data-detail="${project.detail}" role="listitem">
+            <button type="button" class="${classes}" data-detail="${project.detail}" role="listitem" data-project-id="${id}">
               ${mediaHtml}
               <div class="work-card__body">
                 <h3 class="work-card__title">${project.title}</h3>
@@ -394,10 +472,6 @@
           `;
             })
             .join("");
-        }
-
-        function renderGrid() {
-          renderCardGrid(workGrid, projectOrder, projects, "");
         }
 
         function renderProGrid() {
@@ -792,14 +866,15 @@
         }
 
         function openProject(id) {
-          const project = projects[id];
-          if (!project) return;
+          const entry = projectRegistry[id];
+          const project = entry?.project;
+          if (!project || !entry) return;
 
           activeProjectId = id;
           activeSubId = null;
           showDetailFromFile(
             project.detail,
-            "&larr; Back to Selected Work",
+            entry.backLabel,
             "grid"
           );
         }
@@ -810,23 +885,27 @@
         }
 
         async function openArchive() {
-          const project = projects[activeProjectId];
-          if (!project) return;
+          const entry = projectRegistry[activeProjectId];
+          const project = entry?.project;
+          if (!project || !entry) return;
           activeSubId = null;
           await showDetailFromFile(
             project.detail,
-            "&larr; Back to Selected Work",
+            entry.backLabel,
             "grid"
           );
         }
 
-        workGrid.addEventListener("click", (e) => {
-          const card = e.target.closest("[data-detail]");
-          if (!card) return;
-          const id = projectOrder.find(
-            (key) => projects[key].detail === card.dataset.detail
+        function handleCategoryCardClick(e) {
+          const card = e.target.closest(
+            "[data-project-id][data-detail]"
           );
-          if (id) openProject(id);
+          if (!card) return;
+          openProject(card.dataset.projectId);
+        }
+
+        CATEGORY_SECTIONS.forEach((section) => {
+          section.grid.addEventListener("click", handleCategoryCardClick);
         });
 
         proWorkGrid.addEventListener("click", (e) => {
@@ -881,21 +960,41 @@
         }
 
         Promise.all([
-          loadJson("projects.json"),
+          ...CATEGORY_SECTIONS.map((s) => loadJson(s.file)),
           loadJson("professional-work.json"),
         ])
-          .then(([workData, proData]) => {
-            projectOrder = workData.order;
-            projects = workData.projects;
+          .then((results) => {
+            const categoryResults = results.slice(0, CATEGORY_SECTIONS.length);
+            const proData = results[CATEGORY_SECTIONS.length];
+
+            CATEGORY_SECTIONS.forEach((section, idx) => {
+              const workData = categoryResults[idx];
+              renderCardGrid(
+                section.grid,
+                workData.order,
+                workData.projects,
+                ""
+              );
+
+              Object.entries(workData.projects).forEach(([id, project]) => {
+                projectRegistry[id] = {
+                  project,
+                  backLabel: section.backLabel,
+                };
+              });
+            });
+
             proProjectOrder = proData.order;
             proProjects = proData.projects;
-            renderGrid();
             renderProGrid();
           })
           .catch((error) => {
-            workGrid.innerHTML =
+            const message =
               '<p class="work-grid__error">Could not load projects. Run the site with a local server (e.g. py -m http.server).</p>';
-            proWorkGrid.innerHTML = workGrid.innerHTML;
+            CATEGORY_SECTIONS.forEach((s) => {
+              s.grid.innerHTML = message;
+            });
+            proWorkGrid.innerHTML = message;
             console.error(error);
           });
 
