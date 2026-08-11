@@ -68,8 +68,17 @@ body {
   box-shadow: 0 16px 40px rgba(2, 6, 23, 0.4);
 }
 
-.intro {
+.hero-panel {
+  background: #0f172a;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  display: grid;
+  gap: 1.25rem;
   padding: 1.5rem;
+}
+
+.intro {
+  padding: 0;
   display: grid;
   grid-template-columns: 220px 1fr;
   gap: 1.5rem;
@@ -157,37 +166,16 @@ body {
   font-weight: 700;
 }
 
+.cta-block {
+  display: grid;
+  gap: 1rem;
+}
+
 .cta-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-}
-
-.cta-card {
-  padding: 1.1rem 1.15rem 1.2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.cta-card--featured {
-  border-color: rgba(34, 211, 238, 0.38);
-  background:
-    linear-gradient(160deg, rgba(8, 145, 178, 0.22) 0%, var(--card) 50%),
-    var(--card);
-}
-
-.cta-card__title {
-  margin: 0 0 0.35rem;
-  font-size: 1.05rem;
-}
-
-.cta-card__subtitle {
-  margin: 0 0 0.9rem;
-  flex-grow: 1;
-  color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.45;
+  align-items: stretch;
 }
 
 .btn {
@@ -199,13 +187,14 @@ body {
   padding: 0.6rem 0.85rem;
   font-size: 0.88rem;
   font-weight: 600;
+  background: #1e293b;
   transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
 }
 
 button.btn {
   cursor: pointer;
   font-family: inherit;
-  background: transparent;
+  background: #1e293b;
 }
 
 .btn:hover,
@@ -213,7 +202,36 @@ button.btn {
   outline: none;
   transform: translateY(-1px);
   border-color: rgba(34, 211, 238, 0.6);
-  background: rgba(30, 41, 59, 0.55);
+  background: #334155;
+}
+
+.btn--download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  height: 100%;
+  min-height: 2.75rem;
+  text-align: center;
+  padding: 0.65rem 1rem;
+  line-height: 1.25;
+  background: #1e293b;
+}
+
+.btn--download span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn--download i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 1.15rem;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .btn--primary {

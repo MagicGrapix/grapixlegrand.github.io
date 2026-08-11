@@ -18,114 +18,116 @@
   </head>
   <body>
     <main class="page">
-      <section class="card intro">
-        <img
-          class="profile-image"
-          src="./resources/profile.jpg"
-          alt="Portrait of Quentin Guignard"
-        />
-        <div class="intro-text">
-          <p class="eyebrow">Portfolio</p>
-          <h1>Quentin Guignard</h1>
-          <p>
-            I'm a game developer from Switzerland with a background in
-            Computer Science from EPFL and ETH Zurich.
-          </p>
-          <p>
-            I enjoy building interactive, visual and technical systems, from
-            gameplay prototypes to tools, VFX and AI-assisted workflows.
-          </p>
-          <ul class="profile-links" aria-label="Profiles and social links">
-            <li>
-              <a
-                class="profile-links__chip"
-                href="https://www.linkedin.com/in/quentin-guignard-9b13a6301/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
-                <span>LinkedIn</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="profile-links__chip"
-                href="https://github.com/MagicGrapix"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i class="fa-brands fa-github" aria-hidden="true"></i>
-                <span>GitHub</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="profile-links__chip"
-                href="https://grapixlegrand.itch.io/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i class="fa-brands fa-itch-io" aria-hidden="true"></i>
-                <span>itch.io</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="profile-links__chip"
-                href="https://www.youtube.com/@unrealisticdreamer9059"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i class="fa-brands fa-youtube" aria-hidden="true"></i>
-                <span>YouTube</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="profile-links__chip"
-                href="mailto:quentin.guignard@outlook.com"
-              >
-                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
-                <span>quentin.guignard@outlook.com</span>
-              </a>
-            </li>
-          </ul>
+      <section class="hero-panel">
+        <div class="intro">
+          <img
+            class="profile-image"
+            src="./resources/profile.jpg"
+            alt="Portrait of Quentin Guignard"
+          />
+          <div class="intro-text">
+            <p class="eyebrow">Portfolio</p>
+            <h1>Quentin Guignard</h1>
+            <p>
+              I'm a game developer from Switzerland with a background in
+              Computer Science from EPFL and ETH Zurich.
+            </p>
+            <p>
+              I enjoy building interactive, visual and technical systems, from
+              gameplay prototypes to tools, VFX and AI-assisted workflows.
+            </p>
+            <ul class="profile-links" aria-label="Profiles and social links">
+              <li>
+                <a
+                  class="profile-links__chip"
+                  href="https://www.linkedin.com/in/quentin-guignard-9b13a6301/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                  <span>LinkedIn</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="profile-links__chip"
+                  href="https://github.com/MagicGrapix"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class="fa-brands fa-github" aria-hidden="true"></i>
+                  <span>GitHub</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="profile-links__chip"
+                  href="https://grapixlegrand.itch.io/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class="fa-brands fa-itch-io" aria-hidden="true"></i>
+                  <span>itch.io</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="profile-links__chip"
+                  href="https://www.youtube.com/@unrealisticdreamer9059"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                  <span>YouTube</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="profile-links__chip"
+                  href="mailto:quentin.guignard@outlook.com"
+                >
+                  <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                  <span>quentin.guignard@outlook.com</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </section>
 
-      <section class="cta-row" aria-label="CV options">
-        <article class="card cta-card">
-          <h2 class="cta-card__title">Classic CV</h2>
-          <p class="cta-card__subtitle">
-            Download the traditional PDF version.
-          </p>
-          <a class="btn" href="./QuentinGuignardCV.pdf" download>Download PDF</a>
-        </article>
-        <article class="card cta-card">
-          <h2 class="cta-card__title">VFX Portfolio</h2>
-          <p class="cta-card__subtitle">
-            Download my visual effects portfolio (2026).
-          </p>
-          <a class="btn" href="./QuentinGuignardPortfolio2026.pdf" download
-            >Download PDF</a
-          >
-        </article>
-        <article class="card cta-card">
-          <h2 class="cta-card__title">Video CV</h2>
-          <p class="cta-card__subtitle">
-            Watch a 90-second video where I present myself!
-          </p>
-          <button type="button" class="btn" id="video-cv-open">Watch Video</button>
-        </article>
-        <article class="card cta-card cta-card--featured">
-          <h2 class="cta-card__title">Game CV</h2>
-          <p class="cta-card__subtitle">
-            Play a short experience to discover my profile.
-          </p>
-          <button type="button" class="btn btn--primary" id="game-cv-open">
-            Play Game
-          </button>
-        </article>
+        <div class="cta-block" aria-label="CV options">
+          <div class="cta-row">
+            <button
+              type="button"
+              class="btn btn--download"
+              id="video-cv-open"
+            >
+              <span>Intro Video</span>
+              <i class="fa-solid fa-video" aria-hidden="true"></i>
+            </button>
+            <a class="btn btn--download" href="./QuentinGuignardCV.pdf" download>
+              <span
+                >Game developer &amp;<br />Technical artist</span
+              >
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+            <a
+              class="btn btn--download"
+              href="./QuentinGuignardPortfolio2026.pdf"
+              download
+            >
+              <span>VFX Portfolio</span>
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+            <a
+              class="btn btn--download"
+              href="./QuentinGuignardSoftwareEngineerCV.pdf"
+              download
+            >
+              <span>Software Engineer CV</span>
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
       </section>
 
       <section class="pro-work" aria-labelledby="pro-work-heading">
@@ -985,10 +987,8 @@
           });
 
         document.getElementById("video-cv-open").addEventListener("click", () => {
-          openYoutubeModal("Video CV", "JJZnswDj0YA", "vertical");
+          openYoutubeModal("Intro Video", "JJZnswDj0YA", "vertical");
         });
-
-        document.getElementById("game-cv-open").addEventListener("click", openGameCv);
 
         youtubeClose.addEventListener("click", closeYoutubeModal);
         youtubeModal.addEventListener("click", (e) => {
