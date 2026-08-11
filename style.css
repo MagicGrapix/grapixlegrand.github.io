@@ -57,7 +57,7 @@ body {
 .page {
   width: min(1140px, 100%);
   display: grid;
-  gap: 1.25rem;
+  gap: 2.25rem;
 }
 
 .card {
@@ -69,6 +69,8 @@ body {
 }
 
 .hero-panel {
+  width: 100%;
+  box-sizing: border-box;
   background: #0f172a;
   border: 1px solid var(--border);
   border-radius: 0;
@@ -356,8 +358,11 @@ button.btn {
   border: 0;
 }
 
-.pro-work {
-  padding: 1.5rem 1.5rem 1.65rem;
+.pro-work,
+.work {
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  padding: 0 1.5rem;
 }
 
 .pro-work__grid {
@@ -377,10 +382,6 @@ button.btn {
 
 .work-card--pro .work-card__media:empty::after {
   content: none;
-}
-
-.work {
-  padding: 1.5rem 1.5rem 1.65rem;
 }
 
 .work__header h2 {
@@ -1606,7 +1607,12 @@ body.video-lightbox-open {
 }
 
 .contact {
-  padding: 1.4rem 1.5rem 1.6rem;
+  width: 100%;
+  box-sizing: border-box;
+  background: #0f172a;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.5rem;
 }
 
 .contact h2 {
