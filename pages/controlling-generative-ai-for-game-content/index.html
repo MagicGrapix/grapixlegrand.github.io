@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controlling Generative AI for Game Content | Quentin Guignard</title>
+    <meta
+      name="description"
+      content="Research into structured generation, lore grounding, multimodal evaluation and feedback loops for controllable AI-generated game content."
+    />
+    <link rel="stylesheet" href="../../style.css" />
+  </head>
+  <body>
+    <main class="page article-page">
+      <a class="btn btn--back" href="../../">← Back to Portfolio</a>
+
+      <article class="article-shell">
+        <div class="article-content" id="article-content">
+          <p class="article-content__loading">Loading article…</p>
+        </div>
+      </article>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      (async function () {
+        const target = document.getElementById("article-content");
+        try {
+          const response = await fetch("./article.md", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error("Failed to load article.md (" + response.status + ")");
+          }
+          const markdown = await response.text();
+          target.innerHTML = marked.parse(markdown);
+        } catch (error) {
+          target.innerHTML =
+            '<p class="article-content__error">Could not load the article. Open this page via a local server (not as a file:// URL).</p>';
+          console.error(error);
+        }
+      })();
+    </script>
+  </body>
+</html>

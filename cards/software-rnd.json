@@ -6,7 +6,7 @@
       "meta": "R&D · Generative AI · 2025",
       "summary": "Research into structured generation, lore grounding, multimodal evaluation and feedback loops for controllable AI-generated game content.",
       "chips": ["Generative AI", "LLMs", "RAG", "Computer Vision"],
-      "link": "./articles/generative-ai/"
+      "link": "./pages/controlling-generative-ai-for-game-content/"
     },
     "thesis": {
       "title": "Master Thesis Prototype",

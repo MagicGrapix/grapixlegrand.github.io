@@ -1687,3 +1687,141 @@ body.video-lightbox-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* Standalone article pages */
+.article-page {
+  gap: 1.25rem;
+}
+
+.article-page .btn--back {
+  justify-self: start;
+  width: fit-content;
+  background: #1e293b;
+}
+
+.article-shell {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0f172a;
+  border: 1px solid var(--border);
+  padding: 1.5rem clamp(1.25rem, 3vw, 2.5rem) 2rem;
+}
+
+.article-content {
+  max-width: 72ch;
+  margin: 0 auto;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.article-content__loading,
+.article-content__error {
+  color: var(--muted);
+  margin: 0;
+}
+
+.article-content__error {
+  color: #fca5a5;
+}
+
+.article-content > :first-child {
+  margin-top: 0;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+  line-height: 1.25;
+  margin: 1.75rem 0 0.75rem;
+}
+
+.article-content h1 {
+  font-size: clamp(1.7rem, 2.4vw, 2.15rem);
+  margin-top: 0;
+}
+
+.article-content h2 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  color: var(--accent);
+}
+
+.article-content h3 {
+  font-size: 1.1rem;
+}
+
+.article-content p,
+.article-content ul,
+.article-content ol,
+.article-content blockquote {
+  margin: 0 0 1rem;
+}
+
+.article-content ul,
+.article-content ol {
+  padding-left: 1.25rem;
+}
+
+.article-content li + li {
+  margin-top: 0.35rem;
+}
+
+.article-content a {
+  color: var(--accent);
+}
+
+.article-content a:hover,
+.article-content a:focus-visible {
+  color: #67e8f9;
+}
+
+.article-content strong {
+  font-weight: 700;
+}
+
+.article-content blockquote {
+  margin-left: 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border-left: 3px solid rgba(34, 211, 238, 0.55);
+  color: var(--muted);
+}
+
+.article-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.25rem 0;
+  border: 1px solid var(--border);
+}
+
+.article-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(2, 6, 23, 0.65);
+  border: 1px solid var(--border);
+}
+
+.article-content pre {
+  margin: 0 0 1.15rem;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid var(--border);
+}
+
+.article-content pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 600px) {
+  .article-shell {
+    padding: 1.15rem 1rem 1.5rem;
+  }
+}
