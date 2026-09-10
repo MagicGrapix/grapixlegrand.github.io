@@ -30,12 +30,12 @@
     },
     "levek": {
       "title": "LevekGL",
-      "meta": "Student project · Experimental graphics engine",
-      "summary": "A C++ / OpenGL learning project built step by step, from Phong lighting to Assimp scene loading and Bullet rigid-body physics.",
+      "meta": "2021–2023 · Student graphics R&D",
+      "summary": "A C++ / OpenGL rendering library built to explore shaders, scene loading, GPU resources and physics experiments.",
       "chips": ["C++", "OpenGL", "GLSL", "Assimp", "Bullet Physics"],
-      "preview": "./resources/levek/levek-thumbnail.jpg",
+      "preview": "./resources/levek/levek-phong-lighting.jpg",
       "previewFit": "cover",
-      "link": "https://github.com/MagicGrapix/LevekGL"
+      "link": "./pages/levekgl/"
     }
   }
 }
