@@ -1,11 +1,13 @@
 {
-  "order": ["genai", "thesis", "raytracer"],
+  "order": ["genai", "thesis", "raytracer", "levek"],
   "projects": {
     "genai": {
       "title": "Controlling Generative AI for Game Content",
       "meta": "R&D · Generative AI · 2025",
       "summary": "Research into structured generation, lore grounding, multimodal evaluation and feedback loops for controllable AI-generated game content.",
       "chips": ["Generative AI", "LLMs", "RAG", "Computer Vision"],
+      "preview": "./pages/controlling-generative-ai-for-game-content/images/image_pipeline.jpg",
+      "previewFit": "cover",
       "link": "./pages/controlling-generative-ai-for-game-content/"
     },
     "thesis": {
@@ -25,6 +27,15 @@
       "preview": "./cg22/images/final_scene_full_denoised.jpeg",
       "previewFit": "cover",
       "detail": "raytracer.html"
+    },
+    "levek": {
+      "title": "LevekGL",
+      "meta": "Student project · Experimental graphics engine",
+      "summary": "A C++ / OpenGL learning project built step by step, from Phong lighting to Assimp scene loading and Bullet rigid-body physics.",
+      "chips": ["C++", "OpenGL", "GLSL", "Assimp", "Bullet Physics"],
+      "preview": "./resources/levek/levek-thumbnail.jpg",
+      "previewFit": "cover",
+      "link": "https://github.com/MagicGrapix/LevekGL"
     }
   }
 }

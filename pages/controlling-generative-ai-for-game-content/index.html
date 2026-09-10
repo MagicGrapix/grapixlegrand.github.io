@@ -1,43 +1,188 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Controlling Generative AI for Game Content | Quentin Guignard</title>
-    <meta
-      name="description"
-      content="Research into structured generation, lore grounding, multimodal evaluation and feedback loops for controllable AI-generated game content."
-    />
-    <link rel="stylesheet" href="../../style.css" />
-  </head>
-  <body>
-    <main class="page article-page">
-      <a class="btn btn--back" href="../../">← Back to Portfolio</a>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Controlling Generative AI for Game Content | Quentin Guignard</title>
+  <meta name="description" content="An R&D project developed at OZWE: exploring narrative structure, lore retrieval and visual evaluation for AI-generated postcard quests.">
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    body.article-view { display: block; padding: clamp(1rem, 3vw, 3rem) 1rem; }
+    .article-view .article-page { margin: 0 auto; width: min(1140px, 100%); gap: 1.5rem; }
+    .article-view .article-shell { padding: clamp(1.25rem, 4vw, 3.5rem); }
+    .article-view .article-content {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 70ch) minmax(0, 1fr);
+      max-width: none; margin: 0; font-size: 1.0625rem; line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+    .article-view .article-content > * { grid-column: 2; min-width: 0; }
+    .article-view .article-content h1 {
+      font-size: clamp(2rem, 4.4vw, 3.3rem); line-height: 1.12;
+      letter-spacing: -.035em; margin: 0 0 1rem; text-wrap: balance;
+    }
+    .article-view .article-content h1 + p { color: var(--muted); font-size: .95rem; margin-bottom: 2rem; }
+    .article-view .article-content h2 { font-size: clamp(1.35rem, 2.5vw, 1.7rem); margin: 2.7rem 0 1rem; line-height: 1.3; scroll-margin-top: 1rem; }
+    .article-view .article-content p { margin: 0 0 1.2rem; }
+    .article-view .article-content li + li { margin-top: .4rem; }
+    .article-view .article-content li::marker { color: var(--accent); }
+    .article-view .article-content figure {
+      grid-column: 1 / -1; margin: 1.6rem 0 2rem !important;
+      padding: clamp(.5rem, 1.8vw, 1.2rem); border: 1px solid var(--border);
+      background: #101722; border-radius: 10px; overflow: hidden;
+    }
+    .article-view .article-content figure img,
+    .article-view .article-content details img { border: 0; margin: 0 auto; object-fit: contain; }
+    .article-view .article-content figure > a { display: block; }
+    .article-view .article-content figcaption { margin: .85rem .25rem .1rem; color: var(--muted); font-size: .9rem; line-height: 1.6; text-align: center; }
+    .article-view .article-content figcaption em { font-style: normal; }
+    .article-view .article-content .figure-pair { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem !important; align-items: center; }
+    .article-view .figure-pair a { display: flex; justify-content: center; min-width: 0; }
+    .article-view .article-content .figure-pair img { width: 100% !important; max-height: 460px !important; height: auto !important; }
+    .article-view .article-content .figure-pair img[src*="hand-"] { max-height: 360px !important; }
+    .article-view a.image-expand { cursor: zoom-in; border-radius: 4px; }
+    .article-view a.image-expand:hover img { filter: brightness(1.05); }
+    .article-view :focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+    .article-view .article-content details { margin: .25rem 0 1.5rem; border: 1px solid var(--border); padding: 1rem; border-radius: 8px; }
+    .article-view .article-content summary { cursor: pointer; color: var(--accent); font-weight: 600; line-height: 1.5; }
+    .article-view .article-content details[open] summary { margin-bottom: 1rem; }
+    .image-dialog { width: min(1500px, 96vw); max-width: 96vw; max-height: 94dvh; padding: 1rem; border: 1px solid var(--border); border-radius: 10px; background: #0b1220; color: var(--text); }
+    .image-dialog::backdrop { background: rgba(2, 6, 23, .9); }
+    .image-dialog__toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .image-dialog a { color: var(--accent); }
+    .image-dialog button { color: var(--text); background: #1e293b; border: 1px solid var(--border); border-radius: 6px; padding: .65rem 1rem; font: inherit; cursor: pointer; }
+    .image-dialog img { display: block; max-width: 100%; max-height: 72dvh; width: auto; height: auto; object-fit: contain; margin: 0 auto; }
+    .image-dialog p { color: var(--muted); font-size: .9rem; line-height: 1.5; margin: 1rem 0 0; }
+    html.image-dialog-open { overflow: hidden; }
+    @media (max-width: 600px) {
+      .article-view .article-shell { padding: 1.2rem; }
+      .article-view .article-content { font-size: 1rem; }
+      .article-view .article-content figure { margin: 1.1rem 0 1.6rem !important; }
+      .article-view .article-content h2 { margin-top: 2rem; }
+      .article-view .article-content .figure-pair { gap: .5rem !important; }
+      .article-view .article-content figcaption { font-size: .875rem; text-align: left; }
+    }
+    @media print {
+      body.article-view { background: white; color: black; padding: 0; }
+      .article-view .article-shell { border: 0; background: white; padding: 0; }
+      .article-view .article-content { color: black; font-size: 11pt; }
+      .article-view .btn--back, .image-dialog { display: none; }
+      .article-view .article-content figure { background: white; break-inside: avoid; }
+      .article-view .article-content h2 { color: black; break-after: avoid; }
+    }
+  </style>
+</head>
+<body class="article-view">
+  <main class="page article-page">
+    <a class="btn btn--back" href="../../">← Back to Portfolio</a>
+    <article class="article-shell" aria-label="Controlling Generative AI for Game Content">
+      <div class="article-content" id="article-content" aria-busy="true">
+        <p class="article-content__loading" role="status">Loading article…</p>
+      </div>
+      <noscript><p>Enable JavaScript to read this article, or <a href="./article.md">open the Markdown version</a>.</p></noscript>
+    </article>
+  </main>
+  <dialog class="image-dialog" id="image-dialog" aria-label="Enlarged illustration" aria-describedby="image-description">
+    <div class="image-dialog__toolbar">
+      <a id="image-original" target="_blank" rel="noopener">Open full-size image ↗</a>
+      <button id="image-close" type="button" autofocus>Close ×</button>
+    </div>
+    <img id="image-preview" alt="">
+    <p id="image-description"></p>
+  </dialog>
+  <script src="./vendor/marked-17.0.5.umd.js"></script>
+  <script>
+    (() => {
+      const content = document.getElementById("article-content");
+      const dialog = document.getElementById("image-dialog");
+      const preview = document.getElementById("image-preview");
+      const original = document.getElementById("image-original");
+      const description = document.getElementById("image-description");
+      let opener = null;
 
-      <article class="article-shell">
-        <div class="article-content" id="article-content">
-          <p class="article-content__loading">Loading article…</p>
-        </div>
-      </article>
-    </main>
+      document.getElementById("image-close").addEventListener("click", () => dialog.close());
+      dialog.addEventListener("click", (event) => {
+        if (event.target !== dialog) return;
+        const box = dialog.getBoundingClientRect();
+        if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
+      });
+      dialog.addEventListener("close", () => {
+        document.documentElement.classList.remove("image-dialog-open");
+        if (opener) opener.focus({ preventScroll: true });
+      });
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-      (async function () {
-        const target = document.getElementById("article-content");
-        try {
-          const response = await fetch("./article.md", { cache: "no-store" });
-          if (!response.ok) {
-            throw new Error("Failed to load article.md (" + response.status + ")");
+      function prepareFigures() {
+        // Turn Markdown image paragraphs and their italic captions into figures.
+        for (const paragraph of [...content.querySelectorAll(":scope > p")]) {
+          const image = paragraph.querySelector("img");
+          if (!image || paragraph.textContent.trim()) continue;
+          const figure = document.createElement("figure");
+          const next = paragraph.nextElementSibling;
+          while (paragraph.firstChild) figure.append(paragraph.firstChild);
+          paragraph.replaceWith(figure);
+          if (next && next.matches("p") && next.children.length === 1 && next.firstElementChild.tagName === "EM") {
+            const caption = document.createElement("figcaption");
+            while (next.firstChild) caption.append(next.firstChild);
+            figure.append(caption);
+            next.remove();
           }
-          const markdown = await response.text();
-          target.innerHTML = marked.parse(markdown);
-        } catch (error) {
-          target.innerHTML =
-            '<p class="article-content__error">Could not load the article. Open this page via a local server (not as a file:// URL).</p>';
-          console.error(error);
         }
-      })();
-    </script>
-  </body>
+        for (const row of content.querySelectorAll("figure > div")) {
+          if (row.querySelectorAll("img").length > 1) row.classList.add("figure-pair");
+        }
+        for (const [index, image] of [...content.querySelectorAll("img")].entries()) {
+          image.decoding = "async";
+          image.loading = index === 0 ? "eager" : "lazy";
+          let link = image.closest("a");
+          if (!link) {
+            link = document.createElement("a");
+            link.href = image.src;
+            image.replaceWith(link);
+            link.append(image);
+          }
+          link.classList.add("image-expand");
+          link.setAttribute("aria-label", "Enlarge: " + (image.alt || "illustration"));
+          link.addEventListener("click", (event) => {
+            if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || typeof dialog.showModal !== "function") return;
+            event.preventDefault();
+            opener = link;
+            preview.src = image.currentSrc || image.src;
+            preview.alt = image.alt;
+            original.href = preview.src;
+            description.textContent = image.alt;
+            dialog.showModal();
+            document.documentElement.classList.add("image-dialog-open");
+          });
+        }
+      }
+
+      async function loadArticle() {
+        try {
+          if (location.protocol === "file:") throw new Error("LOCAL_FILE");
+          const response = await fetch("./article.md", { cache: "no-cache" });
+          if (!response.ok) throw new Error("Article response: " + response.status);
+          if (!window.marked) throw new Error("Markdown reader unavailable");
+          // This Markdown is authored and maintained with the site, including trusted figure HTML.
+          content.innerHTML = marked.parse(await response.text(), { gfm: true });
+          prepareFigures();
+        } catch (error) {
+          content.replaceChildren();
+          const message = document.createElement("p");
+          message.className = "article-content__error";
+          message.setAttribute("role", "alert");
+          message.textContent = location.protocol === "file:"
+            ? "Please open this page through the website or a local web server to load the article."
+            : "The article could not be loaded. Please reload the page or open the text below.";
+          const link = document.createElement("a");
+          link.href = "./article.md";
+          link.textContent = "Read the Markdown article";
+          content.append(message, link);
+          console.error(error);
+        } finally {
+          content.setAttribute("aria-busy", "false");
+        }
+      }
+      loadArticle();
+    })();
+  </script>
+</body>
 </html>
