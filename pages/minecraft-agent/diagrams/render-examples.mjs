@@ -78,8 +78,7 @@ voxels.forEach((layer, y) => {
   voxelSvg += text(945, start + 28, ['Bottom', 'Middle', 'Top'][y], 19, '#aab8cc');
 });
 voxelSvg += text(34, 587, 'S  stone', 21, '#cbd5e1') + text(217, 587, 'D  dirt', 21, '#edbb93')
-  + text(380, 587, 'L  oak_log', 21, '#e6bc79') + text(600, 587, '.  air', 21, '#aab8cc')
-  + text(800, 587, 'Illustration · not a camera view', 18, '#aab8cc');
+  + text(380, 587, 'L  oak_log', 21, '#e6bc79') + text(600, 587, '.  air', 21, '#aab8cc');
 save('voxel-view.svg', 1140, 620, 'One voxel volume, three top-down layers',
   'A half-filled three by three by three voxel volume on the left and the matching ASCII layers on the right. S is stone, D dirt, L oak log and dot air. The real observation tool uses a five by five by four volume.', voxelSvg);
 
@@ -127,12 +126,11 @@ save('shelter-layers.svg', 1200, 510, 'Four horizontal layers of a wooden shelte
 const recipeRows = ['AA.', 'AB.', '.B.'];
 assert.equal(recipeRows.join('').split('A').length - 1, 3);
 assert.equal(recipeRows.join('').split('B').length - 1, 2);
-const png = readFileSync(image('wooden-axe-crafting.png')).toString('base64');
+const recipeImage = readFileSync(image('wooden_axe_recipe.jpg')).toString('base64');
 let recipeSvg = text(32, 44, 'A recipe the planner can read', 28)
   + text(32, 78, 'Wooden axe · 3 oak planks + 2 sticks → 1 item', 21, '#aab8cc')
   + rect(28, 103, 437, 519, '#151f2e') + rect(490, 103, 622, 519, '#151f2e')
-  + `<image href="data:image/png;base64,${png}" x="44" y="128" width="405" height="444" preserveAspectRatio="xMidYMid meet"/>`
-  + text(246, 597, 'Illustration, not a gameplay capture', 18, '#aab8cc', 'text-anchor="middle"');
+  + `<image href="data:image/jpeg;base64,${recipeImage}" x="44" y="128" width="405" height="470" preserveAspectRatio="xMidYMid meet"/>`;
 const recipeLines = [
   ['wooden_axe x1 per craft', 23, '#67e8f9'],
   ['Variant 1/1: Oak planks', 20, '#aab8cc'],
@@ -148,5 +146,5 @@ recipeLines.forEach(([content, size, color], i) => {
 });
 recipeSvg += text(522, 549, 'Catalog knowledge only; not a check of', 19, '#aab8cc')
   + text(522, 579, 'current ingredients or station access.', 19, '#aab8cc');
-save('crafting-recipe.svg', 1140, 650, 'Wooden axe illustration and recipe text',
-  'A generated image of a crafting table and wooden axe appears beside the recipe catalog text. The three by three grid has planks in the top-left, top-middle and middle-left cells, and sticks in the middle-middle and bottom-middle cells. The other cells are empty.', recipeSvg);
+save('crafting-recipe.svg', 1140, 650, 'Wooden axe recipe image and catalog text',
+  'The author-provided wooden axe recipe image appears beside the recipe catalog text. The three by three grid has planks in the top-left, top-middle and middle-left cells, and sticks in the middle-middle and bottom-middle cells. The other cells are empty.', recipeSvg);

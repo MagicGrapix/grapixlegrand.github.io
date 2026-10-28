@@ -154,9 +154,9 @@ This gave up some of the fine-grained model control that had originally interest
 
 The model sometimes got ingredients, quantities or recipe layouts wrong. I added a recipe library with an editable file per item, validated against the Minecraft data. It worked similarly as a regular skill provided to an agent. Its text output includes the result per craft, the required station, ingredients and a grid with cells such as `[A] [ ]`.
 
-![An illustrated crafting table and wooden axe beside the recipe catalog text, showing three oak planks and two sticks in a 3×3 grid.](./images/crafting-recipe.svg)
+![The wooden axe recipe image beside the recipe catalog text, showing three oak planks and two sticks in a 3×3 grid.](./images/crafting-recipe.svg)
 
-*The illustration is generated; the recipe text and grid follow the project's wooden-axe entry. Catalog knowledge describes how to craft the item, not whether the bot currently has the ingredients or can reach a crafting table.*
+*The same recipe shown visually and in the project's text format. Catalog knowledge describes how to craft the item, not whether the bot currently has the ingredients or can reach a crafting table.*
 
 For example, a wooden axe needs three planks and two sticks arranged on a crafting table. Showing the layout alongside the quantities gives the agent more precise guidance than asking it to reconstruct the recipe from memory.
 
@@ -177,3 +177,11 @@ The planner can attach such a condition to a step. A parser accepts only the sup
 The condition itself must still match the request. Possessing an item does not prove it was newly crafted. This is why the external scenarios retain independent checks instead of trusting whichever condition the planner wrote.
 
 ## Conclusion
+
+I started this project to experiment with local language models making decisions in Minecraft. The architecture changed as I watched them struggle: overlapping reflection and execution was difficult to follow, a sequential loop made debugging easier, and specialised agents let me work on conversation, planning, actions and building designs separately. Splitting the work also introduced more calls and more opportunities to lose information between agents.
+
+The web inspector, world observations and repeatable scenarios became part of how I developed the bot. I could read what the model had been told, inspect the tools it called and compare its claims with the game state. The World Controller let me reset an experiment and try again. That helped me decide whether to change a prompt, improve a tool's feedback or fix the execution code.
+
+Construction and collection also changed how much control I wanted to give the model. I kept the LLM involved in plans and designs, while code handled repetitive movement, mining and placement. Recipe lookup reduced the need to reconstruct crafting knowledge from memory, and deterministic checks added evidence for task completion. Trying a larger local model helped with some designs, but latency, context and the quality of the information passed between agents still needed attention.
+
+The bot is still a prototype. Longer tasks can expose missing prerequisites, weak plans and poor recovery. I now have a way to reproduce those failures and inspect them. The next experiments can focus on whether the agent repairs a broken plan and finishes the task, with the time and model calls recorded alongside the result. For the next steps, I'm planning to add a persistent memory and a way for the agent to recognize already visited places.
