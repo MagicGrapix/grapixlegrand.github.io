@@ -32,17 +32,17 @@ The queue held actions waiting to run, in order. An executor performed them one 
 
 *Two kinds of pending work: actions waiting to execute and events waiting for the model to process. A tool call that queues an action does not prove that action has finished.*
 
-Within a model interaction, the conversation grew through assistant tool calls followed by tool results. Skills were available as named instructions the agent could choose to load. Reading a skill added guidance to its context; it did not execute that skill as a script.
+Within an interaction, the conversation grew through assistant tool calls followed by tool results so that the agent sees what it has been doing recently.
 
 But I was now tracking a decision in progress, an action being executed, queued actions and completed actions whose results had not yet been processed. The model could plan from observations that were already outdated. Some requests also ended in an unnecessary “Could you clarify?”, while malformed arguments or truncated responses caused separate failures.
 
-Watching the character did not tell me which of these problems I was seeing. I needed to inspect the conversation behind its behaviour.
+Watching the character did not tell me which of these problems I was seeing. I needed to inspect the conversation behind its behaviour. This is why I built a visual inspector to observe and monitor its thought process.
 
 ## Making the agent's decisions visible
 
 I built a web inspector that records the messages sent to the model, the available tools, its responses and the execution results. I gradually added readable JSON, call ordering, timing and visible error states.
 
-This let me distinguish a bad instruction from a bad tool call, and a successful call from an incorrect interpretation of its result. For example, the agent could reach a position near a tree and still fail to dig the intended block. Its assumption about access was wrong, even though the movement had succeeded.
+Being able to follow the agent thought process let me distinguish a bad instruction from a bad tool call, and a successful call from an incorrect interpretation of its result. For example, the agent could reach a position near a tree and still fail to dig the intended block. Its assumption about access was wrong, even though the movement had succeeded.
 
 > *Screenshot to add: one request in the web inspector, with the prompt, a tool call and its result visible. Choose a trace that shows the difference between movement success and block access.*
 
@@ -50,15 +50,17 @@ In these early trials, overlapping reflection and execution did not give me a cl
 
 ## Strategy Two: think, decide, act, observe, repeat
 
-The next version waited for an action to finish before asking the model what to do next. It could make a plan, choose an action, inspect the result, then continue, revise the plan or stop.
+The next version waited sequentially for an action to finish before asking the model what to do next. It could make a plan, choose an action, inspect the result, then continue, revise the plan or stop. This is way simpler than before and way easier to debug.
 
 ![The first version overlapped model reflection with queued actions; the revised loop waits for execution results before the next decision.](./images/execution-loop.svg)
 
 *Waiting for the result makes each decision easier to connect to an observed outcome.*
 
-This made the sequence easier to follow, but did not make the model a good Minecraft player. It could still spend a long time deciding, repeat unsuccessful actions or misunderstand the world. Minecraft continued changing while the model generated its next response.
+This made the sequence easier to follow, but did not make the model a good Minecraft player. It could still spend a long time deciding, repeat unsuccessful actions or misunderstand the world. Most of the issues became visible in the web UI by looking up the thought processes.
 
-In parallel with this simplification, I introduced a separate administrator bot, the World Controller. It could reset a flat testing area, create trees and prepare the bot's inventory. The AI-controlled bot kept ordinary permissions. I could now return to the same starting conditions instead of manually repairing the world after each attempt.
+In parallel with this simplification, I introduced a separate administrator bot, the World Controller. It could reset a flat testing area, create trees and prepare the bot's inventory. I could now return to the same starting conditions instead of manually repairing the world after each attempt. It allowed for a clearer controlled test environment. As the experiments progressed I started noticing that the Qwen 9B model I was using was starting to be given too much informations and tools for its size which I thought could be a nice next subject to optimize.
+
+TODO ajoute un schema du world controller avec un personnage minecraft different de celui d'avant generé stp.
 
 ## Separating conversation, planning and execution
 
@@ -72,25 +74,29 @@ These roles can use the same underlying model. Each sub-agent delegation starts 
 
 The action agent initially received too little information about the larger task. I later gave it the full plan, previous reports and the current step. I also removed artificial planning and review phases so it could inspect the world, act and reconsider within one conversation.
 
-Separating the roles made their instructions easier to work on individually. It also exposed a more concrete limitation: the action agent often did not understand what its observations meant physically.
+Separating the roles made their instructions easier to work on individually. It also exposed a more concrete limitation: the latency increased as more LLM calls has to be made for the agent to do something. Moreover, the output of the subagents was sometimes re-interpreted by the coordinator and produced inconsistent observations.
 
 ## Giving the agent a usable view of the world
 
-The bot sometimes broke a log and declared success while the dropped item remained on the ground. Being near a block, reaching it, breaking it and collecting its drop needed separate checks.
+The bot sometimes broke a log and declared success while the dropped item remained on the ground. Being near a block, reaching it, breaking it and collecting its drop needed separate checks. I feel that when the agent hallucinate like this it means it misses vision or context.
 
-I expanded the observation tools: searches with a radius and result limit, individual block inspection, an ASCII voxel view, `get_block_access` for reach and visibility, and `get_dropped_items` for loose objects. The voxel view represents horizontal slices around the bot or a chosen position. It is a text representation of world data, not an image from a camera.
+I therefore expanded the observation tools: searches with a radius and result limit, individual block inspection, an ASCII voxel view, `get_block_access` for reach and visibility, and `get_dropped_items` for loose objects. The voxel view represents horizontal slices around the bot or a chosen position. It is a text representation of world data, not an image from a camera.
 
-Tool descriptions now explain what an operation does, what its success proves and what it does not prove. Finding a block does not prove there is a path to it. Successful movement does not prove the block is within digging reach. Breaking it does not prove its drop entered the inventory.
+TODO montre un schema de la voxel view stp en mode un cote l ascii (a droite) et de l autre (a gauche) on montre une generation de blocks minecraft genre on fait du 3x3 et les blocks en cube a moitié rempli comme ça c'est super simple.
+
+Another issue was that the tool descriptions were too vague and missunderstood by the agent. I updated the descriptions to explain what an operation does, what its success proves and what it does not prove. Finding a block does not prove there is a path to it. Successful movement does not prove the block is within digging reach. Breaking it does not prove its drop entered the inventory.
 
 > *Visual to add: the same tree shown in Minecraft and as a labelled voxel slice, followed by a block becoming a dropped item and entering the inventory.*
 
-Navigation needed work too. I improved path-failure feedback and allowed bounded terrain changes, including breaking obstacles and placing scaffolding from the bot's inventory. Inventory snapshots before and after actions made it possible to inspect gains through a diff tool. The snapshots are recorded automatically; the model still has to request the diff. One log already in its inventory cannot demonstrate that it collected another one.
+Navigation needed work too. It could happen that the path finding would return partial paths or obscure errors such as "NO PATH FOUND" to the agent where it could have digged one block to access the target. I therefore improved path-failure feedback and allowed agent terrain changes, including breaking obstacles and placing scaffolding from the bot's inventory. This made the `goto` tool much more reliable for the agent to use and to understand what to do when it failed.
 
 ## From manual trials to repeatable scenarios
 
-Resetting the world made manual experiments easier. I then automated the full trial: prepare a fixed environment, connect a fresh test bot, send a request through chat, observe the result and clean up.
+Resetting the world made manual experiments easier. But as I was testing more and more behaviors such as crafting or finding various ressources it became clear that testing needed some automation. I decided to automate the full trial: prepare a fixed environment, connect a fresh test bot, send a request through chat, observe the result and clean up.
 
-The tests use the real prompts and tools. Each scenario defines a time limit and its own success checks, which are not shown to the agent. Campaign reports record calls, errors, durations and observed state. I can inspect a failure without reconstructing it from console output.
+The tests use the real prompts and tools. Each scenario defines a time limit and its own success checks, which are not shown to the agent. Campaign reports record calls, errors, durations and observed state. I can inspect a failure without reconstructing it from console output. I also added a HTML report of the test campaign so that I can easily see and monitor where the agent lost time by looking at the tool calls.
+
+TODO ajouter une image du report HTML
 
 The first scenarios covered a crafting table, collecting logs and placing a block in front of the bot. I later expanded them to navigation, dropped items, scaffolding, food, storage and crafting chains. A passed test applies to its setup: crafting from supplied ingredients is a different problem from acquiring those ingredients first.
 
@@ -98,27 +104,33 @@ The first scenarios covered a crafting table, collecting logs and placing a bloc
 
 ## Letting the model design a shelter
 
-Construction gave me a reason to reconsider the level of control I wanted. I considered three approaches: let the model decide every block placement, give it the next block to place, or ask it for a complete design and build that design algorithmically.
+This one was tough as it requires lots of planning and spatial understanding. It gave me a reason to reconsider the level of control I wanted. I considered three approaches: let the model decide every block placement, give it the next block to place, or ask it for a complete design and build that design algorithmically.
 
 I chose the third. An **Architect** agent creates a **Blueprint**. Code validates it, calculates the required materials and stores it outside the conversation under a reference. The coordinator can then ask the planner to organise resource gathering before delegating construction.
 
-The **Builder** is an algorithmic controller, not another LLM agent. Through the `build` capability, it selects movements, equips materials, places blocks and checks the result. A model call is not required for every plank.
+The **Builder** is an algorithmic controller, not another LLM agent. Through the `build` capability, it selects movements, equips materials, places blocks and checks the result. A model call is not required for every plank. I just thought that I should automate the repetitive tasks involving no abstract reasonning requirements as LLM calls is an expensive and slow resource.
+
+TODO schema du system de build stp
 
 The first Blueprint format asked too much at once: nested arrays, dimensions, a material palette, block properties and doors. Shape errors made it difficult to judge whether the model understood the building at all. I simplified its input to a multiline drawing: `A` for oak planks, `.` for required air, and a blank line between layers. The layers are horizontal, viewed from above, and stacked from bottom to top. The dimensions can be inferred from the drawing. I put actual doors aside and focused on shelters with an opening.
 
-I also built an isolated Architect workshop to inspect the exact prompts and validation feedback. It later gained a layer-by-layer experiment with a template grid and editable layers; the main Minecraft path still used the complete drawing. Validating a drawing's format was only the first check. I still needed to test whether it could be built and whether it matched the request.
+TODO schema horizontal du shelter en bois stp pour montrer un example.
+
+I also built an isolated Architect web UI to inspect the exact prompts and validation feedback. It later gained a layer-by-layer experiment with a template grid and editable layers; the main Minecraft path still used the complete drawing. Validating a drawing's format was only the first check. I still needed to test whether it could be built and whether it matched the request.
 
 > *Visual to add: a Blueprint in the Architect workshop, its horizontal layers stacked into a volume, and the corresponding in-game shelter. Label a rendered preview as a preview, not an executed build.*
 
 ### Trying a larger local model
 
-The 9B model struggled with dimensions and spatial consistency, so I tried Qwen 27B through llama.cpp, then llama-swap. The application used a local OpenAI-compatible endpoint, which let me change the serving backend without rewriting the Minecraft tools.
+The 9B model struggled with dimensions and spatial consistency, so I tried Qwen 27B through llama.cpp, then llama-swap. The application used a local OpenAI-compatible endpoint, which let me change the serving backend without rewriting the Minecraft tools. I chose to run a special Q4XS model that could fit with some context on my 16 GB GPU.
 
 The new model produced more convincing designs in my trials. I had also been changing the prompts and validation feedback, so I cannot attribute all of the improvement to model size. This was an exploratory comparison, not a controlled benchmark.
 
 ## Automating repetitive collection
 
 The Builder changed how I thought about gathering. I had originally wanted to watch the model decide every small action, but collecting several logs meant repeatedly choosing where to go, what to break and how to collect the drop.
+
+TODO tu peux faire un schema mermaid stp qui montre l'agent minecraft qu on a genéré et les gotos, dig gotos et find resources stp qui montre le collect resource fonctionner stp.
 
 I added `collect_resource`, a composite tool that handles this loop without internal LLM calls. The agent chooses a resource and quantity. The routine finds sources, checks the available harvesting tool, navigates, mines and confirms inventory gains. It returns a compact report, while the detailed sub-operations remain available under the parent call in the logs.
 
@@ -128,11 +140,13 @@ I also tightened confirmation of crafting and placement. A returned operation co
 
 *The resulting division of work: agents choose goals, plans and designs; code performs repeated physical operations. World observations also inform coordination and planning.*
 
-This gave up some of the fine-grained model control that had originally interested me. It also removed the need for a new model decision at every repeated gesture. Crafting then became a more visible source of mistakes.
+This gave up some of the fine-grained model control that had originally interested me. It also removed the need for a new model decision at every repeated gesture. Crafting then became a more visible source of mistakes where the agent failed to remember the correct reciepes.
 
 ## Giving the planner recipes it could consult
 
-The model sometimes got ingredients, quantities or recipe layouts wrong. I added a recipe library with an editable file per item, validated against the Minecraft data. Its text output includes the result per craft, the required station, ingredients and a grid with cells such as `[A] [ ]`.
+The model sometimes got ingredients, quantities or recipe layouts wrong. I added a recipe library with an editable file per item, validated against the Minecraft data. It worked similarly as a regular skill provided to an agent. Its text output includes the result per craft, the required station, ingredients and a grid with cells such as `[A] [ ]`.
+
+TODO tu peux generer un schema qui illustre le crafting d'une hache en bois stp. tu peux generer la partie minecraft comme une image et ensuite à droite montrer la partie avec notre formulation.
 
 For example, a wooden axe needs three planks and two sticks arranged on a crafting table. Showing the layout alongside the quantities gives the agent more precise guidance than asking it to reconstruct the recipe from memory.
 
@@ -152,12 +166,4 @@ The planner can attach such a condition to a step. A parser accepts only the sup
 
 The condition itself must still match the request. Possessing an item does not prove it was newly crafted. This is why the external scenarios retain independent checks instead of trusting whichever condition the planner wrote.
 
-## The longer task that still failed
-
-I extended the tools and scenarios to storage, furnace use and mineral collection, then tried a full progression from an empty inventory: make a stone pickaxe, use a furnace and obtain an iron pickaxe while keeping both pickaxes. Wood, stone, coal and iron were available nearby.
-
-The planner's first step asked for eleven cobblestones. It had omitted the wooden pickaxe needed to mine them. Collection correctly refused with `HARVEST_TOOL_MISSING`, but the agent failed to repair the dependency chain before the ten-minute limit. It collected wood, made planks and placed a crafting table, but had not produced its first pickaxe when the trial stopped.
-
-This was a different failure from malformed tool arguments or missing observations. The individual operations had become more useful, but the plan and its recovery were still fragile. The logs did not establish context exhaustion as the cause, and the trial never reached mineral collection.
-
-My next experiment is to test recovery from a missing prerequisite: whether the agent can revise its plan and obtain the tool it needs, rather than spend the rest of the trial working around that omission.
+## Conclusion
