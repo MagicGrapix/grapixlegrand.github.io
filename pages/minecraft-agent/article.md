@@ -1,12 +1,14 @@
 # Building a Minecraft Agent with a Local LLM
 
-*Personal R&D project · 2026 · About 12 min read*
+*Personal R&D project · 2026 · About 5 min read*
+
+<p><a class="profile-links__chip" href="https://github.com/MagicGrapix/MinecraftLLM" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i><span>View source code on GitHub</span></a></p>
 
 The goal of this project was to experiment with local language models in Minecraft. I wanted to see how far a model could get from a request in chat, from collecting wood to crafting tools and building a shelter. I developed a TypeScript prototype with Codex and Cursor, using Mineflayer to control the character. I chose to build a custom harness by handling and managing the responses and states of the LLM myself.
 
 The project became a series of experiments in how much responsibility to give the model. I started by letting it choose small actions and think while they ran. I then switched to a more structured execution loop where the agent thinks, chooses and acts sequentially. I chose to build a custom multi-agent system with a few agents controlled by a coordinator. I also created a testing framework to repeat experiments and allow me to iterate in fixed conditions.
 
-![The bot holding a wooden axe beside oak trees and a crafting table in the flat test world.](./images/scene1.png)
+![The bot holding a wooden axe beside oak trees and a crafting table in the flat test world.](./images/scene1.jpeg)
 
 *The bot in a wood-gathering scene.*
 
@@ -94,7 +96,7 @@ I therefore expanded the observation tools: searches with a radius and result li
 
 Another issue was that the tool descriptions were too vague and misunderstood by the agent. I updated the descriptions to explain what an operation does, what its success proves and what it does not prove. Finding a block does not prove there is a path to it. Successful movement does not prove the block is within digging reach. Breaking it does not prove its drop entered the inventory.
 
-![A loose oak log on the ground between the bot and a tree.](./images/scene2.png)
+![A loose oak log on the ground between the bot and a tree.](./images/scene2.jpeg)
 
 *A loose log is still a world entity, not an inventory item. Breaking a block and collecting its drop are separate outcomes.*
 
@@ -132,7 +134,7 @@ The first Blueprint format asked too much at once: nested arrays, dimensions, a 
 
 I also built an isolated Architect web UI to inspect the exact prompts and validation feedback. It later gained a layer-by-layer experiment with a template grid and editable layers; the main Minecraft path still used the complete drawing. Validating a drawing's format was only the first check. I still needed to test whether it could be built and whether it matched the request.
 
-![The bot beside a small oak-plank shelter with a two-block-high entrance and a one-block window.](./images/scene4.png)
+![The bot beside a small oak-plank shelter with a two-block-high entrance and a one-block window.](./images/scene4.jpeg)
 
 *A 5×5×4 oak-plank shelter with a two-block-high entrance and a one-block window.*
 
@@ -162,7 +164,7 @@ This gave up some of the fine-grained model control that had originally interest
 
 ## Giving the planner recipes it could consult
 
-![The bot beside a crafting table, a furnace and oak logs in a prepared crafting scene.](./images/scene3.png)
+![The bot beside a crafting table, a furnace and oak logs in a prepared crafting scene.](./images/scene3.jpeg)
 
 *A crafting setup in the test world. Knowing a recipe, having its ingredients and being able to use the required station are separate checks.*
 

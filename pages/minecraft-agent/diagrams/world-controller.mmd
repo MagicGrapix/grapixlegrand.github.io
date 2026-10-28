@@ -9,6 +9,6 @@ flowchart LR
     accDescr: The terminal or scenario runner asks WorldBuilder for a bounded WorldPlan. CommandExecutor sends its commands at a controlled rate through a separate OP World Controller. The AI bot plays normally without administrator privileges.
     T["Terminal or<br/>scenario runner"] --> P["WorldBuilder<br/>Bounded WorldPlan"]
     P --> Q["CommandExecutor<br/>Queued and throttled"]
-    Q --> C@{ img: "../images/world-controller-character.png", label: "Controller (OP)", pos: "b", h: 200, constraint: "on" }
+    Q --> C@{ img: "../images/world-controller-character.jpeg", label: "Controller (OP)", pos: "b", h: 200, constraint: "on" }
     C -->|"Reset / fill / give"| W["Test environment<br/>Terrain, trees, inventory"]
     B["AI-controlled bot<br/>No OP privileges"] -.->|"Normal gameplay"| W

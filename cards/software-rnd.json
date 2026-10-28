@@ -6,7 +6,7 @@
       "meta": "Personal R&D · LLM agents · 2026",
       "summary": "Experiments with local LLM agents, world observations, automated collection and construction, and repeatable Minecraft scenarios.",
       "chips": ["TypeScript", "Mineflayer", "LLM agents", "Evaluation"],
-      "preview": "./pages/minecraft-agent/images/agent-architecture.svg",
+      "preview": "./pages/minecraft-agent/images/scene1.jpeg",
       "previewFit": "contain",
       "link": "./pages/minecraft-agent/"
     },

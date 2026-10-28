@@ -1,6 +1,6 @@
 # Minecraft article
 
-The page follows the existing OZWE article reader and shares its vendored Markdown renderer. It uses static SVG diagrams and author-provided PNG screenshots; Mermaid is not loaded by visitors.
+The page follows the existing OZWE article reader and shares its vendored Markdown renderer. It uses static SVG diagrams and author-provided JPEG screenshots; Mermaid is not loaded by visitors. The article header links to the Minecraft project's GitHub repository.
 
 ## Edit
 
@@ -10,7 +10,7 @@ The page follows the existing OZWE article reader and shares its vendored Markdo
 - `diagrams/render-examples.mjs`: dependency-free SVG renderer for the voxel, shelter and recipe examples, with fixture assertions.
 - `diagrams/render-trace.mjs` and `diagrams/trace-example.json`: renderer and minimal recorded data for the campaign summary and simplified inspector.
 - `images/*.svg`: generated diagrams. Regenerate them after editing a source.
-- `../../cards/software-rnd.json`: portfolio card. Its diagram preview can later be replaced by a real screenshot.
+- `../../cards/software-rnd.json`: portfolio card, using `scene1.jpeg` with its full aspect ratio preserved.
 
 ## Completion checklist
 
@@ -28,7 +28,7 @@ The page follows the existing OZWE article reader and shares its vendored Markdo
 - [x] Simplified inspector: four recorded tool calls, with the missing-harvesting-tool error selected and short prompt excerpts.
 - [x] Conclusion drafted from the project's progression, tradeoffs and remaining limitations; ready for the author's review.
 
-The four game screenshots are `images/scene1.png` through `images/scene4.png`. They are staged illustrations, not evidence of an autonomous run. The loose-log image does not show a confirmed inventory gain, and the crafting image does not prove the held tool was crafted. The original files are displayed without cropping or alteration and can be opened at full size.
+The four game screenshots are `images/scene1.jpeg` through `images/scene4.jpeg`. They are staged illustrations, not evidence of an autonomous run. The loose-log image does not show a confirmed inventory gain, and the crafting image does not prove the held tool was crafted. The screenshots are JPEG-compressed at quality 85 with 4:4:4 chroma sampling, without cropping or resizing, and can be opened at full size. Raster assets use `.jpeg`; the already-JPEG recipe image was renamed without recompression. Formerly transparent cutouts are flattened against the diagrams' `#101722` background. Embedded rasters in SVGs use these same compressed files.
 
 The UI capture placeholders have been replaced by compact SVG views derived from a saved trial. No further screenshots are required for the current draft. The Architect workshop remains described in the article without an additional screenshot. Keep actual execution evidence distinct from staged scenes. No gameplay or LLM execution was performed during this integration.
 
@@ -49,7 +49,7 @@ Source: `campaign_1792497383278_f1e7505b/report-en.html`, scenario `craft_iron_p
 
 The generator includes assertions for count totals, source records and the selected failure. The existing full report and the Minecraft debug UI are unchanged. Clicking either SVG in the article opens the full-size view.
 
-The article now follows the chronology in the author's Google Doc, from asynchronous control to sequential execution, specialised agents, observations, scenarios, construction, collection, recipes and deterministic checks. It is approximately 12 minutes of reading. Model comparisons and speed improvements are not presented as benchmark results.
+The article now follows the chronology in the author's Google Doc, from asynchronous control to sequential execution, specialised agents, observations, scenarios, construction, collection, recipes and deterministic checks. The header displays the author's requested “About 5 min read” label and reuses the portfolio's GitHub chip. Model comparisons and speed improvements are not presented as benchmark results.
 
 ## Export diagrams
 
@@ -59,7 +59,7 @@ With Node.js installed, run this from `pages/minecraft-agent` in PowerShell:
 ./diagrams/render.ps1
 ```
 
-The script exports all seven `.mmd` files with Mermaid CLI 12.0.0 and embeds local PNG cutouts. This keeps the exported SVG self-contained when displayed as an image. The first invocation downloads the CLI and its browser into the user's cache. No global install or site build dependency is required. The SVG files are already generated for this draft. If using an installed Chrome instead, pass `-PuppeteerConfig path/to/puppeteer-config.json` with an `executablePath` in that JSON. To regenerate only selected diagrams, use `-Names world-controller,build-workflow,collect-resource`.
+The script exports all seven `.mmd` files with Mermaid CLI 12.0.0 and embeds local JPEG cutouts. This keeps the exported SVG self-contained when displayed as an image. The first invocation downloads the CLI and its browser into the user's cache. No global install or site build dependency is required. The SVG files are already generated for this draft. If using an installed Chrome instead, pass `-PuppeteerConfig path/to/puppeteer-config.json` with an `executablePath` in that JSON. To regenerate only selected diagrams, use `-Names world-controller,build-workflow,collect-resource`.
 
 The three exact grid examples use code rather than image generation:
 
@@ -69,7 +69,7 @@ node ./diagrams/render-examples.mjs
 
 This generates `voxel-view.svg`, `shelter-layers.svg` and `crafting-recipe.svg`. The script checks dimensions, block counts, entrance/window coordinates and recipe ingredient counts before completing. The voxel projection and ASCII rows share one data structure. These are small fixed illustrations, not a second Minecraft simulation or a runtime dependency of the site.
 
-`crafting-recipe.svg` embeds the author-provided `images/wooden_axe_recipe.jpg` on the left, preserving its aspect ratio and full contents. The recipe text on the right is generated by the script. The former generated axe cutout is no longer used in this diagram.
+`crafting-recipe.svg` embeds the author-provided `images/wooden_axe_recipe.jpeg` on the left, preserving its aspect ratio and full contents. The recipe text on the right is generated by the script. The former generated axe cutout is no longer used in this diagram.
 
 Reference data checked against the Minecraft project:
 
@@ -77,11 +77,11 @@ Reference data checked against the Minecraft project:
 - `src/devworld/scenes/shelter.ts`: 5×5×4 shelter, 79 oak planks, south entrance (1×2), west window (1×1), no door item.
 - `recipes/wooden_axe.json` and the recipe renderer: 3 oak planks, 2 sticks, one wooden axe per craft, 3×3 crafting-table grid. The SVG preserves the rendered text, including the warning that catalog knowledge is not a live inventory/access check.
 
-See [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli) for PNG/PDF output and browser configuration, and [Mermaid image nodes](https://mermaid.js.org/syntax/flowchart.html#image-shape) for the character integration. The text-only diagrams can also be pasted into [Mermaid Live Editor](https://mermaid.live/). The capabilities diagram needs the local PNG embedded by the export script.
+See [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli) for PNG/PDF output and browser configuration, and [Mermaid image nodes](https://mermaid.js.org/syntax/flowchart.html#image-shape) for the character integration. The text-only diagrams can also be pasted into [Mermaid Live Editor](https://mermaid.live/). The capabilities diagram needs the local JPEG embedded by the export script.
 
 ## Character illustration
 
-`images/minecraft-bot.png` was generated using the built-in image tool with transparency, then copied into this project. The image is illustrative, not evidence of a bot run. The diagram's labels, layout and arrows come from Mermaid.
+`images/minecraft-bot.jpeg` was generated using the built-in image tool with transparency, then flattened against the diagram background for the JPEG export. The image is illustrative, not evidence of a bot run. The diagram's labels, layout and arrows come from Mermaid.
 
 Generation prompt:
 
@@ -93,7 +93,7 @@ Both cutouts below were generated with the built-in image tool, with `transparen
 
 ### World Controller
 
-- Asset: `images/world-controller-character.png`
+- Asset: `images/world-controller-character.jpeg`
 - Used in: `images/world-controller.svg`
 - Original generation filename: `exec-fd974588-ba84-4c85-b203-00e236832616.png`
 
@@ -103,8 +103,8 @@ Generation prompt:
 
 ### Wooden axe and crafting table (replaced)
 
-- Asset: `images/wooden-axe-crafting.png`
-- Status: retained source asset, replaced in `images/crafting-recipe.svg` by the author's `wooden_axe_recipe.jpg`.
+- Asset: `images/wooden-axe-crafting.jpeg`
+- Status: retained source asset, replaced in `images/crafting-recipe.svg` by the author's `wooden_axe_recipe.jpeg`.
 - Original generation filename: `exec-a6eeddf5-cd37-4464-8744-b59fc2d4ec1c.png`
 
 Generation prompt:

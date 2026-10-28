@@ -126,7 +126,7 @@ save('shelter-layers.svg', 1200, 510, 'Four horizontal layers of a wooden shelte
 const recipeRows = ['AA.', 'AB.', '.B.'];
 assert.equal(recipeRows.join('').split('A').length - 1, 3);
 assert.equal(recipeRows.join('').split('B').length - 1, 2);
-const recipeImage = readFileSync(image('wooden_axe_recipe.jpg')).toString('base64');
+const recipeImage = readFileSync(image('wooden_axe_recipe.jpeg')).toString('base64');
 let recipeSvg = text(32, 44, 'A recipe the planner can read', 28)
   + text(32, 78, 'Wooden axe · 3 oak planks + 2 sticks → 1 item', 21, '#aab8cc')
   + rect(28, 103, 437, 519, '#151f2e') + rect(490, 103, 622, 519, '#151f2e')
