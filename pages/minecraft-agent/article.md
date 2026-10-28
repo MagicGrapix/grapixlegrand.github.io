@@ -6,7 +6,9 @@ The goal of this project was to experiment with local language models in Minecra
 
 The project became a series of experiments in how much responsibility to give the model. I started by letting it choose small actions and think while they ran. I then switched to a more structured execution loop where the agent thinks, chooses and acts sequentially. I chose to build a custom multi-agent system with a few agents controlled by a coordinator. I also created a testing framework to repeat experiments and allow me to iterate in fixed conditions.
 
-> *Screenshot to add: the bot completing a documented crafting task. Include the request and state which materials were supplied.*
+![The bot holding a wooden axe beside oak trees and a crafting table in the flat test world.](./images/scene1.png)
+
+*The bot in a wood-gathering scene.*
 
 ## A scripted bot before the language model
 
@@ -44,7 +46,9 @@ I built a web inspector that records the messages sent to the model, the availab
 
 Being able to follow the agent's thought process let me distinguish a bad instruction from a bad tool call, and a successful call from an incorrect interpretation of its result. For example, the agent could reach a position near a tree and still fail to dig the intended block. Its assumption about access was wrong, even though the movement had succeeded.
 
-> *Screenshot to add: one request in the web inspector, with the prompt, a tool call and its result visible. Choose a trace that shows the difference between movement success and block access.*
+![A simplified inspector showing four recorded tool calls, with a failed cobblestone collection selected. The prompt, input and MISSING_ITEM error are readable beside the call list.](./images/debug-inspector.svg)
+
+*A condensed inspector view from a recorded trial. Call #13 requested 11 cobblestone, but the bot had no tool that could harvest it. The prompt and error are excerpts from the trace; the layout is simplified for this article.*
 
 In these early trials, overlapping reflection and execution did not give me a clear benefit. I had made the control flow complicated before I could reliably explain its failures. I decided to simplify it.
 
@@ -90,7 +94,9 @@ I therefore expanded the observation tools: searches with a radius and result li
 
 Another issue was that the tool descriptions were too vague and misunderstood by the agent. I updated the descriptions to explain what an operation does, what its success proves and what it does not prove. Finding a block does not prove there is a path to it. Successful movement does not prove the block is within digging reach. Breaking it does not prove its drop entered the inventory.
 
-> *Gameplay capture to add: a block being broken, its dropped item on the ground, then the confirmed inventory gain. The diagram above illustrates the representation, not a recorded run.*
+![A loose oak log on the ground between the bot and a tree.](./images/scene2.png)
+
+*A loose log is still a world entity, not an inventory item. Breaking a block and collecting its drop are separate outcomes.*
 
 Navigation needed work too. It could happen that the path finding would return partial paths or obscure errors such as "NO PATH FOUND" to the agent where it could have dug one block to access the target. I therefore improved path-failure feedback and allowed agent terrain changes, including breaking obstacles and placing scaffolding from the bot's inventory. This made the `goto` tool much more reliable for the agent to use and to understand what to do when it failed.
 
@@ -100,7 +106,9 @@ Resetting the world made manual experiments easier. But as I was testing more an
 
 The tests use the real prompts and tools. Each scenario defines a time limit and its own success checks, which are not shown to the agent. Campaign reports record calls, errors, durations and observed state. I can inspect a failure without reconstructing it from console output. I also added an HTML report of the test campaign so that I can easily see and monitor where the agent lost time by looking at the tool calls.
 
-> *Screenshot pending: the campaign report with a selected call, its prompt/result and the execution timeline. Keep the scenario's starting conditions and outcome visible.*
+![Summary of one crafting trial stopped at ten minutes: 33 LLM calls, 31 tool calls and two tool errors, with a full timeline and call counts by tool.](./images/campaign-summary.svg)
+
+*One recorded trial, stopped at the ten-minute limit without either requested pickaxe. The timeline separates LLM requests, delegations and other tools; the histogram counts calls, not completed tasks. This is a summary of the report, not a benchmark across multiple trials.*
 
 The first scenarios covered a crafting table, collecting logs and placing a block in front of the bot. I later expanded them to navigation, dropped items, scaffolding, food, storage and crafting chains. A passed test applies to its setup: crafting from supplied ingredients is a different problem from acquiring those ingredients first.
 
@@ -124,7 +132,9 @@ The first Blueprint format asked too much at once: nested arrays, dimensions, a 
 
 I also built an isolated Architect web UI to inspect the exact prompts and validation feedback. It later gained a layer-by-layer experiment with a template grid and editable layers; the main Minecraft path still used the complete drawing. Validating a drawing's format was only the first check. I still needed to test whether it could be built and whether it matched the request.
 
-> *Captures to add: a Blueprint in the Architect workshop and its corresponding in-game shelter. Label a staged scene as an illustration, and distinguish it from a build actually executed by the bot.*
+![The bot beside a small oak-plank shelter with a two-block-high entrance and a one-block window.](./images/scene4.png)
+
+*A 5×5×4 oak-plank shelter with a two-block-high entrance and a one-block window.*
 
 ### Trying a larger local model
 
@@ -151,6 +161,10 @@ I also tightened confirmation of crafting and placement. A returned operation co
 This gave up some of the fine-grained model control that had originally interested me. It also removed the need for a new model decision at every repeated gesture. Crafting then became a more visible source of mistakes where the agent failed to remember the correct recipes.
 
 ## Giving the planner recipes it could consult
+
+![The bot beside a crafting table, a furnace and oak logs in a prepared crafting scene.](./images/scene3.png)
+
+*A crafting setup in the test world. Knowing a recipe, having its ingredients and being able to use the required station are separate checks.*
 
 The model sometimes got ingredients, quantities or recipe layouts wrong. I added a recipe library with an editable file per item, validated against the Minecraft data. It worked similarly as a regular skill provided to an agent. Its text output includes the result per craft, the required station, ingredients and a grid with cells such as `[A] [ ]`.
 

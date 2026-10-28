@@ -1,0 +1,758 @@
+{
+  "source": {
+    "campaign": "campaign_1792497383278_f1e7505b",
+    "report": "report-en.html",
+    "sha256": "59387faad5f0fc353a2fac20fff25f624bbd5ad67289e3f4303bc0b48c02c0de",
+    "date": "2026-10-20"
+  },
+  "scenario": "craft_iron_pickaxe_from_world",
+  "status": "timeout",
+  "durationMs": 600000.2842999999,
+  "counts": {
+    "llm": 33,
+    "tools": 31,
+    "failedTools": 2,
+    "internal": 61
+  },
+  "tools": {
+    "ask_planner": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 199630
+    },
+    "search_recipes": {
+      "count": 2,
+      "failed": 0,
+      "durationMs": 1
+    },
+    "read_recipe": {
+      "count": 7,
+      "failed": 0,
+      "durationMs": 1
+    },
+    "submit_plan": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 1
+    },
+    "run_step": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 376378
+    },
+    "collect_resource": {
+      "count": 4,
+      "failed": 1,
+      "durationMs": 24779
+    },
+    "find_nearest_blocks": {
+      "count": 5,
+      "failed": 1,
+      "durationMs": 367
+    },
+    "get_dropped_items": {
+      "count": 2,
+      "failed": 0,
+      "durationMs": 2
+    },
+    "get_inventory": {
+      "count": 2,
+      "failed": 0,
+      "durationMs": 2
+    },
+    "get_voxel_view": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 2
+    },
+    "craft_from_inventory_2x2": {
+      "count": 2,
+      "failed": 0,
+      "durationMs": 902
+    },
+    "equip": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 1
+    },
+    "get_block": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 1
+    },
+    "place": {
+      "count": 1,
+      "failed": 0,
+      "durationMs": 1051
+    }
+  },
+  "activities": [
+    {
+      "kind": "llm",
+      "agent": "coordinator",
+      "label": "LLM coordinator",
+      "startMs": 3,
+      "durationMs": 16825,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "coordinator",
+      "label": "#1 ask_planner",
+      "startMs": 16829,
+      "durationMs": 199630,
+      "status": "completed",
+      "tool": "ask_planner"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 16830,
+      "durationMs": 22310,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#2 search_recipes",
+      "startMs": 39141,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "search_recipes"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 39143,
+      "durationMs": 1080,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#3 read_recipe",
+      "startMs": 40224,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 40226,
+      "durationMs": 1800,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#4 read_recipe",
+      "startMs": 42027,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 42028,
+      "durationMs": 2387,
+      "status": "completed"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 44416,
+      "durationMs": 19483,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#5 read_recipe",
+      "startMs": 63900,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 63901,
+      "durationMs": 3588,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#6 read_recipe",
+      "startMs": 67490,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 67491,
+      "durationMs": 1196,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#7 read_recipe",
+      "startMs": 68688,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 68689,
+      "durationMs": 43946,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#8 search_recipes",
+      "startMs": 112636,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "search_recipes"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 112637,
+      "durationMs": 44763,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#9 read_recipe",
+      "startMs": 157401,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "planner",
+      "label": "LLM planner",
+      "startMs": 157402,
+      "durationMs": 59054,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "planner",
+      "label": "#10 submit_plan",
+      "startMs": 216457,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "submit_plan"
+    },
+    {
+      "kind": "llm",
+      "agent": "coordinator",
+      "label": "LLM coordinator",
+      "startMs": 216462,
+      "durationMs": 7166,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "coordinator",
+      "label": "#11 run_step",
+      "startMs": 223628,
+      "durationMs": 376378,
+      "status": "completed",
+      "tool": "run_step"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 223630,
+      "durationMs": 21487,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#12 collect_resource",
+      "startMs": 245117,
+      "durationMs": 4919,
+      "status": "completed",
+      "tool": "collect_resource"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 250038,
+      "durationMs": 2594,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#13 collect_resource",
+      "startMs": 252632,
+      "durationMs": 159,
+      "status": "failed",
+      "tool": "collect_resource"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 252794,
+      "durationMs": 17314,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#14 find_nearest_blocks",
+      "startMs": 270108,
+      "durationMs": 39,
+      "status": "completed",
+      "tool": "find_nearest_blocks"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 270148,
+      "durationMs": 2307,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#15 get_dropped_items",
+      "startMs": 272456,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "get_dropped_items"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 272458,
+      "durationMs": 17061,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#16 find_nearest_blocks",
+      "startMs": 289519,
+      "durationMs": 113,
+      "status": "completed",
+      "tool": "find_nearest_blocks"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 289632,
+      "durationMs": 8211,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#17 get_inventory",
+      "startMs": 297844,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "get_inventory"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 297846,
+      "durationMs": 10506,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#18 find_nearest_blocks",
+      "startMs": 308353,
+      "durationMs": 109,
+      "status": "completed",
+      "tool": "find_nearest_blocks"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 308464,
+      "durationMs": 28247,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#19 get_voxel_view",
+      "startMs": 336712,
+      "durationMs": 2,
+      "status": "completed",
+      "tool": "get_voxel_view"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 336716,
+      "durationMs": 13977,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#20 get_dropped_items",
+      "startMs": 350693,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "get_dropped_items"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 350696,
+      "durationMs": 4667,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#21 find_nearest_blocks",
+      "startMs": 355363,
+      "durationMs": 2,
+      "status": "failed",
+      "tool": "find_nearest_blocks"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 355365,
+      "durationMs": 3761,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#22 find_nearest_blocks",
+      "startMs": 359127,
+      "durationMs": 104,
+      "status": "completed",
+      "tool": "find_nearest_blocks"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 359232,
+      "durationMs": 48796,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#23 collect_resource",
+      "startMs": 408029,
+      "durationMs": 8165,
+      "status": "completed",
+      "tool": "collect_resource"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 416196,
+      "durationMs": 14877,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#24 craft_from_inventory_2x2",
+      "startMs": 431074,
+      "durationMs": 481,
+      "status": "completed",
+      "tool": "craft_from_inventory_2x2"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 431556,
+      "durationMs": 9540,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#25 read_recipe",
+      "startMs": 441097,
+      "durationMs": 0,
+      "status": "completed",
+      "tool": "read_recipe"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 441098,
+      "durationMs": 41525,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#26 craft_from_inventory_2x2",
+      "startMs": 482624,
+      "durationMs": 421,
+      "status": "completed",
+      "tool": "craft_from_inventory_2x2"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 483047,
+      "durationMs": 10733,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#27 equip",
+      "startMs": 493781,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "equip"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 493784,
+      "durationMs": 17158,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#28 get_block",
+      "startMs": 510942,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "get_block"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 510944,
+      "durationMs": 4352,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#29 place",
+      "startMs": 515297,
+      "durationMs": 1051,
+      "status": "completed",
+      "tool": "place"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 516349,
+      "durationMs": 50018,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#30 collect_resource",
+      "startMs": 566367,
+      "durationMs": 11536,
+      "status": "completed",
+      "tool": "collect_resource"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 577904,
+      "durationMs": 13079,
+      "status": "completed"
+    },
+    {
+      "kind": "tool",
+      "agent": "actioner",
+      "label": "#31 get_inventory",
+      "startMs": 590983,
+      "durationMs": 1,
+      "status": "completed",
+      "tool": "get_inventory"
+    },
+    {
+      "kind": "llm",
+      "agent": "actioner",
+      "label": "LLM actioner",
+      "startMs": 590985,
+      "durationMs": 9020,
+      "status": "failed",
+      "errorCode": "ABORTED"
+    }
+  ],
+  "selected": [
+    {
+      "actionNumber": 12,
+      "tool": "collect_resource",
+      "startMs": 245117,
+      "durationMs": 4919,
+      "status": "completed",
+      "arguments": {
+        "item": "oak_log",
+        "quantity": 1
+      },
+      "result": {
+        "ok": true,
+        "value": {
+          "item": "oak_log",
+          "requested": 1,
+          "collected": 1,
+          "inventoryKnown": true,
+          "sourcesFound": 12,
+          "sourcesBroken": 1,
+          "accessFailed": 0,
+          "durationMs": 4916,
+          "scaffoldsLeft": 0
+        }
+      },
+      "before": {},
+      "after": {
+        "oak_log": 1
+      }
+    },
+    {
+      "actionNumber": 13,
+      "tool": "collect_resource",
+      "startMs": 252632,
+      "durationMs": 159,
+      "status": "failed",
+      "arguments": {
+        "item": "cobblestone",
+        "quantity": 11
+      },
+      "result": {
+        "ok": false,
+        "error": {
+          "code": "MISSING_ITEM",
+          "message": "No inventory tool can harvest cobblestone from stone without changing its drop.",
+          "retryable": false,
+          "facts": {
+            "reason": "HARVEST_TOOL_MISSING",
+            "progress": {
+              "item": "cobblestone",
+              "requested": 11,
+              "collected": 0,
+              "inventoryKnown": true,
+              "sourcesFound": 14,
+              "sourcesBroken": 0,
+              "accessFailed": 0,
+              "durationMs": 157,
+              "scaffoldsLeft": 0
+            }
+          }
+        }
+      },
+      "before": {
+        "oak_log": 1
+      },
+      "after": {
+        "oak_log": 1
+      }
+    },
+    {
+      "actionNumber": 14,
+      "tool": "find_nearest_blocks",
+      "startMs": 270108,
+      "durationMs": 39,
+      "status": "completed",
+      "arguments": {
+        "names": [
+          "cobblestone"
+        ],
+        "maxDistance": 32,
+        "count": 20
+      },
+      "result": {
+        "ok": true,
+        "value": []
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "actionNumber": 15,
+      "tool": "get_dropped_items",
+      "startMs": 272456,
+      "durationMs": 1,
+      "status": "completed",
+      "arguments": {
+        "names": [
+          "cobblestone"
+        ],
+        "maxDistance": 32,
+        "count": 20
+      },
+      "result": {
+        "ok": true,
+        "value": []
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "prompt": {
+    "system": [
+      "You control a Minecraft bot through the supplied tools.",
+      "After a failure, retry only with new evidence or a relevant change."
+    ],
+    "user": "Execute step 1 of the current plan."
+  },
+  "final": {
+    "completedSteps": 0,
+    "planSteps": 8,
+    "stonePickaxes": 0,
+    "ironPickaxes": 0
+  }
+}

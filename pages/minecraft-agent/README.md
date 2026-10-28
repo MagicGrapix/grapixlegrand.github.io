@@ -1,6 +1,6 @@
 # Minecraft article
 
-The page follows the existing OZWE article reader and shares its vendored Markdown renderer. It uses static SVG images; Mermaid is not loaded by visitors.
+The page follows the existing OZWE article reader and shares its vendored Markdown renderer. It uses static SVG diagrams and author-provided PNG screenshots; Mermaid is not loaded by visitors.
 
 ## Edit
 
@@ -8,6 +8,7 @@ The page follows the existing OZWE article reader and shares its vendored Markdo
 - `diagrams/*.mmd`: editable Mermaid sources.
 - `diagrams/mermaid-config.json`: diagram colours and typography.
 - `diagrams/render-examples.mjs`: dependency-free SVG renderer for the voxel, shelter and recipe examples, with fixture assertions.
+- `diagrams/render-trace.mjs` and `diagrams/trace-example.json`: renderer and minimal recorded data for the campaign summary and simplified inspector.
 - `images/*.svg`: generated diagrams. Regenerate them after editing a source.
 - `../../cards/software-rnd.json`: portfolio card. Its diagram preview can later be replaced by a real screenshot.
 
@@ -19,14 +20,34 @@ The page follows the existing OZWE article reader and shares its vendored Markdo
 - [x] Four horizontal shelter layers, matching static scene 4.
 - [x] Collection loop with the original bot character.
 - [x] Author-provided wooden axe recipe image alongside the actual recipe text format.
-- [ ] Campaign report screenshot: requested from the author, not yet received. Include a selected call, its prompt/result and timeline, plus the scenario and outcome.
-- [ ] In-game crafting result for the introduction. Document the request and supplied materials.
-- [ ] Web inspector capture showing movement success versus block access.
-- [ ] Block / dropped item / inventory comparison from gameplay.
-- [ ] Architect workshop and corresponding in-game shelter captures.
+- [x] Campaign overview: full grouped timeline, tool histogram and elapsed time from the recorded ten-minute trial.
+- [x] Scene 1: author-provided wood-gathering scene for the introduction.
+- [x] Scene 2: author-provided loose-log scene illustrating the distinction between breaking and collecting.
+- [x] Scene 3: author-provided crafting setup beside a table, furnace and logs.
+- [x] Scene 4: author-provided in-game shelter matching the illustrated Blueprint.
+- [x] Simplified inspector: four recorded tool calls, with the missing-harvesting-tool error selected and short prompt excerpts.
 - [x] Conclusion drafted from the project's progression, tradeoffs and remaining limitations; ready for the author's review.
 
-The remaining capture notes are visible in `article.md`. Replace each with a Markdown image followed by an italic caption. Label staged screenshots and illustrative renders separately from actual agent executions; do not present a static scene as proof of a successful run. No gameplay or LLM execution was performed for these illustrations.
+The four game screenshots are `images/scene1.png` through `images/scene4.png`. They are staged illustrations, not evidence of an autonomous run. The loose-log image does not show a confirmed inventory gain, and the crafting image does not prove the held tool was crafted. The original files are displayed without cropping or alteration and can be opened at full size.
+
+The UI capture placeholders have been replaced by compact SVG views derived from a saved trial. No further screenshots are required for the current draft. The Architect workshop remains described in the article without an additional screenshot. Keep actual execution evidence distinct from staged scenes. No gameplay or LLM execution was performed during this integration.
+
+## Recorded trial visuals
+
+Run from `pages/minecraft-agent`:
+
+```powershell
+node ./diagrams/render-trace.mjs
+```
+
+This regenerates `images/campaign-summary.svg` and `images/debug-inspector.svg` from the small checked-in `diagrams/trace-example.json`. No dependencies, game server or model are needed. To re-extract the original saved report, pass its local path as the only argument. The script checks the scenario, counts, selected calls and prompt excerpts before writing the fixture. This is deliberately an illustration of one specific trial, not a general report-export framework.
+
+Source: `campaign_1792497383278_f1e7505b/report-en.html`, scenario `craft_iron_pickaxe_from_world`, recorded on 2026-10-20. The fixture stores the report SHA-256 for provenance. It retains only timings, counts, four tool results and short prompt excerpts; full prompts, private reasoning, local machine paths and tool-call IDs are not copied into the website.
+
+- Campaign: one 600-second timeout, 33 LLM calls (including the final aborted call), 31 tool calls and 2 tool errors. All 64 non-internal activities are shown on a shared time axis, grouped by role. Very short calls are ticks. The 61 internal operations are omitted, not counted a second time. Delegations overlap their children and must not be added to their durations. The histogram includes delegation tools and labels green as “No error recorded,” not “task succeeded.”
+- Inspector: real calls #12–15, with #13 selected. It requested 11 cobblestone, found 14 sources, collected none and returned `MISSING_ITEM` / `HARVEST_TOOL_MISSING`. Inventory stayed at one oak log. Calls #14 and #15 returned empty results successfully. Prompt and error excerpts are verbatim; the request heading is shortened. The SVG is an editorial reconstruction of the inspector layout, not a screenshot of the live UI.
+
+The generator includes assertions for count totals, source records and the selected failure. The existing full report and the Minecraft debug UI are unchanged. Clicking either SVG in the article opens the full-size view.
 
 The article now follows the chronology in the author's Google Doc, from asynchronous control to sequential execution, specialised agents, observations, scenarios, construction, collection, recipes and deterministic checks. It is approximately 12 minutes of reading. Model comparisons and speed improvements are not presented as benchmark results.
 
