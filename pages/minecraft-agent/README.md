@@ -7,10 +7,26 @@ The page follows the existing OZWE article reader and shares its vendored Markdo
 - `article.md`: article text, image paths and captions.
 - `diagrams/*.mmd`: editable Mermaid sources.
 - `diagrams/mermaid-config.json`: diagram colours and typography.
+- `diagrams/render-examples.mjs`: dependency-free SVG renderer for the voxel, shelter and recipe examples, with fixture assertions.
 - `images/*.svg`: generated diagrams. Regenerate them after editing a source.
 - `../../cards/software-rnd.json`: portfolio card. Its diagram preview can later be replaced by a real screenshot.
 
-Five visible capture/render placeholders remain: gameplay result, web inspector, voxel observations and pickup, campaign report, and Blueprint/build comparison. Replace each with a Markdown image followed by an italic caption, as in the other articles. Document the task and supplied materials for gameplay; include scenario and result for reports. Label illustrative renders separately from executed builds. Do not add a nonexistent image path.
+## Completion checklist
+
+- [x] World Controller diagram, with a different generated Minecraft-style character.
+- [x] Voxel volume on the left and matching ASCII layers on the right.
+- [x] Blueprint / preparation / algorithmic construction workflow.
+- [x] Four horizontal shelter layers, matching static scene 4.
+- [x] Collection loop with the original bot character.
+- [x] Wooden axe illustration alongside the actual recipe text format.
+- [ ] Campaign report screenshot: requested from the author, not yet received. Include a selected call, its prompt/result and timeline, plus the scenario and outcome.
+- [ ] In-game crafting result for the introduction. Document the request and supplied materials.
+- [ ] Web inspector capture showing movement success versus block access.
+- [ ] Block / dropped item / inventory comparison from gameplay.
+- [ ] Architect workshop and corresponding in-game shelter captures.
+- [ ] Author's conclusion: the heading is intentionally left empty rather than inventing their assessment.
+
+The remaining capture notes are visible in `article.md`. Replace each with a Markdown image followed by an italic caption. Label staged screenshots and illustrative renders separately from actual agent executions; do not present a static scene as proof of a successful run. No gameplay or LLM execution was performed for these illustrations.
 
 The article now follows the chronology in the author's Google Doc, from asynchronous control to sequential execution, specialised agents, observations, scenarios, construction, collection, recipes and deterministic checks. It is approximately 12 minutes of reading. Model comparisons and speed improvements are not presented as benchmark results.
 
@@ -22,7 +38,21 @@ With Node.js installed, run this from `pages/minecraft-agent` in PowerShell:
 ./diagrams/render.ps1
 ```
 
-The script exports four diagrams with Mermaid CLI 12.0.0 and embeds the character PNG into the capabilities SVG. This keeps the exported SVG self-contained when displayed as an image. The first invocation downloads the CLI and its browser into the user's cache. No global install or site build dependency is required. The SVG files are already generated for this draft. If using an installed Chrome instead, pass `-PuppeteerConfig path/to/puppeteer-config.json` with an `executablePath` in that JSON.
+The script exports all seven `.mmd` files with Mermaid CLI 12.0.0 and embeds local PNG cutouts. This keeps the exported SVG self-contained when displayed as an image. The first invocation downloads the CLI and its browser into the user's cache. No global install or site build dependency is required. The SVG files are already generated for this draft. If using an installed Chrome instead, pass `-PuppeteerConfig path/to/puppeteer-config.json` with an `executablePath` in that JSON. To regenerate only selected diagrams, use `-Names world-controller,build-workflow,collect-resource`.
+
+The three exact grid examples use code rather than image generation:
+
+```powershell
+node ./diagrams/render-examples.mjs
+```
+
+This generates `voxel-view.svg`, `shelter-layers.svg` and `crafting-recipe.svg`. The script checks dimensions, block counts, entrance/window coordinates and recipe ingredient counts before completing. The voxel projection and ASCII rows share one data structure. These are small fixed illustrations, not a second Minecraft simulation or a runtime dependency of the site.
+
+Reference data checked against the Minecraft project:
+
+- `src/world/VoxelView.ts`: real observation size 5×5×4, horizontal slices, north-to-south rows and west-to-east columns. The article diagram deliberately uses a smaller 3×3×3 example (14 solid cells and 13 air cells).
+- `src/devworld/scenes/shelter.ts`: 5×5×4 shelter, 79 oak planks, south entrance (1×2), west window (1×1), no door item.
+- `recipes/wooden_axe.json` and the recipe renderer: 3 oak planks, 2 sticks, one wooden axe per craft, 3×3 crafting-table grid. The SVG preserves the rendered text, including the warning that catalog knowledge is not a live inventory/access check.
 
 See [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli) for PNG/PDF output and browser configuration, and [Mermaid image nodes](https://mermaid.js.org/syntax/flowchart.html#image-shape) for the character integration. The text-only diagrams can also be pasted into [Mermaid Live Editor](https://mermaid.live/). The capabilities diagram needs the local PNG embedded by the export script.
 
@@ -33,6 +63,30 @@ See [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli) for PNG/PDF output 
 Generation prompt:
 
 > Use case: stylized-concept. Asset type: a small character cutout to embed in a technical Mermaid diagram for a Minecraft bot article. Primary request: one Minecraft player character, full body, standing in a neutral pose, slight three-quarter view, familiar blocky cubic proportions and pixel textures, turquoise shirt and blue trousers. Clean readable silhouette at small size. Genuinely transparent background, no scenery, no platform or ground plane, no floating items, no labels, no text, no diagram or arrows, no watermark. Center the entire character with modest transparent padding; do not crop head or feet. This is an explanatory illustration, not a screenshot from a real bot run.
+
+## Additional generated cutouts
+
+Both cutouts below were generated with the built-in image tool, with `transparent_background: true`, and copied into the project. No external image-generation script or API was used. Only the decorative cutouts are generated: labels, arrows, coordinates, voxel cells and recipe cells come from Mermaid or SVG code.
+
+### World Controller
+
+- Asset: `images/world-controller-character.png`
+- Used in: `images/world-controller.svg`
+- Original generation filename: `exec-fd974588-ba84-4c85-b203-00e236832616.png`
+
+Generation prompt:
+
+> Use case: stylized-concept. Asset type: isolated character cutout for a technical diagram in an English Minecraft R&D article. Create one Minecraft-style player character, full body, neutral standing pose, three-quarter view, cubic limbs and pixel textures, a green work jacket, tan trousers, brown boots and orange hair. The character must look clearly different from the turquoise-shirt, blue-trouser player used elsewhere. Friendly practical world-builder appearance. Entire head and feet visible, generous transparent padding, simple silhouette readable at 180 pixels high. Soft even studio light, sharp clean edges. Genuinely transparent background, no ground plane, no glow, no shadow halo, no scenery, no extra objects, no tool held, no text, no arrows, no watermark. This is an explanatory illustration, not a real gameplay screenshot.
+
+### Wooden axe and crafting table
+
+- Asset: `images/wooden-axe-crafting.png`
+- Used in: `images/crafting-recipe.svg`
+- Original generation filename: `exec-a6eeddf5-cd37-4464-8744-b59fc2d4ec1c.png`
+
+Generation prompt:
+
+> Use case: stylized-concept. Asset type: Minecraft crafting illustration cutout for an educational diagram. Show a single Minecraft crafting table cube in a clear three-quarter isometric view, with a recognisable pixelated wooden axe hovering just above it, axe handle pointing downward diagonally and chunky brown wooden axe head. Match the familiar blocky Minecraft voxel proportions and pixel-art textures, warm oak wood, no realistic rounded edges. Entire cube and axe visible with ample padding. Clean even light, transparent background, no ground plane, no glow or halo, no characters, no UI or crafting grid, no text, no labels, no other ingredients or objects, no watermark. Technical layout and exact recipe grid will be added separately in SVG, so this image must contain only the table and the wooden axe. An illustrative render, not a screenshot of gameplay.
 
 ## Local preview
 

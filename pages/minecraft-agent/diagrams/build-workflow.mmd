@@ -1,0 +1,25 @@
+---
+config:
+  markdownAutoWrap: false
+  flowchart:
+    wrappingWidth: 360
+---
+flowchart LR
+    accTitle: From a building request to a verified construction
+    accDescr: The coordinator asks the Architect for a drawing. Code validates it and computes materials; invalid drawings return feedback. A saved blueprint reference and material bill inform the planner. The action agent gathers resources and invokes an algorithmic Builder, which verifies the placed blocks and reports its result.
+    subgraph DESIGN["1 · Design"]
+        direction TB
+        AR["Coordinator → Architect<br/>Draw horizontal layers"] --> V{"Valid drawing?"}
+        V -->|"No: feedback"| AR
+        V -->|"Yes"| BP["Saved Blueprint<br/>Geometry + material bill"]
+    end
+    subgraph PREPARE["2 · Prepare"]
+        direction TB
+        CP["Coordinator → Planner<br/>Plan resources and construction"] --> A["Action agent<br/>Acquire required materials"]
+    end
+    subgraph EXECUTE["3 · Build"]
+        direction TB
+        B["build(blueprintId, origin)<br/>Algorithmic Builder<br/>Move · equip · place · verify"] --> R["Report to coordinator<br/>Complete or partial / failed"]
+    end
+    DESIGN -->|"Blueprint reference"| PREPARE
+    PREPARE -->|"Invoke build"| EXECUTE

@@ -1,0 +1,20 @@
+---
+config:
+  markdownAutoWrap: false
+  flowchart:
+    wrappingWidth: 320
+---
+flowchart LR
+    accTitle: One collection tool call, multiple physical operations
+    accDescr: The action agent chooses an item and quantity once. The collection routine finds a source or existing dropped item, checks access and the harvesting tool, navigates, digs, approaches dropped items and confirms the inventory gain. It repeats within fixed limits, then returns a compact report. The inner loop does not call a language model.
+    A["One LLM tool call<br/>collect_resource<br/>Save inventory baseline"] --> FIND["Find sources<br/>or loose items"]
+    subgraph LOOP["Algorithmic collection · no LLM calls inside"]
+        FIND -->|"Block"| G["Check tool + access<br/>goto source · equip · dig"]
+        G --> PICK["Find drop<br/>goto drop · wait"]
+        FIND -->|"Existing drop"| PICK
+        PICK --> I["Check<br/>inventory gain"]
+        I -->|"More needed; within limits"| FIND
+    end
+    I -->|"Target reached"| R["Compact report<br/>Collected / requested<br/>Access failures"]
+    G -->|"Blocked / tool missing / limit"| R
+    A -.-> BOT@{ img: "../images/minecraft-bot.png", label: "Mineflayer bot", pos: "b", h: 170, constraint: "on" }
