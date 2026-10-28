@@ -1,0 +1,40 @@
+{
+  "maxTextSize": 2000000,
+  "theme": "base",
+  "themeVariables": {
+    "background": "#101722",
+    "primaryColor": "#1e293b",
+    "primaryTextColor": "#e5e7eb",
+    "primaryBorderColor": "#22d3ee",
+    "lineColor": "#94a3b8",
+    "secondaryColor": "#164e63",
+    "tertiaryColor": "#0f172a",
+    "textColor": "#e5e7eb",
+    "mainBkg": "#1e293b",
+    "nodeBorder": "#22d3ee",
+    "clusterBkg": "#0f172a",
+    "clusterBorder": "#64748b",
+    "edgeLabelBackground": "#101722",
+    "actorBkg": "#1e293b",
+    "actorBorder": "#22d3ee",
+    "actorTextColor": "#e5e7eb",
+    "actorLineColor": "#64748b",
+    "signalColor": "#e5e7eb",
+    "signalTextColor": "#e5e7eb",
+    "labelBoxBkgColor": "#164e63",
+    "labelBoxBorderColor": "#22d3ee",
+    "labelTextColor": "#e5e7eb",
+    "loopTextColor": "#e5e7eb",
+    "noteBkgColor": "#164e63",
+    "noteTextColor": "#e5e7eb",
+    "noteBorderColor": "#22d3ee",
+    "fontFamily": "Segoe UI, sans-serif",
+    "fontSize": "18px"
+  },
+  "flowchart": {
+    "htmlLabels": false
+  },
+  "sequence": {
+    "mirrorActors": false
+  }
+}

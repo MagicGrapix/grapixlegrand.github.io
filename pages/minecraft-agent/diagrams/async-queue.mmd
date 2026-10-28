@@ -1,0 +1,11 @@
+flowchart LR
+    accTitle: Strategy One - intent routing and concurrent execution
+    accDescr: Chat is classified before a response or action request. A mailbox feeds events to the agent. The agent edits a FIFO queue; the executor runs one action at a time and posts completion results back to the mailbox. Model generation and physical execution can overlap.
+    U["Player chat"] --> R{"Intent"}
+    R -->|"Question"| C["Chat reply"]
+    R -->|"Action"| M["Mailbox<br/>messages + results"]
+    M --> L["LLM decision"]
+    L -->|"Queue / resume"| Q["FIFO queue<br/>1. goto<br/>2. equip<br/>3. dig"]
+    Q -->|"Next action"| E["Execute one action<br/>via Mineflayer"]
+    E -->|"Result"| M
+    L -.->|"Concurrent"| E

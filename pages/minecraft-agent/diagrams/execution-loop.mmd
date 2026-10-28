@@ -1,0 +1,23 @@
+sequenceDiagram
+    accTitle: From overlapping work to a sequential loop
+    accDescr: The first version overlapped model reflection with queued actions; the revised loop waits for execution results before the next decision.
+    participant L as LLM
+    participant E as Execution
+    participant W as Minecraft
+
+    Note over L,W: Initial approach: overlapping work
+    L->>E: Queue actions
+    par Reflection
+        L->>L: Prepare the next decision
+    and Execution
+        E->>W: Execute a queued action
+        W-->>E: Observed result
+    end
+    E-->>L: Return the result
+
+    Note over L,W: Revised approach: sequential loop
+    L->>E: Select one action
+    E->>W: Execute the action
+    W-->>E: Observed result
+    E-->>L: Return the result
+    L->>L: Observe and decide again

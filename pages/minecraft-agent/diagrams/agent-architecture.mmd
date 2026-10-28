@@ -1,0 +1,23 @@
+flowchart TB
+    accTitle: Minecraft agent responsibilities
+    accDescr: The coordinator delegates to a planner, an architect and an action agent. The action agent calls algorithmic tools through Mineflayer.
+    U["Player request"] --> C["Coordinator"]
+
+    subgraph LLM["LLM decisions"]
+        C -->|"Request plan"| P["Planner"]
+        P -->|"Checklist"| C
+        C -->|"Request design"| AR["Architect"]
+        AR -->|"Blueprint reference"| C
+        C -->|"Delegate step"| A["Action agent"]
+        A -->|"Report"| C
+    end
+
+    subgraph CODE["Algorithmic execution"]
+        T["Tools, resource collection and Builder"]
+        M["Mineflayer"]
+        T --> M
+    end
+
+    A -->|"Tool call"| T
+    M --> W["Minecraft world"]
+    W -.->|"Observations and results"| A

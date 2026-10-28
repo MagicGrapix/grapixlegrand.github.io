@@ -1,6 +1,15 @@
 {
-  "order": ["genai", "thesis", "raytracer", "levek"],
+  "order": ["minecraft", "genai", "thesis", "raytracer", "levek"],
   "projects": {
+    "minecraft": {
+      "title": "Building a Minecraft Agent with a Local LLM",
+      "meta": "Personal R&D · LLM agents · 2026",
+      "summary": "Experiments with local LLM agents, world observations, automated collection and construction, and repeatable Minecraft scenarios.",
+      "chips": ["TypeScript", "Mineflayer", "LLM agents", "Evaluation"],
+      "preview": "./pages/minecraft-agent/images/agent-architecture.svg",
+      "previewFit": "contain",
+      "link": "./pages/minecraft-agent/"
+    },
     "genai": {
       "title": "Controlling Generative AI for Game Content",
       "meta": "R&D · Generative AI · 2025",
