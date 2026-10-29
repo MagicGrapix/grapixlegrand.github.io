@@ -1,10 +1,11 @@
 # Minecraft article
 
-The page follows the existing OZWE article reader and shares its vendored Markdown renderer. It uses static SVG diagrams and author-provided JPEG screenshots; Mermaid is not loaded by visitors. The article header links to the Minecraft project's GitHub repository.
+The page follows the existing OZWE article layout. The local build renders `article.md` into `index.html` using the shared vendored Markdown renderer; visitors receive the complete HTML. It uses static SVG diagrams and author-provided JPEG screenshots; Mermaid is not loaded by visitors. The article header links to the Minecraft project's GitHub repository.
 
 ## Edit
 
 - `article.md`: article text, image paths and captions.
+- `template.html`: page metadata, surrounding layout and article styles.
 - `diagrams/*.mmd`: editable Mermaid sources.
 - `diagrams/mermaid-config.json`: diagram colours and typography.
 - `diagrams/render-examples.mjs`: dependency-free SVG renderer for the voxel, shelter and recipe examples, with fixture assertions.
@@ -116,9 +117,11 @@ Generation prompt:
 From the repository root:
 
 ```powershell
+npm ci
+npm run build
 py -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open http://127.0.0.1:8000/pages/minecraft-agent/. Opening `index.html` directly with `file://` cannot load the Markdown reader's fetch request.
+Open http://127.0.0.1:8000/pages/minecraft-agent/. Run `npm run watch` in a second terminal while editing Markdown, then refresh the browser. See the root README for the complete workflow. The generated article is readable without JavaScript; `assets/article.js` adds the image dialog.
 
-Nothing in this folder publishes the site. Review the article, replace the screenshot placeholders and approve the changes before pushing.
+Nothing in this folder publishes the site. Review the article and approve the changes before pushing.
