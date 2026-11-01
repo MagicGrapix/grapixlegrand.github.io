@@ -24,9 +24,9 @@
   <header class="reader-header">
     <a class="reader-brand" href="../../">Quentin Guignard<span aria-hidden="true">.</span></a>
     <nav aria-label="Portfolio navigation">
-      <a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg> Projects</a>
+      <a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6" /></svg> Projects</a>
       <a class="reader-contact" href="../../#contact">Contact</a>
-      <a class="reader-cv" href="../../QuentinGuignardSoftwareEngineerCV.pdf" target="_blank" rel="noopener" aria-label="Open software engineer CV (PDF)">CV <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg></a>
+      <a class="reader-cv" href="../../QuentinGuignardSoftwareEngineerCV.pdf" target="_blank" rel="noopener" aria-label="Open software engineer CV (PDF)">CV <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4" /></svg></a>
     </nav>
   </header>
   <main class="page article-page">
@@ -36,7 +36,7 @@
 <p><em>R&amp;D project developed at OZWE · Early 2025 · 5 min read</em></p>
 <p>It all started with a request from our client to explore new ways of using AI to create game content. At OZWE, we began investigating a generative quest system. How much could AI handle, which parts should remain scripted, and could we use AI to help verify its own output?</p>
 <p>Our prototype followed Alfred, a cook travelling through different biomes to find new spices for his village. His adventures would arrive as humorous postcards, with illustrations and choices that shaped the quest.</p>
-<figure><a aria-label="Enlarge: Alfred's illustrated postcards, with a player choice leading to two different endings." class="image-expand" href="./images/alfred-postcard-quest.jpg"><img loading="eager" decoding="async" src="./images/alfred-postcard-quest.jpg" alt="Alfred's illustrated postcards, with a player choice leading to two different endings."></a><figcaption><em>The prototype: an adventure told through postcards and player choices.</em></figcaption></figure>
+<figure><img loading="eager" decoding="async" src="./images/alfred-postcard-quest.jpg" alt="Alfred's illustrated postcards, with a player choice leading to two different endings."><figcaption><em>The prototype: an adventure told through postcards and player choices.</em></figcaption></figure>
 
 <h2>The original question</h2>
 <p>The goal was not complete autonomy. A designer would describe a quest, and the system would help turn that intention into game content.</p>
@@ -59,7 +59,7 @@
 <p>We took a divide and conquer approach: break the quest into steps, questions, branches, and outcomes, then generate content within that structure.</p>
 <p>This made the progression explicit and easier to inspect. However, it did not guarantee that the content would fit the game world. Including all the lore introduced another problem: too much context.</p>
 <figure>
-  <a aria-label="Enlarge: Narrative structure: two steps lead to a choice, two branches and separate endings." class="image-expand" href="./images/quest-narrative-structure.jpg"><img decoding="async" src="./images/quest-narrative-structure.jpg" alt="Narrative structure: two steps lead to a choice, two branches and separate endings." loading="lazy" style="width: auto; max-width: 100%; height: auto; max-height: 460px; margin: 0 auto; object-fit: contain;"></a>
+  <img decoding="async" src="./images/quest-narrative-structure.jpg" alt="Narrative structure: two steps lead to a choice, two branches and separate endings." loading="lazy" style="width: auto; max-width: 100%; height: auto; max-height: 460px; margin: 0 auto; object-fit: contain;">
   <figcaption><em>Breaking the quest into explicit steps, choices and endings made its progression easier to control.</em></figcaption>
 </figure>
 
@@ -73,7 +73,7 @@
 </ul>
 <p>Our trials showed better lore compliance and consistency between steps. These were qualitative observations from the prototype.</p>
 <figure style="margin: 1.5rem 0;">
-  <a aria-label="Enlarge: RAG: embed the quest prompt, compare it with the lore and retrieve a reduced context." class="image-expand" href="./images/lore-rag-retrieval.jpg"><img decoding="async" src="./images/lore-rag-retrieval.jpg" alt="RAG: embed the quest prompt, compare it with the lore and retrieve a reduced context." loading="lazy" style="width: auto; max-width: 100%; height: auto; max-height: 460px; margin: 0 auto; object-fit: contain;"></a>
+  <img decoding="async" src="./images/lore-rag-retrieval.jpg" alt="RAG: embed the quest prompt, compare it with the lore and retrieve a reduced context." loading="lazy" style="width: auto; max-width: 100%; height: auto; max-height: 460px; margin: 0 auto; object-fit: contain;">
   <figcaption><em>Retrieval selected the relevant knowledge before generation, reducing the amount of lore placed in context.</em></figcaption>
 </figure>
 
@@ -88,24 +88,24 @@
 <li><strong>Style:</strong> use a reference image to guide its visual treatment.</li>
 <li><strong>Identity:</strong> explore face swapping to preserve Alfred's appearance.</li>
 </ul>
-<figure><a aria-label="Enlarge: Illustration approach combining a structure image and style reference through FLUX 1.1, followed by a face-swap stage using Alfred's face." class="image-expand" href="./images/image_pipeline.jpg"><img loading="lazy" decoding="async" src="./images/image_pipeline.jpg" alt="Illustration approach combining a structure image and style reference through FLUX 1.1, followed by a face-swap stage using Alfred's face."></a><figcaption><em>Reconstruction of the explored approach, using illustrative examples rather than original outputs from every named tool. Open the image for a closer look.</em></figcaption></figure>
+<figure><a href="./images/image_pipeline.jpg"><img loading="lazy" decoding="async" src="./images/image_pipeline.jpg" alt="Illustration approach combining a structure image and style reference through FLUX 1.1, followed by a face-swap stage using Alfred's face."></a><figcaption><em>Reconstruction of the explored approach, using illustrative examples rather than original outputs from every named tool.</em></figcaption></figure>
 
 <h2>Checking smaller parts of the image</h2>
 <p>We experimented with vision-language models (VLMs) to check the generated images. Their descriptions captured the overall scene but often missed details or mixed foreground and background.</p>
 <p>Again, we decomposed the problem: use depth and masks to separate regions, then ask more specific questions about clothing, objects, or scenery.</p>
-<figure><a aria-label="Enlarge: Image isolation pipeline using Depth Anything, background removal and a binary mask to separate foreground and background." class="image-expand" href="./images/foreground-background-isolation-pipeline.jpg"><img loading="lazy" decoding="async" src="./images/foreground-background-isolation-pipeline.jpg" alt="Image isolation pipeline using Depth Anything, background removal and a binary mask to separate foreground and background."></a><figcaption><em>Separating the scene gives the evaluator a smaller region to inspect.</em></figcaption></figure>
+<figure><a href="./images/foreground-background-isolation-pipeline.jpg"><img loading="lazy" decoding="async" src="./images/foreground-background-isolation-pipeline.jpg" alt="Image isolation pipeline using Depth Anything, background removal and a binary mask to separate foreground and background."></a><figcaption><em>Separating the scene gives the evaluator a smaller region to inspect.</em></figcaption></figure>
 
 <p>We also explored detecting individual characters and isolating them for clothing checks.</p>
 <details>
   <summary>Example: isolating a character for evaluation</summary>
-  <a aria-label="Enlarge: Detected characters, an isolated child, and a targeted clothing question for the VLM." class="image-expand" href="./images/character-detection-clothing-evaluation.jpg"><img decoding="async" src="./images/character-detection-clothing-evaluation.jpg" alt="Detected characters, an isolated child, and a targeted clothing question for the VLM." loading="lazy"></a>
+  <img decoding="async" src="./images/character-detection-clothing-evaluation.jpg" alt="Detected characters, an isolated child, and a targeted clothing question for the VLM." loading="lazy">
 </details>
 
 <p>However, finding a region did not guarantee a correct evaluation. Detecting a hand and judging its anatomy remained different problems.</p>
 <figure style="margin: 1.5rem 0;">
   <div class="figure-pair" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
-    <a aria-label="Enlarge: Generated chef illustration with detection boxes around hands." class="image-expand" href="./images/hand-detection.jpg"><img decoding="async" src="./images/hand-detection.jpg" alt="Generated chef illustration with detection boxes around hands." loading="lazy" style="width: 260px; max-width: 100%; height: auto; margin: 0;"></a>
-    <a aria-label="Enlarge: Close-up of the same chef's foreground hand, showing the anatomy to inspect." class="image-expand" href="./images/hand-detail.jpg"><img decoding="async" src="./images/hand-detail.jpg" alt="Close-up of the same chef's foreground hand, showing the anatomy to inspect." loading="lazy" style="width: 260px; max-width: 100%; height: auto; margin: 0;"></a>
+    <img decoding="async" src="./images/hand-detection.jpg" alt="Generated chef illustration with detection boxes around hands." loading="lazy" style="width: 260px; max-width: 100%; height: auto; margin: 0;">
+    <img decoding="async" src="./images/hand-detail.jpg" alt="Close-up of the same chef's foreground hand, showing the anatomy to inspect." loading="lazy" style="width: 260px; max-width: 100%; height: auto; margin: 0;">
   </div>
   <figcaption><em>A detected hand and its close-up: localisation alone does not establish anatomical correctness.</em></figcaption>
 </figure>
@@ -124,15 +124,8 @@
       </div>
     </article>
   </main>
-  <footer class="reader-footer"><a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg> Back to projects</a><a href="mailto:quentin.guignard@outlook.com">Let’s build it.</a></footer>
-  <dialog class="image-dialog" id="image-dialog" aria-label="Enlarged illustration" aria-describedby="image-description">
-    <div class="image-dialog__toolbar">
-      <a id="image-original" target="_blank" rel="noopener">Open full-size image ↗</a>
-      <button id="image-close" type="button" autofocus>Close ×</button>
-    </div>
-    <img id="image-preview" alt="">
-    <p id="image-description"></p>
-  </dialog>
-  <script src="../../assets/article.js" defer></script>
+  <footer class="reader-footer"><a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6" /></svg> Back to projects</a><a href="mailto:quentin.guignard@outlook.com">Let’s build it.</a></footer>
+
+
 </body>
 </html>

@@ -28,7 +28,7 @@ async function ready(p) {
   assert.equal(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, 'No horizontal overflow');
   assert.deepEqual(await p.evaluate(() => [...document.images].filter(i => i.getAttribute('src') && !i.naturalWidth).map(i => i.src)), [], 'Images loaded');
 }
-const top = (id = 'software') => page.evaluate(id => document.getElementById(id).getBoundingClientRect().top + scrollY - document.querySelector('.site-header').offsetHeight - 18, id);
+const top = (id = 'software') => page.evaluate(id => document.getElementById(id).getBoundingClientRect().top + scrollY - document.querySelector('.site-header').offsetHeight, id);
 async function at(y) {
   try { await page.waitForFunction(value => Math.abs(scrollY - value) < 3, y); }
   catch (error) { console.log('Navigation failure', { expected: y, ...await page.evaluate(() => ({ y: scrollY, active: document.activeElement.outerHTML.slice(0,160) })) }); throw error; }
@@ -40,7 +40,9 @@ try {
   assert.equal(await page.locator('.work-card').count(), 13);
   assert.notEqual(await page.locator('.name .letter').first().evaluate(e => getComputedStyle(e).color), 'rgba(0, 0, 0, 0)');
   assert.deepEqual(await page.locator('.portfolio-content > section').evaluateAll(elements => elements.map(el => el.id)), ['about','software','art','experience','games','contact']);
-  assert.equal(await page.locator('#about .stack-band').count(), 1);
+  assert.equal(await page.locator('#about .stack-band,.about-background').count(), 0);
+  const nav = await page.locator('.section-links').boundingBox();
+  assert.ok(Math.abs(nav.x + nav.width / 2 - 720) < 2, 'Centered desktop navigation');
   assert.equal(await page.locator('#contact .portrait, #contact .about-title').count(), 0);
   await page.locator('.motion-replay').click();
   await page.locator('.motion-replay').evaluate(e => e.blur());
@@ -104,37 +106,34 @@ try {
   await phone.screenshot({ path: `${out}/mobile-about-bottom.png` });
   await phone.locator('.continue-work').click(); await phone.waitForTimeout(150);
   await phone.screenshot({ path: `${out}/mobile-projects.png` });
-  assert.equal(await phone.locator('.compact-projects').isVisible(), true);
+  assert.equal(await phone.locator('.compact-projects').isVisible(), false);
+  assert.equal(await phone.locator('.wordmark').isVisible(), false);
+  assert.equal(await phone.locator('.socials a').count(), 5);
   await mobile.close();
   const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const touchPage = await touchContext.newPage();
   touchPage.on('pageerror', e => errors.push(e.message));
   await touchPage.goto(base); await ready(touchPage);
   const cdp = await touchContext.newCDPSession(touchPage);
-  async function swipe() {
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 200, y: 650 }] });
+  async function swipe(up = true) {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 200, y: up ? 650 : 300 }] });
     for (let step = 1; step <= 8; step++) {
-      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: 650 - step * 20 }] });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: up ? 650 - step * 20 : 300 + step * 20 }] });
       await touchPage.waitForTimeout(25);
     }
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await touchPage.waitForTimeout(1100);
   }
-  const mobileTop = id => touchPage.evaluate(id => document.getElementById(id).getBoundingClientRect().top + scrollY - document.querySelector('.site-header').offsetHeight - 18, id);
+  const mobileTop = id => touchPage.evaluate(id => document.getElementById(id).getBoundingClientRect().top + scrollY - document.querySelector('.site-header').offsetHeight, id);
   await swipe();
   assert.ok(Math.abs(await touchPage.evaluate(() => scrollY) - await mobileTop('about')) < 5, 'Touch guides intro to About');
-  const aboutStart = await mobileTop('about');
+  assert.ok(await touchPage.locator('#about').evaluate(el => el.offsetHeight <= innerHeight - document.querySelector('.site-header').offsetHeight + 2), 'Mobile About fits the screen');
   await swipe();
-  assert.ok(await touchPage.evaluate(y => scrollY > y + 40, aboutStart), 'Tall mobile presentation scrolls naturally');
-  assert.ok(await touchPage.evaluate(() => scrollY) < await mobileTop('software') - 200, 'Presentation content is not skipped');
-  await touchPage.evaluate(() => {
-    const header = document.querySelector('.site-header').offsetHeight + 18;
-    const projects = document.getElementById('software').getBoundingClientRect().top + scrollY - header;
-    scrollTo(0, projects - (innerHeight - header));
-  });
-  await touchPage.waitForTimeout(100);
-  await swipe();
-  assert.ok(Math.abs(await touchPage.evaluate(() => scrollY) - await mobileTop('software')) < 5, 'Touch guides the end of About to projects');
+  assert.ok(Math.abs(await touchPage.evaluate(() => scrollY) - await mobileTop('software')) < 5, 'Touch guides About to projects');
+  await swipe(false);
+  assert.ok(Math.abs(await touchPage.evaluate(() => scrollY) - await mobileTop('about')) < 5, 'Touch guides projects back to About');
+  await swipe(false);
+  assert.ok(await touchPage.evaluate(() => scrollY < 5), 'Touch returns to the title');
   await touchContext.close();
   const staticContext = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const staticPage = await staticContext.newPage(); await staticPage.goto(base);

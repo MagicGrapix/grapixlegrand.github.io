@@ -63,7 +63,7 @@ export function renderHomeCopy(markdown) {
       sections.set(key, []);
     } else if (key) sections.get(key).push(token);
   }
-  for (const required of ['roles', 'notes', 'about', 'toolkit']) assert.ok(sections.has(required), `Missing home section: ${required}`);
+  for (const required of ['roles', 'notes', 'about']) assert.ok(sections.has(required), `Missing home section: ${required}`);
   const result = new Map();
   for (const [name, tokens] of sections) {
     const { document } = parseHTML(`<div id="copy">${marked.parser(tokens)}</div>`);
@@ -106,15 +106,6 @@ export function renderArticle(markdown) {
     assert.ok(image.hasAttribute('alt'), `Missing image alt: ${image.getAttribute('src')}`);
     image.setAttribute('decoding', 'async');
     image.setAttribute('loading', index === 0 ? 'eager' : 'lazy');
-    let link = image.closest('a');
-    if (!link) {
-      link = document.createElement('a');
-      link.setAttribute('href', image.getAttribute('src'));
-      image.replaceWith(link);
-      link.append(image);
-    }
-    link.classList.add('image-expand');
-    link.setAttribute('aria-label', `Enlarge: ${image.getAttribute('alt') || 'illustration'}`);
   }
   return content.innerHTML;
 }
@@ -178,18 +169,20 @@ export async function generate(directory = root) {
     }
     home = insert(home, `<!-- CARDS:${category} -->`, renderCards(data, category));
   }
+  const { document: homeDocument } = parseHTML(home);
+  const homeImage = homeDocument.querySelector('.portrait img')?.getAttribute('src') || './resources/profile.jpg';
   if (home.includes('<!-- STRUCTURED_DATA -->')) {
-    const { document } = parseHTML(home);
+    const document = homeDocument;
     const person = { '@type': 'Person', '@id': `${origin}/#person`, name: 'Quentin Guignard', url: `${origin}/`, jobTitle: 'Software Engineer',
       description: document.querySelector('.about-paragraphs')?.textContent.trim(),
-      image: `${origin}/resources/profile.jpg`,
+      image: new URL(homeImage, `${origin}/`).href,
       sameAs: [...document.querySelectorAll('.socials a.social[href^="https:"]')].map(a => a.getAttribute('href')) };
     const graph = { '@context': 'https://schema.org', '@graph': [person,
       { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'Quentin Guignard — Software Engineering', publisher: { '@id': person['@id'] } },
       { '@type': 'ProfilePage', '@id': `${origin}/#webpage`, url: `${origin}/`, name: document.querySelector('title').textContent, mainEntity: { '@id': person['@id'] }, isPartOf: { '@id': `${origin}/#website` } }] };
     home = insert(home, '<!-- STRUCTURED_DATA -->', `<script type="application/ld+json">${JSON.stringify(graph).replaceAll('<', '\\u003c')}</script>`);
   }
-  outputs.set('index.html', addMetadata(home, '/', origin, 'website', './resources/profile.jpg'));
+  outputs.set('index.html', addMetadata(home, '/', origin, 'website', homeImage));
   const routes = ['/'];
   for (const entry of (await readdir(resolve(directory, 'pages'), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
     if (!entry.isDirectory()) continue;

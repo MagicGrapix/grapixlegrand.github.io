@@ -10,9 +10,12 @@
     "test:browser": "node tests/browser.mjs",
     "test:gateway": "node tests/gateway.mjs",
     "test:dev": "node tests/dev.mjs",
-    "test:readers": "node tests/readers.mjs"
+    "test:readers": "node tests/readers.mjs",
+    "test:scroll": "node tests/scroll-return.cjs"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
     "linkedom": "0.18.14",
     "playwright": "1.64.1"

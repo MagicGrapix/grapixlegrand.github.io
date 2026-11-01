@@ -39,7 +39,7 @@
       "year": "2025"
     },
     "thesis": {
-      "title": "Master Thesis Prototype",
+      "title": "Master Thesis",
       "meta": "2024 · AI / gameplay research prototype",
       "summary": "ETH thesis prototype (Andrometica Cynus): LLM + MCTS for chat-driven NPC behavior in a 2D Bevy game.",
       "chips": [

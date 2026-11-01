@@ -106,7 +106,7 @@
         p.el.style.transform=`translate3d(${p.x}px,${p.y}px,0)`;
         p.el.style.filter=`blur(${Math.min(.3,Math.hypot(p.vx,p.vy)*.07)}px)`;
         if(true){
-          const split=f*3.2,sy=(a.x-p.cx)/180*f;
+          const split=f*(a.region===composition?6:3.2),sy=(a.x-p.cx)/180*f;
           p.el.style.textShadow=f>.002?`${-split}px ${sy}px #dfa3a5,${split}px ${-sy}px #9bc9e8`:"none";
         }
         unsettled ||= Math.abs(p.x-tx)+Math.abs(p.y-ty)+Math.abs(p.vx)+Math.abs(p.vy)>.08;
@@ -123,6 +123,7 @@
   }
 
   const particles=Array.from({length:86},(_,i)=>({phase:random(i),lane:random(i+800),speed:(.028+random(i+1600)*.018)*.75,dx:0,dy:0,vx:0,vy:0,color:colors[i%3]}));
+  const links=new Map();
   function bend(x,y,radius=27000,amount=80){
     const dx=x-mx,dy=y-my,d2=dx*dx+dy*dy,f=Math.exp(-d2/radius)*power*amount;
     return [dx/Math.sqrt(d2+2000)*f,dy/Math.sqrt(d2+2000)*f];
@@ -134,7 +135,7 @@
     const y=75+lane*(h-150)+Math.sin(travel*6.28+lane*4)*23+(travel-.5)*h*.1;
     return {x,y,life};
   }
-  function drawParticles(t,intro,move){
+  function drawParticles(t,intro,move,dt=33){
     const count=fine.matches?particles.length:42,points=[];
     const stream=effect==='streams',network=effect==='neighbours';
     if(stream){
@@ -158,24 +159,33 @@
       }
       const [fx,fy]=bend(x,y);
       if(move){p.vx=(p.vx+(fx-p.dx)*.12)*.75;p.vy=(p.vy+(fy-p.dy)*.12)*.75;p.dx+=p.vx;p.dy+=p.vy;}
-      points.push({x:x+p.dx,y:y+p.dy,alpha:Math.pow(Math.sin(life*Math.PI),1.2)*(.48+(i%3)*.09)*intro,color:p.color,r:i%7===0?3:2.05});
+      points.push({x:x+p.dx,y:y+p.dy,alpha:Math.pow(Math.sin(life*Math.PI),1.2)*(.48+(i%3)*.09)*intro,color:p.color,r:.85+Math.pow(random(i+3100),2)*2.9});
     }
     if(network){
-      const linked=new Set(),radius=Math.min(165,w*.23);
+      const wanted=new Set(),radius=Math.min(165,w*.23);
       points.forEach((p,i)=>{
         const closest=points.map((q,j)=>({q,j,d:Math.hypot(p.x-q.x,p.y-q.y)})).filter(v=>v.j!==i&&v.d<radius).sort((a,b)=>a.d-b.d).slice(0,2);
         closest.forEach(({q,j,d})=>{
-          const key=Math.min(i,j)+':'+Math.max(i,j);if(linked.has(key)||d<.1)return;linked.add(key);
-          const gradient=ctx.createLinearGradient(p.x,p.y,q.x,q.y);gradient.addColorStop(0,p.color);gradient.addColorStop(1,q.color);
-          ctx.strokeStyle=gradient;ctx.globalAlpha=(1-d/radius)*Math.min(p.alpha,q.alpha)*.68;ctx.lineWidth=.95;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+          const key=Math.min(i,j)+':'+Math.max(i,j);if(wanted.has(key)||d<.1)return;wanted.add(key);
+          if(!links.has(key))links.set(key,{i,j,weight:move?0:1});
         });
+      });
+      links.forEach((link,key)=>{
+        const selected=wanted.has(key),target=selected?1:0;
+        link.weight=move?link.weight+(target-link.weight)*(1-Math.exp(-dt/(selected?240:170))):target;
+        if(link.weight<.002&&!selected){links.delete(key);return;}
+        const p=points[link.i],q=points[link.j];if(!p||!q){links.delete(key);return;}
+        const distance=Math.hypot(p.x-q.x,p.y-q.y);
+        const gradient=ctx.createLinearGradient(p.x,p.y,q.x,q.y);gradient.addColorStop(0,p.color);gradient.addColorStop(1,q.color);
+        ctx.strokeStyle=gradient;ctx.globalAlpha=Math.max(0,1-distance/radius)*Math.min(p.alpha,q.alpha)*.68*link.weight;
+        ctx.lineWidth=.95;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
       });
     }
     for(const p of points){ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}
   }
-  function drawBackground(move){
+  function drawBackground(move,dt=33){
     if(!ctx)return;ctx.clearRect(0,0,w,h);const t=elapsed/1000,intro=canMove()?clamp(introElapsed/1000,0,1):1;
-    drawParticles(t,intro,move);
+    drawParticles(t,intro,move,dt);
     ctx.globalAlpha=1;
   }
   function requestFrame(){if(!frame&&!document.hidden&&canMove())frame=requestAnimationFrame(render);}
@@ -186,7 +196,7 @@
     if(heroVisible){
       elapsed+=dt;introElapsed+=dt;px+=(targetX-px)*.1;py+=(targetY-py)*.1;power+=(targetPower-power)*.14;
       composition.style.transform=`translate3d(${px*13}px,${py*9}px,0)`;
-      drawBackground(true);
+      drawBackground(true,dt);
     }
     const unsettled=reactiveFrame();if(heroVisible||unsettled)requestFrame();
   }
@@ -219,23 +229,24 @@
   addEventListener('scroll',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(syncScroll);},{passive:true});
   let transitioning=false,transitionTarget=0,releaseTimer=0;
   function headerHeight(){return document.querySelector('.site-header').offsetHeight;}
-  function sectionTop(id){const el=document.getElementById(id);return Math.max(0,el.getBoundingClientRect().top+scrollY-headerHeight()-18);}
+  function sectionTop(id){const el=document.getElementById(id);return Math.max(0,el.getBoundingClientRect().top+scrollY-headerHeight());}
   function aboutEnd(){
     // Taller presentations remain freely scrollable before their next guided step.
-    return Math.max(sectionTop('about'),sectionTop('software')-(innerHeight-headerHeight()-18));
+    return Math.max(sectionTop('about'),sectionTop('software')-(innerHeight-headerHeight()));
   }
   function overlayOpen(){return body.classList.contains('work-overlay-open')||Boolean(document.querySelector('dialog[open]'));}
   function releaseTransition(){transitioning=false;clearTimeout(releaseTimer);}
   function navigate(el,focus=false){
     if(!el)return;
-    const top=Math.max(0,el.getBoundingClientRect().top+scrollY-(el===hero?0:headerHeight()+18));
-    scrollTo({top,behavior:canMove()?'smooth':'instant'});
+    const top=Math.max(0,el.getBoundingClientRect().top+scrollY-(el===hero?0:headerHeight()));
+    if(canMove())crossBoundary(top);else scrollTo({top,behavior:'instant'});
     if(focus)el.querySelector('h1,h2')?.focus({preventScroll:true});
   }
   function crossBoundary(target){
     releaseTransition();transitioning=true;transitionTarget=target;
     scrollTo({top:transitionTarget,behavior:'smooth'});
-    releaseTimer=setTimeout(releaseTransition,850);
+    // Native touch inertia can leave the smooth scroll a few pixels off its target.
+    releaseTimer=setTimeout(()=>{scrollTo({top:transitionTarget,behavior:'instant'});releaseTransition();},850);
   }
   document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
     if(e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
@@ -250,17 +261,20 @@
     if(delta<0){
       if(y>8&&y<=about+35)return 0;
       if(y>end+8&&y<=projects+35)return end;
+      // Re-enter the guided introduction as soon as a gesture crosses its edge.
+      if(y>projects+35&&y+delta<=projects)return end;
     }
     return null;
   }
   addEventListener('wheel',e=>{
     if(!fine.matches||!canMove()||overlayOpen()||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY)||!e.deltaY)return;
-    if(e.target.closest('button,input,textarea,select,[contenteditable=true]'))return;
+    if(e.target.closest('input,textarea,select,[contenteditable=true]'))return;
     if(transitioning){
       e.preventDefault();
       return;
     }
-    const target=boundaryFor(e.deltaY);if(target===null)return;
+    const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
+    const target=boundaryFor(delta);if(target===null)return;
     e.preventDefault();crossBoundary(target);
   },{passive:false});
   addEventListener('keydown',e=>{
@@ -270,14 +284,25 @@
     const target=boundaryFor(delta);if(!delta||target===null)return;e.preventDefault();crossBoundary(target);
   });
   let touch=null;
-  addEventListener('touchstart',e=>{releaseTransition();touch=e.touches.length===1?{y:e.touches[0].clientY,scroll:scrollY}:null;},{passive:true});
+  addEventListener('touchstart',e=>{
+    touch=e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,scroll:scrollY,target:null,blocked:transitioning}:null;
+  },{passive:true});
+  addEventListener('touchmove',e=>{
+    if(!touch||!canMove()||overlayOpen()||e.touches.length!==1)return;
+    const dx=e.touches[0].clientX-touch.x,delta=touch.y-e.touches[0].clientY;
+    if(Math.abs(dx)>Math.abs(delta)||Math.abs(delta)<8)return;
+    if(touch.blocked){if(e.cancelable)e.preventDefault();return;}
+    const target=boundaryFor(delta,touch.scroll);
+    if(target!==null){touch.target=target;if(e.cancelable)e.preventDefault();}
+  },{passive:false});
   addEventListener('touchend',e=>{
     if(!touch||!canMove()||overlayOpen()){touch=null;return;}
-    const delta=touch.y-e.changedTouches[0].clientY,target=boundaryFor(delta,touch.scroll);touch=null;
-    if(Math.abs(delta)>45&&target!==null)crossBoundary(target);
+    const delta=touch.y-e.changedTouches[0].clientY,dx=e.changedTouches[0].clientX-touch.x;
+    const target=touch.target??boundaryFor(delta,touch.scroll),blocked=touch.blocked;touch=null;
+    if(!blocked&&Math.abs(delta)>45&&Math.abs(delta)>Math.abs(dx)&&target!==null)crossBoundary(target);
   },{passive:true});
   addEventListener('touchcancel',()=>{touch=null;},{passive:true});
-  addEventListener('pointerdown',releaseTransition);
+  addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')releaseTransition();});
 
   function stopMotion(){
     cancelAnimationFrame(frame);frame=0;lastFrame=0;heroEntrances.splice(0).forEach(a=>a.cancel());revealAll();

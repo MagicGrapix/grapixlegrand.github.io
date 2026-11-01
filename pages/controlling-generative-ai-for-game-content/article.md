@@ -78,7 +78,7 @@ We investigated separating three concerns:
 
 [![Illustration approach combining a structure image and style reference through FLUX 1.1, followed by a face-swap stage using Alfred's face.](./images/image_pipeline.jpg)](./images/image_pipeline.jpg)
 
-*Reconstruction of the explored approach, using illustrative examples rather than original outputs from every named tool. Open the image for a closer look.*
+*Reconstruction of the explored approach, using illustrative examples rather than original outputs from every named tool.*
 
 ## Checking smaller parts of the image
 

@@ -67,12 +67,10 @@ try {
       await page.screenshot({ path: `${output}/${slug}-${width}.png`, fullPage: slug === 'home' });
       if (slug !== 'home') {
         assert.equal(await page.locator('h1').count(), 1);
-        const opener = page.locator('#article-content a.image-expand').first();
-        await opener.click();
-        await page.waitForFunction(() => document.querySelector('#image-dialog').open);
-        await page.keyboard.press('Escape');
-        await page.waitForFunction(() => !document.querySelector('#image-dialog').open);
-        assert.equal(await opener.evaluate(element => document.activeElement === element), true, 'Image opener focus restored');
+        assert.equal(await page.locator('#article-content a.image-expand, #image-dialog').count(), 0);
+        const currentUrl = page.url();
+        await page.locator('#article-content figure img').first().click();
+        assert.equal(page.url(), currentUrl, 'Article images do not navigate or open a dialog');
       }
     }
     {
@@ -144,7 +142,7 @@ try {
   }
   assert.deepEqual(failures, [], 'Browser errors or failed local resources');
   await writeFile(`${output}/layout.json`, JSON.stringify(snapshots, null, 2));
-  console.log(`${baseline ? 'Baseline' : 'Browser tests'} passed: three articles, ten overlays, image dialogs, image/video galleries, desktop and mobile.`);
+  console.log(`${baseline ? 'Baseline' : 'Browser tests'} passed: three articles, ten overlays, noninteractive article images, image/video galleries, desktop and mobile.`);
 } finally {
   await browser.close();
 }

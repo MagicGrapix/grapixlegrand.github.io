@@ -24,9 +24,9 @@
   <header class="reader-header">
     <a class="reader-brand" href="../../">Quentin Guignard<span aria-hidden="true">.</span></a>
     <nav aria-label="Portfolio navigation">
-      <a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg> Projects</a>
+      <a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6" /></svg> Projects</a>
       <a class="reader-contact" href="../../#contact">Contact</a>
-      <a class="reader-cv" href="../../QuentinGuignardSoftwareEngineerCV.pdf" target="_blank" rel="noopener" aria-label="Open software engineer CV (PDF)">CV <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg></a>
+      <a class="reader-cv" href="../../QuentinGuignardSoftwareEngineerCV.pdf" target="_blank" rel="noopener" aria-label="Open software engineer CV (PDF)">CV <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4" /></svg></a>
     </nav>
   </header>
   <main class="page article-page">
@@ -34,8 +34,10 @@
       <div class="article-content" id="article-content">
 <h1>LevekGL — Learning How Rendering Works</h1>
 <p><em>Student project · 2021–2023 · 3 min read</em></p>
+<p><a class="profile-links__chip" href="https://github.com/MagicGrapix/LevekGL" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 7c.85 0 1.7.12 2.5.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.39.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.59c0 .27.18.58.69.48A10 10 0 0 0 12 2z" /></svg><span>View source code on GitHub</span></a></p>
+
 <p>I started LevekGL during my studies because I wanted to understand what was happening underneath the game engines I was using. Building a small rendering library felt like the most direct way to learn: isolate one problem, make it visible, then move to the next layer.</p>
-<figure><a aria-label="Enlarge: Two views of the blue dragon model rendered during the Phong lighting experiment." class="image-expand" href="../../resources/levek/levek-phong-lighting.jpg"><img loading="eager" decoding="async" src="../../resources/levek/levek-phong-lighting.jpg" alt="Two views of the blue dragon model rendered during the Phong lighting experiment."></a><figcaption><em>The original dragon render I used while exploring Phong lighting.</em></figcaption></figure>
+<figure><img loading="eager" decoding="async" src="../../resources/levek/levek-phong-lighting.jpg" alt="Two views of the blue dragon model rendered during the Phong lighting experiment."><figcaption><em>The original dragon render I used while exploring Phong lighting.</em></figcaption></figure>
 
 <h2>Starting with the rendering foundations</h2>
 <p>I began by wrapping the OpenGL objects needed to draw something on screen: vertex and index buffers, vertex arrays, textures, framebuffers and GLSL shaders.</p>
@@ -79,22 +81,14 @@
 <p>I also started designing a more general system of rendering passes and states. That part remained experimental, but it pushed me to think beyond individual effects and about how a renderer should be organised as it grows.</p>
 <p>LevekGL was never meant to compete with a complete engine. Its value was in the process: build a small example, understand the layer behind it, identify its limits, and use that knowledge to approach the next problem.</p>
 <p>That project gave me a much clearer understanding of the path from an asset on disk to an interactive rendered scene, and it shaped the way I approach technical R&amp;D today.</p>
-<p class="article-links"><a href="https://github.com/MagicGrapix/LevekGL" target="_blank" rel="noopener noreferrer">View LevekGL on GitHub ↗</a></p>
 
       </div>
     </article>
   </main>
-  <footer class="reader-footer"><a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg> Back to projects</a><a href="mailto:quentin.guignard@outlook.com">Let’s build it.</a></footer>
+  <footer class="reader-footer"><a class="reader-return" href="../../#software"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6" /></svg> Back to projects</a><a href="mailto:quentin.guignard@outlook.com">Let’s build it.</a></footer>
 
-  <dialog class="image-dialog" id="image-dialog" aria-label="Enlarged illustration" aria-describedby="image-description">
-    <div class="image-dialog__toolbar">
-      <a id="image-original" target="_blank" rel="noopener">Open full-size image ↗</a>
-      <button id="image-close" type="button" autofocus>Close ×</button>
-    </div>
-    <img id="image-preview" alt="">
-    <p id="image-description"></p>
-  </dialog>
 
-  <script src="../../assets/article.js" defer></script>
+
+
 </body>
 </html>

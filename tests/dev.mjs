@@ -6,7 +6,7 @@ import { root } from '../scripts/build.mjs';
 const base = process.env.SITE_URL || 'http://127.0.0.1:8000';
 const source = resolve(root, 'content/home.md');
 const original = await readFile(source);
-const marker = '<!-- dev-rebuild-smoke-20261101 -->';
+const marker = 'dev-rebuild-smoke-20261101';
 const changed = Buffer.concat([original, Buffer.from('\n'+marker+'\n')]);
 const controller = new AbortController();
 let events = '';

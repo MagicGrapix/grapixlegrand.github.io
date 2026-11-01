@@ -1,0 +1,14 @@
+/* Preview-only framing of the selected IMG_8263 retouch. */
+.about-section .portrait { width: 290px; }
+.portrait-window { position: relative; z-index: 1; height: 300px; overflow: hidden; }
+.about-section .portrait img { width: 340px; max-width: none; height: auto; position: absolute; left: 50%; top: 0; transform: translateX(-50%); object-fit: initial; }
+.about-section .portrait-cover { height: 1px; clip-path: none; border: 0; background: var(--accent); }
+@media (max-width: 600px) {
+  .about-section .portrait { width: 270px; }
+  .portrait-window { height: 285px; }
+  .about-section .portrait img { width: 320px; }
+}
+@media (max-width: 360px) {
+  .about-section .portrait { width: 245px; }
+  .portrait-code { width: calc(100% + 30px); left: -15px; }
+}

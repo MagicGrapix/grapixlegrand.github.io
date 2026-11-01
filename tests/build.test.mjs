@@ -14,7 +14,7 @@ test('home Markdown preserves text and opposite paragraph forces, rejecting inco
   const document = parseHTML(copy.get('about')).document;
   assert.deepEqual([...document.querySelectorAll('[data-force]')].map(e => e.dataset.force), ['1', '-1']);
   assert.ok(copy.get('toolkit').includes('TypeScript &amp; C++'));
-  assert.throws(() => renderHomeCopy(markdown.replace('## Toolkit', '## Tools')), /Missing home section/);
+  assert.throws(() => renderHomeCopy(markdown.replace('## About', '## Biography')), /Missing home section/);
 });
 
 test('home exposes a coherent person profile and locally hosted visual assets', async () => {
@@ -23,7 +23,9 @@ test('home exposes a coherent person profile and locally hosted visual assets', 
   const person = graph.find(item => item['@type'] === 'Person');
   assert.equal(person.name, 'Quentin Guignard');
   assert.equal(person.jobTitle, 'Software Engineer');
-  assert.equal(person.image, 'https://www.quentinguignard.com/resources/profile.jpg');
+  assert.equal(person.image, 'https://www.quentinguignard.com/assets/portrait-selected.png');
+  assert.equal(document.querySelectorAll('.about-background,.stack-band').length, 0);
+  assert.equal(document.querySelectorAll('meta[name=robots][content*=noindex]').length, 0);
   assert.equal(person.sameAs.length, 3);
   assert.ok(person.sameAs.every(url => !url.endsWith('.pdf')));
   assert.ok(person.description.includes('EPFL and ETH Zurich'));
@@ -71,7 +73,7 @@ test('Markdown retains authored HTML, literal replacement tokens, figures and ca
   assert.equal(document.querySelector('details summary').textContent, 'More');
   assert.equal(document.querySelector('img').getAttribute('loading'), 'eager');
   assert.equal(document.querySelectorAll('img')[1].getAttribute('loading'), 'lazy');
-  assert.equal(document.querySelectorAll('a.image-expand').length, 2);
+  assert.equal(document.querySelectorAll('figure a').length, 0);
   assert.throws(() => renderArticle('No heading'), /one H1/);
   assert.throws(() => renderArticle('# One\n\n# Two'), /one H1/);
   assert.throws(() => renderArticle('# Title\n\n<img src="x.svg">'), /Missing image alt/);
