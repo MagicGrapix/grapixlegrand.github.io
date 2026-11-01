@@ -3,9 +3,35 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { resolve, dirname, sep } from 'node:path';
 import { parseHTML } from 'linkedom';
-import { build, generate, renderArticle, renderCards, root } from '../scripts/build.mjs';
+import { build, generate, renderArticle, renderCards, renderHomeCopy, root } from '../scripts/build.mjs';
 
 const categories = ['professional-work', 'personal-games', 'software-rnd', 'art-visual'];
+
+test('home Markdown preserves text and opposite paragraph forces, rejecting incomplete content', () => {
+  const markdown = '## Roles\n\n- Software Engineering\n- Applied AI\n\n## Notes\n\n- Switzerland.\n\n## About\n\nFirst paragraph.\n\nSecond paragraph.\n\n## Toolkit\n\nTypeScript & C++\n';
+  const copy = renderHomeCopy(markdown);
+  assert.ok(copy.get('roles').includes('Software Engineering'));
+  const document = parseHTML(copy.get('about')).document;
+  assert.deepEqual([...document.querySelectorAll('[data-force]')].map(e => e.dataset.force), ['1', '-1']);
+  assert.ok(copy.get('toolkit').includes('TypeScript &amp; C++'));
+  assert.throws(() => renderHomeCopy(markdown.replace('## Toolkit', '## Tools')), /Missing home section/);
+});
+
+test('home exposes a coherent person profile and locally hosted visual assets', async () => {
+  const document = parseHTML((await generate()).get('index.html')).document;
+  const graph = JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent)['@graph'];
+  const person = graph.find(item => item['@type'] === 'Person');
+  assert.equal(person.name, 'Quentin Guignard');
+  assert.equal(person.jobTitle, 'Software Engineer');
+  assert.equal(person.image, 'https://www.quentinguignard.com/resources/profile.jpg');
+  assert.equal(person.sameAs.length, 3);
+  assert.ok(person.sameAs.every(url => !url.endsWith('.pdf')));
+  assert.ok(person.description.includes('EPFL and ETH Zurich'));
+  assert.equal(document.querySelectorAll('h1').length, 1);
+  assert.ok(document.querySelector('.about-paragraphs').textContent.includes('software engineer'));
+  assert.equal(document.querySelectorAll('script[src*="marked"]').length, 0);
+  assert.equal(document.querySelector('link[rel="preload"][as="font"]').getAttribute('href'), './assets/fonts/JetBrains.woff2');
+});
 
 async function fixture(t) {
   const parent = resolve(root, 'test-results');

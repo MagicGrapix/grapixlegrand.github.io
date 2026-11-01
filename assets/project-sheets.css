@@ -1,0 +1,57 @@
+/* Project sheets keep their gallery behaviour while sharing Gateway's surfaces. */
+.work-overlay { background: rgba(10,13,20,.9); backdrop-filter: none; -webkit-backdrop-filter: none; padding: 24px; }
+.work-overlay .work-detail {
+  width: min(960px, 100%); max-width: none; height: min(90dvh, 1100px); max-height: calc(100dvh - 48px);
+  padding: clamp(24px, 4vw, 48px); gap: 24px; border: 1px solid var(--line); border-radius: 0;
+  background: var(--bg); color: var(--fg); box-shadow: none;
+  scrollbar-color: var(--line) var(--bg); font-size: 16px; line-height: 1.8;
+}
+.work-overlay .work-detail:has(.visual-experiments, .painting-page) { width: min(1120px, 100%); }
+.work-detail > * { min-width: 0; }
+.work-detail :is(h3,h4) { font-family: var(--display); font-weight: 500; letter-spacing: -.03em; }
+.work-detail .work-detail__title { font-size: clamp(26px, 3vw, 36px); line-height: 1.25; color: var(--fg); }
+.work-detail .work-detail__meta { margin-top: 12px; font-size: 13px; color: var(--muted); font-weight: 400; }
+.work-detail .work-detail__description { max-width: 74ch; color: var(--fg); font-size: 16px; line-height: 1.8; }
+.work-detail .work-detail__section { margin-top: 12px; }
+.work-detail .work-detail__section h3 { color: var(--fg); font-size: 20px; margin-bottom: 18px; }
+.work-detail .work-detail__section ul { line-height: 1.8; padding-left: 1.3em; }
+.work-detail li::marker { color: var(--accent); }
+.work-detail .work-detail__section li + li { margin-top: 8px; }
+.work-detail a:not(.btn) { color: var(--second); text-decoration: underline; text-underline-offset: .25em; }
+.work-detail a:hover { color: var(--accent); }
+.work-detail :is(.btn, .work-detail__chips span) { border-radius: 0; box-shadow: none; }
+.work-detail .btn { min-height: 46px; padding: 12px 18px; gap: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--accent); font: 14px/1.5 var(--body); transform: none; transition: border-color .25s, background .25s; }
+.work-detail .btn:hover { border-color: var(--accent); background: var(--bg); }
+.work-detail .btn--back { margin: 0 0 8px; padding: 8px 0; border: 0; border-bottom: 1px solid var(--line); background: var(--bg); text-align: left; justify-content: flex-start; }
+.work-detail .btn--back svg { transition: transform .3s var(--ease); }
+.work-detail .btn--back:hover svg { transform: translateX(-4px); }
+.work-detail :is(.work-detail__figure,.work-detail__media,.media-gallery,.video-wrapper,.painting-gallery__item,.game-cv-embed) { border-radius: 0; border-color: var(--line); box-shadow: none; background: var(--panel); }
+.work-detail .work-detail__figure { padding: 0; border: 0; }
+.work-detail .work-detail__figure img { max-height: min(50dvh, 540px); }
+.work-detail .media-gallery__viewport { background: var(--panel); }
+.work-detail .work-detail__chips { gap: 8px; }
+.work-detail .work-detail__chips span { padding: 5px 10px; color: var(--second); border: 1px solid var(--line); background: none; font: 12px/1.6 var(--display); }
+.work-detail .work-detail__links { gap: 12px; }
+.work-detail .sub-card { background: var(--panel); border: 1px solid var(--line); border-radius: 0; box-shadow: none; padding: 24px; color: var(--fg); }
+.work-detail .sub-card:hover { border-color: var(--accent); transform: none; }
+.work-detail .sub-card__title { color: var(--fg); }
+.work-detail .sub-card__meta, .work-detail .sub-card__desc { color: var(--muted); }
+.work-detail .sub-card__chips span { border-radius: 0; background: none; color: var(--second); border-color: var(--line); }
+.work-detail :is(.video-card__title,.video-card__desc) { display: block; overflow: visible; -webkit-line-clamp: unset; min-height: 0; }
+.work-detail .video-card__desc { color: var(--muted); font-size: 14px; line-height: 1.7; }
+.work-detail .visual-experiments__videos { gap: 32px 24px; }
+.work-detail .media-gallery__btn { min-width: 44px; min-height: 44px; color: var(--fg); border: 1px solid var(--line); border-radius: 0; background: rgba(25,30,40,.94); box-shadow: none; opacity: 1; }
+.work-detail .media-gallery__btn:hover { border-color: var(--accent); color: var(--accent); }
+.work-detail .painting-gallery__item img { width: 100%; }
+.work-detail .painting-gallery__label { opacity: 1; inset: auto 0 0; min-height: 44px; padding: 10px 12px; background: rgba(25,30,40,.92); text-align: left; justify-content: flex-start; font-size: 13px; }
+.painting-lightbox, .video-lightbox { background: rgba(10,13,20,.97); }
+:is(.painting-lightbox__close,.video-lightbox__close,.video-modal__close) { opacity: 1; min-width: 44px; min-height: 44px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+.video-modal, .video-modal__panel { background: var(--bg); border-color: var(--line); border-radius: 0; box-shadow: none; }
+@media (max-width: 600px) {
+  .work-overlay { padding: 8px; }
+  .work-overlay .work-detail { padding: 22px 20px; height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); gap: 22px; }
+  .work-detail .work-detail__description { font-size: 15px; }
+  .work-detail .media-gallery__viewport { height: 250px; min-height: 0; }
+  .work-detail .painting-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .work-overlay, .work-detail, .work-detail *, .painting-lightbox * { animation: none !important; transition: none !important; } }

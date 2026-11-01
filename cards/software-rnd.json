@@ -1,50 +1,107 @@
 {
-  "order": ["minecraft", "genai", "thesis", "raytracer", "levek"],
+  "order": [
+    "minecraft",
+    "genai",
+    "thesis",
+    "levek",
+    "raytracer",
+    "paradisland"
+  ],
   "projects": {
     "minecraft": {
       "title": "Building a Minecraft Agent with a Local LLM",
       "meta": "Personal R&D · LLM agents · 2026",
       "summary": "Experiments with local LLM agents, world observations, automated collection and construction, and repeatable Minecraft scenarios.",
-      "chips": ["TypeScript", "Mineflayer", "LLM agents", "Evaluation"],
+      "chips": [
+        "TypeScript",
+        "Mineflayer",
+        "LLM agents",
+        "Evaluation"
+      ],
       "preview": "./pages/minecraft-agent/images/scene1.jpeg",
       "previewFit": "contain",
-      "link": "./pages/minecraft-agent/"
+      "link": "./pages/minecraft-agent/",
+      "year": "2026"
     },
     "genai": {
       "title": "Controlling Generative AI for Game Content",
       "meta": "R&D · Generative AI · 2025",
       "summary": "Research into structured generation, lore grounding, multimodal evaluation and feedback loops for controllable AI-generated game content.",
-      "chips": ["Generative AI", "LLMs", "RAG", "Computer Vision"],
+      "chips": [
+        "Generative AI",
+        "LLMs",
+        "RAG",
+        "Computer Vision"
+      ],
       "preview": "./pages/controlling-generative-ai-for-game-content/images/image_pipeline.jpg",
       "previewFit": "cover",
-      "link": "./pages/controlling-generative-ai-for-game-content/"
+      "link": "./pages/controlling-generative-ai-for-game-content/",
+      "year": "2025"
     },
     "thesis": {
       "title": "Master Thesis Prototype",
       "meta": "2024 · AI / gameplay research prototype",
       "summary": "ETH thesis prototype (Andrometica Cynus): LLM + MCTS for chat-driven NPC behavior in a 2D Bevy game.",
-      "chips": ["Bevy", "Rust", "LLMs", "MCTS", "ETH Zurich"],
+      "chips": [
+        "Bevy",
+        "Rust",
+        "LLMs",
+        "MCTS",
+        "ETH Zurich"
+      ],
       "preview": "./resources/master_thesis/MasterThesis.jpg",
       "previewFit": "cover",
-      "detail": "thesis.html"
+      "detail": "thesis.html",
+      "year": "2024"
     },
     "raytracer": {
       "title": "Raytracer",
       "meta": "2022 · Computer graphics project",
       "summary": "CG22 path tracer at ETH Zurich; final scene presented at the section Disney renderer competition.",
-      "chips": ["C++", "Path tracing", "Rendering", "Computer graphics", "Open Image Denoise", "ETH Zurich"],
+      "chips": [
+        "C++",
+        "Path tracing",
+        "Rendering",
+        "Computer graphics",
+        "Open Image Denoise",
+        "ETH Zurich"
+      ],
       "preview": "./cg22/images/final_scene_full_denoised.jpeg",
       "previewFit": "cover",
-      "detail": "raytracer.html"
+      "detail": "raytracer.html",
+      "year": "2022"
     },
     "levek": {
       "title": "LevekGL",
       "meta": "2021–2023 · Student graphics R&D",
       "summary": "A C++ / OpenGL rendering library built to explore shaders, scene loading, GPU resources and physics experiments.",
-      "chips": ["C++", "OpenGL", "GLSL", "Assimp", "Bullet Physics"],
+      "chips": [
+        "C++",
+        "OpenGL",
+        "GLSL",
+        "Assimp",
+        "Bullet Physics"
+      ],
       "preview": "./resources/levek/levek-phong-lighting.jpg",
       "previewFit": "cover",
-      "link": "./pages/levekgl/"
+      "link": "./pages/levekgl/",
+      "year": "2021–2023"
+    },
+    "paradisland": {
+      "title": "Paradisland",
+      "meta": "2020 · Academic project · EPFL",
+      "summary": "EPFL team project: water shader, screen-space reflections, shadows, and outlining.",
+      "chips": [
+        "GLSL",
+        "JavaScript",
+        "Regl",
+        "WebGL",
+        "EPFL"
+      ],
+      "preview": "./assets/paradisland-preview.webp",
+      "previewFit": "cover",
+      "detail": "paradisland.html",
+      "year": "2020"
     }
   }
 }

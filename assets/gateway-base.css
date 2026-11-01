@@ -1,0 +1,12 @@
+/* Shared Gateway palette and local type, used by the homepage and readers. */
+@font-face { font-family: Manrope; src: url('./fonts/Manrope.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: JetBrains; src: url('./fonts/JetBrains.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+:root {
+  --bg: #191e28; --fg: #ececf2; --muted: #b9becd;
+  --accent: #eeb9a2; --second: #a9c6ef; --third: #d6b9e8;
+  --panel: #262e3c; --line: #455166;
+  --text: var(--fg); --border: var(--line);
+  --display: JetBrains, monospace; --body: Manrope, sans-serif;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: dark;
+}

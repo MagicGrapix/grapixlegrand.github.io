@@ -1,0 +1,15 @@
+# Gateway — integration, 1 November 2026
+
+Experience mode. Local-only iteration on design/gateway, no push/deployment. Preserve static GitHub Pages outputs, existing article Markdown, cards and project details. Selected design: series07 Gateway, graphite blue with peach/blue/lavender, centered large JetBrains name. Current approved experiment: title, About with portrait/background/toolkit, software projects, Art, compact OZWE, Games, contact-only ending.
+
+Integrate nearest-neighbour lines colored at both endpoints with drifting particles. Pointer-local chromatic edges on hero name and About heading, zero split at rest. Reduce role/note/paragraph pointer displacement and spring jitter. Add a handful of brighter falling code streams around the portrait, changing characters faster, bounded to the portrait area and pausing offscreen. Reuse stock cutout provisionally; keep real profile photo for Person metadata, never label the stock portrait as Quentin.
+
+Repeat guided hero ↔ About ↔ projects transitions on every return, with natural scrolling inside a tall presentation and below Projects. Desktop About fits a viewport; mobile can expand. The boundaries accept wheel, navigation keys and completed vertical touch swipes; clear anchors work without JavaScript, including a direct Projects link on every viewport. Reduced motion has no forced animation. Respect open dialogs and input controls. Keep visible content without JS. No tunnel, large 3D shapes or thumbnail selector.
+
+Latest user steering explicitly requests a scan-like name entrance, overriding the earlier no-scanner exploration preference for this element only. Use a finite left-to-right reveal (1250ms per line, 150ms stagger), solid letters and no blinking. Make particles modestly larger and brighter, with opposing flows and more visible endpoint-colored links that reform as particles pass. Preserve pointer response, pause, reduced-motion and offscreen rendering limits. Do not add scans to project cards.
+
+Content stays modular: content/home.md for roles, notes, biography, background and toolkit; cards JSON for metadata/order/images/destinations; pages/*/article.md for full articles; templates/home.html for structure; assets/gateway.css, gateway-intro.css and gateway.js for homepage presentation. No runtime Markdown fetch. Preserve legacy detail interactions and URLs. Background facts come from the existing biography and OZWE/thesis project sheets; do not invent career dates.
+
+Local dev: one command, regenerates Markdown/JSON/templates and reloads browsers, LAN URL for phone on same Wi-Fi, no source/private directory exposure. Static outputs deploy on GitHub Pages without Node on the server.
+
+SEO/GEO: initial semantic HTML, real links, descriptive title/description, canonical, OG/Twitter, matching Person/ProfilePage/WebSite structured data, sitemap and robots. No promise of ranking/citation. Validate generation, no-JS content, repeat scrolling, desktop/mobile layout, pause/reduced motion, project overlays and dev-server content rebuild. User now explicitly authorizes server and browser testing; earlier file URL preview restriction is not used as a workaround.

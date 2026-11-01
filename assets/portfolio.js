@@ -41,7 +41,7 @@
         let activeSubId = null;
 
         function backButton(label, action) {
-          return `<button type="button" class="btn btn--back" data-back="${action}">${label}</button>`;
+          return `<button type="button" class="btn btn--back" data-back="${action}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg><span>${label.replace(/^(?:&larr;|←)\s*/, "")}</span></button>`;
         }
 
         function resolveFragmentUrls(html) {
@@ -71,7 +71,10 @@
             const html = resolveFragmentUrls(await loadCardFragment(path));
             workDetail.innerHTML = backButton(backLabel, backAction) + html;
             const title = workDetail.querySelector(".work-detail__title");
-            if (title) workDetail.setAttribute("aria-labelledby", title.id || "");
+            if (title) {
+              title.id = "active-project-title";
+              workDetail.setAttribute("aria-labelledby", title.id);
+            }
             bindYoutubeButtons(workDetail);
             bindGalleries(workDetail);
             bindPaintingGallery(workDetail);
@@ -567,7 +570,7 @@
           });
         });
 
-        document.getElementById("video-cv-open").addEventListener("click", () => {
+        document.getElementById("video-cv-open")?.addEventListener("click", () => {
           openYoutubeModal("Intro Video", "JJZnswDj0YA", "vertical");
         });
 

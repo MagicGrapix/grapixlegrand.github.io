@@ -5,8 +5,12 @@
     "build": "node scripts/build.mjs",
     "check": "node scripts/build.mjs --check",
     "watch": "node scripts/watch.mjs",
+    "dev": "node scripts/dev.mjs",
     "test": "node --test tests/build.test.mjs",
-    "test:browser": "node tests/browser.mjs"
+    "test:browser": "node tests/browser.mjs",
+    "test:gateway": "node tests/gateway.mjs",
+    "test:dev": "node tests/dev.mjs",
+    "test:readers": "node tests/readers.mjs"
   },
   "engines": { "node": ">=22" },
   "devDependencies": {

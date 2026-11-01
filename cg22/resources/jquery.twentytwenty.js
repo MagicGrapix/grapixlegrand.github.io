@@ -81,8 +81,8 @@
             // }
 
             var calcOffset = function(dimensionPctX, dimensionPctY) {
-                var w = 800; //imgs[referenceIndex].width();
-                var h = 800; //imgs[referenceIndex].height();
+                var w = imgs[referenceIndex].width();
+                var h = imgs[referenceIndex].height();
                 return {
                     w: w + "px",
                     h: h + "px",
@@ -146,7 +146,6 @@
             };
 
             var adjustSlider = function(pctX, pctY) {
-                console.log(pctX + " " + pctY)
                 var offset = calcOffset(pctX, pctY);
 
                 // if (sliderOrientation === 'vertical')
@@ -168,8 +167,8 @@
                 {
                     if (i != referenceIndex)
                     {
-                        imgs[i].css("width", 800); //imgs[referenceIndex].width());
-                        imgs[i].css("height", 800); //imgs[referenceIndex].height());
+                        imgs[i].css("width", imgs[referenceIndex].width());
+                        imgs[i].css("height", imgs[referenceIndex].height());
                     }
                 }
                 adjustSlider(sliderPctX, sliderPctY);

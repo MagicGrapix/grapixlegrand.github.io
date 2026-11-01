@@ -1,10 +1,10 @@
 # Portfolio
 
-Les trois articles sont générés en HTML depuis leur `article.md`. L'accueil contient directement ses treize cartes : trois liens vers les articles et dix boutons ouvrant les fiches existantes. Ces fiches conservent leur fonctionnement avec JavaScript. Les articles et leurs liens restent lisibles sans JavaScript.
+La refonte Gateway conserve le site statique et le contenu éditable. Les textes de l’accueil viennent de `content/home.md`, les cartes de `cards/*.json` et les articles de `pages/*/article.md`. Le HTML complet est généré avant publication : aucun serveur Node.js n’est nécessaire chez GitHub Pages. Les treize cartes restent présentes dans le HTML initial ; les dix fiches interactives et les trois articles conservent leurs destinations.
 
 ## Écrire et prévisualiser en local
 
-Prérequis : Node.js 22 ou plus récent (24 en CI), npm et Python pour le serveur local.
+Prérequis : Node.js 22 ou plus récent (24 en CI) et npm.
 
 Depuis la racine du dépôt, une première fois :
 
@@ -13,26 +13,31 @@ npm ci
 npm run build
 ```
 
-Puis, dans deux terminaux :
+Puis une seule commande :
 
 ```powershell
-npm run watch
+npm run dev
 ```
 
-```powershell
-py -m http.server 8000 --bind 127.0.0.1
-```
+Ouvrir <http://127.0.0.1:8000/>. Pour le téléphone, utiliser l’adresse `Network` correspondant au Wi-Fi du PC, sur le même réseau. Le 1 novembre 2026, cette adresse est <http://192.168.1.5:8000/> ; elle peut changer. Le PC doit rester allumé et le serveur démarré. `Ctrl+C` arrête un serveur lancé dans le terminal.
 
-Ouvrir <http://127.0.0.1:8000/>. Modifier un `article.md`, puis actualiser le navigateur : le watcher régénère automatiquement le HTML. Il surveille aussi les templates et les JSON des cartes. Il affiche les erreurs sans remplacer les pages si la validation échoue. Redémarrer le watcher après une modification du générateur ou de `CNAME`. Les modifications de CSS, scripts, images et fiches HTML sont servies directement ; actualiser le navigateur suffit.
+Modifier le Markdown, un template ou un JSON : le HTML est régénéré et les navigateurs ouverts se rechargent automatiquement. Les changements de styles, scripts et images rechargent aussi la page. Une erreur de génération laisse les dernières pages valides en place. Redémarrer après modification de `scripts/` ou `CNAME`. `PORT` change le port ; `HOST=127.0.0.1` limite le serveur au PC. Le serveur ne publie rien sur Internet, n’affiche pas les répertoires et ne sert pas `.git`, `node_modules` ou les sources d’édition.
+
+`npm run watch` reste disponible pour reconstruire sans serveur. Pour arrêter le serveur lancé en arrière-plan pendant cette session : lire son identifiant dans `.dev/server.pid`, vérifier que ce processus est bien `node scripts/dev.mjs`, puis arrêter ce processus. Les journaux sont dans `.dev/`, ignoré par Git.
 
 ## Sources à modifier
 
 - `pages/<slug>/article.md` : texte de l'article, liens, illustrations et légendes. Le Markdown accepte aussi les blocs HTML existants.
-- `pages/<slug>/template.html` : titre, description, présentation et styles propres à l'article. Conserver une occurrence des marqueurs `<!-- SEO -->` et `<!-- ARTICLE -->`.
-- `templates/home.html` : structure de l'accueil ; conserver les marqueurs de cartes et de métadonnées.
-- `cards/*.json` : contenu et ordre des cartes. Une propriété `link` crée un lien classique ; une propriété `detail` conserve une fiche interactive.
+- `content/home.md` : rôles, courtes notes, biographie, parcours et compétences. Conserver les rubriques `Roles`, `Notes`, `About`, `Background`, `Toolkit` ; le texte à l’intérieur reste libre. `Roles` et `Notes` sont des listes Markdown.
+- `pages/<slug>/template.html` : titre, description et structure de l'article. Le style commun vient de `assets/reader.css`. Conserver une occurrence des marqueurs `<!-- SEO -->` et `<!-- ARTICLE -->`.
+- `templates/home.html` : structure de l'accueil ; conserver les marqueurs `HOME`, `CARDS`, `SEO` et `STRUCTURED_DATA`.
+- `cards/*.json` : contenu et ordre des cartes. `year` affiche la date près du titre ; `action` personnalise le lien, `alt` le texte alternatif de l’image. Une propriété `link` crée un lien classique ; une propriété `detail` conserve une fiche interactive. Ajouter un projet dans `projects` puis son identifiant dans `order` : la grille s’agrandit automatiquement.
 - `cards/*.html` : fiches existantes, chargées à l'ouverture de leur fenêtre.
 - `style.css`, `assets/portfolio.js`, `assets/article.js` : styles et interactions.
+- `assets/gateway.css`, `assets/gateway.js` : présentation et interactions de l’accueil. `assets/portrait-code.js` anime uniquement le code autour du portrait et suit le même bouton pause. Les polices sont hébergées dans `assets/fonts/`.
+- `assets/gateway-intro.css` : essai de présentation en deuxième écran, lien Projects mobile et balayage initial du nom. Le parcours guidé est titre ↔ présentation ↔ projets ; une présentation trop haute reste librement défilable avant le passage aux projets. Le contact seul reste à la fin.
+- `assets/gateway-base.css` : palette et polices communes à toutes les pages. `assets/project-sheets.css` habille les fiches et leurs galeries ; `assets/reader.css` habille les articles et rapports.
+- `cg22/report.html`, `SuperVoxel/index.html`, `SuperVoxel/SuperVoxel.html`, `shuffling/story.html` : anciens rapports HTML, édités directement. Ils partagent le style de lecture Gateway. Les visualisations scientifiques intégrées conservent leur interface d’origine.
 - `CNAME` : domaine public, utilisé pour les URL canoniques et le sitemap.
 
 Ne pas éditer manuellement les fichiers générés : `index.html`, `pages/*/index.html`, `sitemap.xml` et `robots.txt`. Ils sont versionnés pour que GitHub Pages puisse les servir directement. Les anciens `index.md` ne participent pas à la génération.
@@ -44,6 +49,7 @@ Pour ajouter un article, créer `pages/<slug>/article.md` avec exactement un H1,
 ```powershell
 npm test
 npm run check
+npm run test:gateway
 ```
 
 `npm test` vérifie la génération, les erreurs, les métadonnées et le contrat des cartes. `npm run check` vérifie les ressources locales référencées et échoue si les fichiers générés ne correspondent plus aux sources, sans écrire de fichiers.
@@ -51,12 +57,17 @@ npm run check
 Avec le serveur local démarré, les tests navigateur utilisent Edge sous Windows :
 
 ```powershell
-npm run test:browser
+npm run test:browser -- --functional-only
+npm run test:readers
 ```
 
 Sur un autre système, installer d'abord Chromium avec `npx playwright install chromium`. `SITE_URL` permet de choisir une autre adresse locale et `BROWSER_CHANNEL` un autre navigateur installé. Les tests couvrent ordinateur/mobile, les trois articles sans JavaScript, les dix fiches, les agrandissements et les galeries. Les lecteurs externes YouTube/itch.io sont exclus des tests automatisés. Les captures sont dans `test-results/`, ignoré par Git.
 
-La commande `node tests/browser.mjs --baseline` enregistre une référence avant modification ; une exécution normale compare ensuite les textes et les dimensions si cette référence existe. Ne pas régénérer la référence pour masquer une régression. Les résultats de cette migration sont dans [docs/validation.md](docs/validation.md).
+`npm run test:gateway` couvre les allers-retours titre/présentation/projets à la molette et au clavier, le défilement libre, les flux de particules dans les deux sens, le balayage du nom, l’aberration chromatique, la progression, une fiche, le mouvement réduit et la lecture sans JavaScript. Il vérifie aussi les transitions avec des gestes tactiles simulés et la lecture d’une présentation mobile plus haute que l’écran. Captures : `test-results/gateway/`.
+
+`npm run test:readers` vérifie les sept URL d’articles et rapports sur ordinateur et mobile, les ressources locales, l’absence de débordement, le comparateur CG22 et la lecture sans JavaScript. Captures : `test-results/readers/`. Le rapport Shuffling signale une illustration déjà absente de l’archive (`story_4_3.png`) ; sa légende est conservée.
+
+La commande historique `node tests/browser.mjs --baseline` enregistre la géométrie de l’ancien design ; elle reste utile pour la migration précédente. `node tests/browser.mjs --functional-only` vérifie les articles et toutes les fiches sans comparer leur géométrie à l’ancien accueil. Ne pas remplacer les anciennes références pour masquer une régression. Les résultats historiques restent dans [docs/validation.md](docs/validation.md).
 
 ## Préparer la publication
 
@@ -68,3 +79,7 @@ La commande `node tests/browser.mjs --baseline` enregistre une référence avant
 Le déploiement observé sur GitHub utilise `master` et le workflow automatique `pages-build-deployment`. `.nojekyll` permet de servir ces fichiers statiques sans transformation Jekyll. La nouvelle CI contrôle leur cohérence ; elle ne déploie rien et ne bloque pas à elle seule le déploiement Pages existant. Aucun push ni déploiement n'est exécuté par les scripts locaux.
 
 Le sitemap contient l'accueil, les trois articles et les trois rapports HTML publics existants. Il exclut les templates, les fragments et les sources Markdown. `robots.txt` autorise l'exploration générale et référence le sitemap ; aucune règle spécifique à l'entraînement des modèles n'a été ajoutée. Cela rend le contenu accessible, sans garantir son indexation ni sa citation par un service donné.
+
+L’accueil ajoute des données structurées `Person`, `ProfilePage` et `WebSite` cohérentes avec le texte visible, ainsi que des métadonnées Twitter/Open Graph. Les URL canoniques restent celles de `CNAME`. Les principes SEO servent aussi la lisibilité par les moteurs génératifs : [documentation Google](https://developers.google.com/search/docs/appearance/ai-features). Le contenu détaillé des dix fiches conserve pour l’instant son affichage JavaScript ; leurs résumés sont directement lisibles dans l’accueil.
+
+Le portrait détouré reste provisoire : [rao qingwei / Pexels](https://www.pexels.com/photo/man-in-black-t-shirt-standing-with-arms-crossed-18733417/), fond retiré dans l’exploration avec l’outil d’image. Il ne représente pas Quentin. Le remplacer avant publication ; les métadonnées d’identité utilisent la vraie photo `resources/profile.jpg`. Le CV reste le PDF existant. Aucun commit, push ou déploiement n’a été réalisé pendant cette intégration.

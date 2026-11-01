@@ -33,26 +33,51 @@ export function renderCards(data, category) {
     const project = data.projects[id];
     assert.ok(project && typeof project.title === 'string' && Array.isArray(project.chips), `Invalid project: ${id}`);
     assert.ok(project.link || project.detail, `Missing destination: ${id}`);
-    const classes = ['work-card', category === 'professional-work' ? 'work-card--pro' : '',
-      project.feature ? 'work-card--feature' : '', project.creative ? 'work-card--creative' : '', project.archive ? 'work-card--archive' : ''].filter(Boolean).join(' ');
+    const classes = 'work-card project-card';
     assert.ok(!project.previewFit || ['cover', 'contain'].includes(project.previewFit), `Invalid previewFit: ${id}`);
-    const mediaClass = `work-card__media${project.previewFit ? ` work-card__media--${project.previewFit}` : ''}`;
+    const mediaClass = `project-media${project.previewFit === 'contain' ? ' project-media--contain' : ''}`;
     const media = project.preview
-      ? `<div class="${mediaClass}"><img src="${webUrl(project.preview)}" alt="${escape(project.title)} preview" /></div>`
+      ? `<div class="${mediaClass}"><img src="${webUrl(project.preview)}" alt="${escape(project.alt || project.title + ' preview')}" loading="lazy" decoding="async" width="800" height="500" /></div>`
       : '<div class="work-card__media" aria-hidden="true"></div>';
     const tag = project.link ? 'a' : 'button';
     const destination = project.link ? `href="${webUrl(project.link)}"` : `type="button" data-detail="${escape(project.detail)}"`;
     return `
-            <${tag} class="${classes}" ${destination} data-project-id="${escape(id)}">
+            <${tag} class="${classes}" ${destination} data-project-id="${escape(id)}" data-enter="card">
               ${media}
-              <div class="work-card__body">
-                <h3 class="work-card__title">${escape(project.title)}</h3>
-                <p class="work-card__meta">${escape(project.meta || '')}</p>
+              <div class="project-body">
+                <div class="project-title-line"><h3 class="work-card__title">${escape(project.title)}</h3><span class="project-date">${escape(project.year || '')}</span></div>
                 <p class="work-card__desc">${escape(project.summary || '')}</p>
-                <div class="work-card__chips">${project.chips.map(chip => `<span>${escape(chip)}</span>`).join('')}</div>
+                <span class="project-action">${escape(project.action || (project.link ? 'Explore project' : 'View project'))}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 19 19 5M6 5h13v13"/></svg></span>
               </div>
             </${tag}>`;
   }).join('\n').trimStart();
+}
+
+export function renderHomeCopy(markdown) {
+  const sections = new Map();
+  let key;
+  for (const token of marked.lexer(markdown)) {
+    if (token.type === 'heading' && token.depth === 2) {
+      key = token.text.toLowerCase();
+      assert.ok(!sections.has(key), `Duplicate home section: ${key}`);
+      sections.set(key, []);
+    } else if (key) sections.get(key).push(token);
+  }
+  for (const required of ['roles', 'notes', 'about', 'toolkit']) assert.ok(sections.has(required), `Missing home section: ${required}`);
+  const result = new Map();
+  for (const [name, tokens] of sections) {
+    const { document } = parseHTML(`<div id="copy">${marked.parser(tokens)}</div>`);
+    const container = document.getElementById('copy');
+    assert.equal(container.querySelectorAll('h1,h2,script').length, 0, `Unexpected heading or script in home ${name}`);
+    if (name === 'roles' || name === 'notes') {
+      const items = [...container.querySelectorAll('li')];
+      assert.ok(items.length, `Use a Markdown list for home ${name}`);
+      result.set(name, items.map(item => `<p class="${name === 'roles' ? 'role-word' : 'note-word'}">${item.innerHTML}</p>`).join(''));
+    } else if (name === 'about') {
+      result.set(name, [...container.children].map((element, i) => `<div class="copy-enter" data-enter="copy"><div class="reactive-copy" data-force="${i % 2 ? -1 : 1}">${element.outerHTML}</div></div>`).join(''));
+    } else result.set(name, container.innerHTML);
+  }
+  return result;
 }
 
 export function renderArticle(markdown) {
@@ -105,6 +130,10 @@ function addMetadata(html, route, origin, type, image) {
     `<link rel="canonical" href="${escape(canonical)}">`,
     ...Object.entries({ type, title, description, url: canonical, image: new URL(image, canonical).href })
       .map(([property, value]) => `<meta property="og:${property}" content="${escape(value)}">`),
+    '<meta name="twitter:card" content="summary_large_image">',
+    `<meta name="twitter:title" content="${escape(title)}">`,
+    `<meta name="twitter:description" content="${escape(description)}">`,
+    `<meta name="twitter:image" content="${escape(new URL(image, canonical).href)}">`,
   ].join('\n    ');
   return insert(html, '<!-- SEO -->', metadata)
     .replace(/<!doctype html>/i, '<!doctype html>\n<!-- Generated by npm run build. Edit the template, Markdown or card JSON sources. -->');
@@ -133,6 +162,10 @@ export async function generate(directory = root) {
   const origin = `https://${hostname}`;
   const outputs = new Map();
   let home = await read(resolve(directory, 'templates/home.html'));
+  if (home.includes('<!-- HOME:')) {
+    const copy = renderHomeCopy(await read(resolve(directory, 'content/home.md')));
+    for (const [key, html] of copy) home = insert(home, `<!-- HOME:${key} -->`, html);
+  }
   for (const category of categories) {
     const data = JSON.parse(await read(resolve(directory, `cards/${category}.json`)));
     for (const id of data.order) {
@@ -144,6 +177,17 @@ export async function generate(directory = root) {
       }
     }
     home = insert(home, `<!-- CARDS:${category} -->`, renderCards(data, category));
+  }
+  if (home.includes('<!-- STRUCTURED_DATA -->')) {
+    const { document } = parseHTML(home);
+    const person = { '@type': 'Person', '@id': `${origin}/#person`, name: 'Quentin Guignard', url: `${origin}/`, jobTitle: 'Software Engineer',
+      description: document.querySelector('.about-paragraphs')?.textContent.trim(),
+      image: `${origin}/resources/profile.jpg`,
+      sameAs: [...document.querySelectorAll('.socials a.social[href^="https:"]')].map(a => a.getAttribute('href')) };
+    const graph = { '@context': 'https://schema.org', '@graph': [person,
+      { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'Quentin Guignard — Software Engineering', publisher: { '@id': person['@id'] } },
+      { '@type': 'ProfilePage', '@id': `${origin}/#webpage`, url: `${origin}/`, name: document.querySelector('title').textContent, mainEntity: { '@id': person['@id'] }, isPartOf: { '@id': `${origin}/#website` } }] };
+    home = insert(home, '<!-- STRUCTURED_DATA -->', `<script type="application/ld+json">${JSON.stringify(graph).replaceAll('<', '\\u003c')}</script>`);
   }
   outputs.set('index.html', addMetadata(home, '/', origin, 'website', './resources/profile.jpg'));
   const routes = ['/'];

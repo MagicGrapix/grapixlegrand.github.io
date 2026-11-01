@@ -126,7 +126,7 @@ try {
     let before;
     try { before = JSON.parse(await readFile('test-results/before/layout.json', 'utf8')); }
     catch (error) { if (error.code !== 'ENOENT') throw error; }
-    if (before) {
+    if (before && !process.argv.includes('--functional-only')) {
       for (const [key, snapshot] of Object.entries(snapshots)) {
         if (typeof snapshot === 'string') { assert.equal(snapshot, before[key], key); continue; }
         assert.equal(snapshot.length, before[key].length, `${key}: element count`);
