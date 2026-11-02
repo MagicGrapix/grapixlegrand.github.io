@@ -13,7 +13,8 @@
     "test:readers": "node tests/readers.mjs",
     "test:scroll": "node tests/scroll-return.cjs",
     "test:mobile": "node tests/mobile-interactions.mjs",
-    "test:motion": "node tests/platform-motion.mjs"
+    "test:motion": "node tests/platform-motion.mjs",
+    "test:native": "node tests/native-scroll.mjs"
   },
   "engines": {
     "node": ">=22"

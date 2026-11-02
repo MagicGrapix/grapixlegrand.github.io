@@ -2,16 +2,15 @@
   const root=document.documentElement,body=document.body,hero=document.querySelector('.hero');
   const effect=body.dataset.effect,full=body.classList.contains('full-page');
   const fine=matchMedia('(pointer:fine)'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
-  const pause=document.querySelector('.motion-pause'),replay=document.querySelector('.motion-replay');
   const canvas=hero.querySelector('canvas'),ctx=canvas.getContext('2d');
   const composition=hero.querySelector('.hero-composition'),name=hero.querySelector('.name');
   const colors=['#eeb9a2','#a9c6ef','#d6b9e8'];
   const random=i=>{const n=Math.sin(i*13.37+79.14)*43758.2;return n-Math.floor(n);};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  let paused=false,heroVisible=true,frame=0,lastFrame=0,elapsed=0,introElapsed=0;
+  let heroVisible=true,frame=0,lastFrame=0,elapsed=0,introElapsed=0;
   let w=innerWidth,h=innerHeight,mx=w/2,my=h/2,targetX=0,targetY=0,px=0,py=0,power=0,targetPower=0;
   let direction=1,lastScroll=scrollY,scrollFrame=0;
-  const canMove=()=>!paused&&!reduced.matches;
+  const canMove=()=>!reduced.matches;
 
   // Section targets are hidden before intersection, never after an already-visible frame.
   const targets=[...document.querySelectorAll('[data-enter]')],entrances=new Map();
@@ -19,9 +18,9 @@
     if(!canMove()||!el.animate)return;
     entrances.get(el)?.cancel();entrances.delete(el);el.dataset.state='armed';
   }
-  function reveal(el,force=false){
+  function reveal(el){
     if(!canMove()||!el.animate){el.dataset.state='visible';return;}
-    if(!force&&el.dataset.state!=='armed')return;
+    if(el.dataset.state!=='armed')return;
     entrances.get(el)?.cancel();
     const kind=el.dataset.enter,section=el.closest('.content-section');
     const siblings=[...(section||document).querySelectorAll('[data-enter="'+kind+'"]')];
@@ -178,8 +177,22 @@
         const distance=Math.hypot(p.x-q.x,p.y-q.y);
         const gradient=ctx.createLinearGradient(p.x,p.y,q.x,q.y);gradient.addColorStop(0,p.color);gradient.addColorStop(1,q.color);
         ctx.strokeStyle=gradient;ctx.globalAlpha=Math.max(0,1-distance/radius)*Math.min(p.alpha,q.alpha)*(desktop?.9:.68)*link.weight;
-        ctx.lineWidth=desktop?1.4:.95;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+        if(distance<.1)return;
+        ctx.beginPath();
+        if(desktop){
+          const nx=-(q.y-p.y)/distance,ny=(q.x-p.x)/distance;
+          const a=.4+p.r*.24,b=.4+q.r*.24;
+          ctx.fillStyle=gradient;
+          ctx.moveTo(p.x+nx*a,p.y+ny*a);ctx.lineTo(q.x+nx*b,q.y+ny*b);
+          ctx.lineTo(q.x-nx*b,q.y-ny*b);ctx.lineTo(p.x-nx*a,p.y-ny*a);ctx.closePath();ctx.fill();
+        }else{ctx.lineWidth=.95;ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}
       });
+    }
+    if(desktop){
+      // Clear links beneath translucent dots so no edge shows through their faces.
+      ctx.globalCompositeOperation='destination-out';ctx.globalAlpha=1;ctx.beginPath();
+      for(const p of points){ctx.moveTo(p.x+p.r+.25,p.y);ctx.arc(p.x,p.y,p.r+.25,0,Math.PI*2);}
+      ctx.fill();ctx.globalCompositeOperation='source-over';
     }
     for(const p of points){ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}
   }
@@ -235,18 +248,17 @@
     return Math.max(sectionTop('about'),sectionTop('software')-(innerHeight-headerHeight()));
   }
   function overlayOpen(){return body.classList.contains('work-overlay-open')||Boolean(document.querySelector('dialog[open]'));}
-  function releaseTransition(){transitioning=false;clearTimeout(releaseTimer);}
+  function releaseTransition(){transitioning=false;clearTimeout(releaseTimer);releaseTimer=0;}
   function navigate(el,focus=false){
     if(!el)return;
     const top=Math.max(0,el.getBoundingClientRect().top+scrollY-(el===hero?0:headerHeight()));
-    if(canMove())crossBoundary(top);else scrollTo({top,behavior:'instant'});
+    if(canMove())crossBoundary(top,false);else scrollTo({top,behavior:'instant'});
     if(focus)el.querySelector('h1,h2')?.focus({preventScroll:true});
   }
-  function crossBoundary(target){
-    releaseTransition();transitioning=true;transitionTarget=target;
+  function crossBoundary(target,lock=true){
+    releaseTransition();transitioning=lock&&fine.matches;transitionTarget=target;
     scrollTo({top:transitionTarget,behavior:'smooth'});
-    // Native touch inertia can leave the smooth scroll a few pixels off its target.
-    releaseTimer=setTimeout(()=>{scrollTo({top:transitionTarget,behavior:'instant'});releaseTransition();},850);
+    releaseTimer=setTimeout(releaseTransition,1200);
   }
   document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
     if(e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
@@ -269,11 +281,18 @@
   addEventListener('wheel',e=>{
     if(!fine.matches||!canMove()||overlayOpen()||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY)||!e.deltaY)return;
     if(e.target.closest('input,textarea,select,[contenteditable=true]'))return;
+    const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
+    if(releaseTimer&&Math.abs(scrollY-transitionTarget)<8){
+      // Preserve a wheel gesture that arrives while the browser finishes smooth scrolling.
+      const start=transitionTarget;releaseTransition();e.preventDefault();
+      const next=boundaryFor(delta,start);
+      if(next!==null)crossBoundary(next);else scrollTo({top:start+delta,behavior:'instant'});
+      return;
+    }
     if(transitioning){
       e.preventDefault();
       return;
     }
-    const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
     const target=boundaryFor(delta);if(target===null)return;
     e.preventDefault();crossBoundary(target);
   },{passive:false});
@@ -283,25 +302,7 @@
     if(delta&&transitioning){e.preventDefault();return;}
     const target=boundaryFor(delta);if(!delta||target===null)return;e.preventDefault();crossBoundary(target);
   });
-  let touch=null;
-  addEventListener('touchstart',e=>{
-    touch=e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,scroll:scrollY,target:null,blocked:transitioning}:null;
-  },{passive:true});
-  addEventListener('touchmove',e=>{
-    if(!touch||!canMove()||overlayOpen()||e.touches.length!==1)return;
-    const dx=e.touches[0].clientX-touch.x,delta=touch.y-e.touches[0].clientY;
-    if(Math.abs(dx)>Math.abs(delta)||Math.abs(delta)<8)return;
-    if(touch.blocked){if(e.cancelable)e.preventDefault();return;}
-    const target=boundaryFor(delta,touch.scroll);
-    if(target!==null){touch.target=target;if(e.cancelable)e.preventDefault();}
-  },{passive:false});
-  addEventListener('touchend',e=>{
-    if(!touch||!canMove()||overlayOpen()){touch=null;return;}
-    const delta=touch.y-e.changedTouches[0].clientY,dx=e.changedTouches[0].clientX-touch.x;
-    const target=touch.target??boundaryFor(delta,touch.scroll),blocked=touch.blocked;touch=null;
-    if(!blocked&&Math.abs(delta)>45&&Math.abs(delta)>Math.abs(dx)&&target!==null)crossBoundary(target);
-  },{passive:true});
-  addEventListener('touchcancel',()=>{touch=null;},{passive:true});
+  addEventListener('scrollend',releaseTransition);
   addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')releaseTransition();});
 
   function stopMotion(){
@@ -311,16 +312,10 @@
     releaseTransition();drawBackground(false);
   }
   function applyMotion(){
-    body.classList.toggle('motion-off',!canMove());pause.disabled=reduced.matches;replay.disabled=!canMove();
-    pause.setAttribute('aria-pressed',String(paused));pause.setAttribute('aria-label',paused?'Resume animations':'Pause animations');pause.title=paused?'Resume animations':'Pause animations';
+    body.classList.toggle('motion-off',!canMove());
     if(!canMove())stopMotion();else{lastFrame=0;requestFrame();}
     document.dispatchEvent(new CustomEvent('portfolio:motion',{detail:{paused:!canMove()}}));
   }
-  pause.addEventListener('click',()=>{paused=!paused;applyMotion();});
-  replay.addEventListener('click',()=>{
-    if(heroVisible)intro();
-    targets.forEach(el=>{const r=el.getBoundingClientRect();if(r.bottom>headerHeight()&&r.top<innerHeight-72)reveal(el,true);});
-  });
   function suspendFrame(){cancelAnimationFrame(frame);frame=0;lastFrame=0;}
   function resumeFrame(){suspendFrame();syncScroll();requestFrame();}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendFrame();else resumeFrame();});

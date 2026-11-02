@@ -45,7 +45,6 @@ html.portfolio-home::-webkit-scrollbar { display: none; }
   .about-section .portrait img { width: 350px; }
   .about-section .about-paragraphs { gap: 12px; }
   .about-section .reactive-copy { font-size: 13px; line-height: 1.65; }
-  .motion-controls button { width: 40px; height: 40px; }
 }
 @media (max-width: 600px) and (max-height: 740px) {
   .about-section { padding: 16px 0 var(--intro-arrow-bottom); gap: 12px; }
@@ -61,4 +60,12 @@ html.portfolio-home::-webkit-scrollbar { display: none; }
 @media (max-width: 360px) {
   .about-section .portrait { width: 240px; }
   .about-section .portrait-code { width: calc(100% + 30px); left: -15px; }
+}
+
+/* One native scroller: two introduction stops, then one freely scrollable work area. */
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  html.portfolio-home { scroll-snap-type: y mandatory; }
+  .hero, .about-section, .work-sections { scroll-snap-align: start; scroll-snap-stop: always; scroll-margin: 0; }
+  .portfolio-content { padding-bottom: 0; }
+  .work-sections { padding-bottom: 70px; }
 }

@@ -58,7 +58,7 @@
     if (paused) { stop(); draw(); } else request();
   });
   reduced.addEventListener('change', () => {
-    paused = reduced.matches || document.querySelector('.motion-pause')?.getAttribute('aria-pressed') === 'true';
+    paused = reduced.matches;
     if (paused) stop(); else request();
   });
   document.addEventListener('visibilitychange', () => { stop(); if (!document.hidden) request(); });

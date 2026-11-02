@@ -39,13 +39,13 @@ try {
   assert.equal(await page.locator('h1').count(), 1);
   assert.equal(await page.locator('.work-card').count(), 13);
   assert.notEqual(await page.locator('.name .letter').first().evaluate(e => getComputedStyle(e).color), 'rgba(0, 0, 0, 0)');
-  assert.deepEqual(await page.locator('.portfolio-content > section').evaluateAll(elements => elements.map(el => el.id)), ['about','software','art','experience','games','contact']);
+  assert.deepEqual(await page.locator('.portfolio-content .content-section').evaluateAll(elements => elements.map(el => el.id)), ['about','software','art','experience','games','contact']);
   assert.equal(await page.locator('#about .stack-band,.about-background').count(), 0);
   const nav = await page.locator('.section-links').boundingBox();
   assert.ok(Math.abs(nav.x + nav.width / 2 - 720) < 2, 'Centered desktop navigation');
   assert.equal(await page.locator('#contact .portrait, #contact .about-title').count(), 0);
-  await page.locator('.motion-replay').click();
-  await page.locator('.motion-replay').evaluate(e => e.blur());
+  assert.equal(await page.locator('.motion-controls').count(), 0);
+  await page.reload(); await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(250);
   assert.notEqual(await page.locator('.name-line').first().evaluate(e => getComputedStyle(e).clipPath), 'none', 'Finite scan reveal runs');
   await page.screenshot({ path: `${out}/desktop-scan.png` });
@@ -88,7 +88,7 @@ try {
   await page.locator('.section-links a[href="#contact"]').click();
   await page.waitForTimeout(1400);
   await page.screenshot({ path: `${out}/desktop-contact.png` });
-  await page.locator('.motion-pause').click();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   assert.equal(await page.locator('body').evaluate(e => e.classList.contains('motion-off')), true);
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await page.waitForTimeout(200);
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--progress')), '1');
@@ -118,7 +118,7 @@ try {
   async function swipe(up = true) {
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 200, y: up ? 650 : 300 }] });
     for (let step = 1; step <= 8; step++) {
-      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: up ? 650 - step * 20 : 300 + step * 20 }] });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: up ? 650 - step * 50 : 300 + step * 50 }] });
       await touchPage.waitForTimeout(25);
     }
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
