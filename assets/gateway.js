@@ -31,7 +31,7 @@
     if(kind==='heading'){x=-70*direction;y=0;delay=300;duration=850;scale=1;}
     if(kind==='copy'){x=35*direction;y=0;delay=240;duration=720;scale=1;}
     if(kind==='portrait'){x=0;y=35*direction;delay=0;duration=620;scale=1;}
-    if(!fine.matches){x=y=rotate=0;scale=1;delay=0;duration=200;}
+    if(!fine.matches){x*=.55;y*=.75;rotate=0;scale=1;delay=Math.min(delay,160);duration=Math.min(duration,680);}
     const a=el.animate([{opacity:0,transform:`translate3d(${x}px,${y}px,0) rotate(${rotate}deg) scale(${scale})`},{opacity:1,transform:'translate3d(0,0,0) rotate(0deg) scale(1)'}],{duration,delay,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'});
     entrances.set(el,a);el.dataset.state='playing';
     a.finished.then(()=>{
@@ -44,14 +44,14 @@
   function revealAll(){entrances.forEach(a=>a.cancel());entrances.clear();targets.forEach(el=>el.dataset.state='visible');}
   const revealObserver='IntersectionObserver'in window?new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
-      if(entry.isIntersecting)reveal(entry.target);
+      if(entry.isIntersecting&&(fine.matches||entry.intersectionRatio>=.12))reveal(entry.target);
       else if(entry.target.dataset.state!=='playing'&&(entry.boundingClientRect.bottom<=0||entry.boundingClientRect.top>=innerHeight))arm(entry.target);
     });
-  },{threshold:0}):null;
+  },{threshold:[0,.12]}):null;
   targets.forEach(el=>{el.dataset.state='armed';revealObserver?.observe(el);});
   root.classList.add('motion-ready');root.classList.remove('reveal-boot');clearTimeout(window.revealWatchdog);
   if(!revealObserver||!canMove())revealAll();
-  document.addEventListener('focusin',e=>{const el=e.target.closest('[data-enter]');if(el){entrances.get(el)?.cancel();entrances.delete(el);el.dataset.state='visible';}});
+  document.addEventListener('focusin',e=>{if(e.target.matches('h1,h2'))return;const el=e.target.closest('[data-enter]');if(el){entrances.get(el)?.cancel();entrances.delete(el);el.dataset.state='visible';}});
 
   const heroEntrances=[];
   function intro(){
@@ -136,7 +136,7 @@
     return {x,y,life};
   }
   function drawParticles(t,intro,move,dt=33){
-    const count=fine.matches?particles.length:42,points=[];
+    const desktop=fine.matches&&w>900,count=fine.matches?particles.length:42,points=[];
     const stream=effect==='streams',network=effect==='neighbours';
     if(stream){
       ctx.lineWidth=.65;
@@ -159,7 +159,7 @@
       }
       const [fx,fy]=bend(x,y);
       if(move){p.vx=(p.vx+(fx-p.dx)*.12)*.75;p.vy=(p.vy+(fy-p.dy)*.12)*.75;p.dx+=p.vx;p.dy+=p.vy;}
-      points.push({x:x+p.dx,y:y+p.dy,alpha:Math.pow(Math.sin(life*Math.PI),1.2)*(.48+(i%3)*.09)*intro,color:p.color,r:.85+Math.pow(random(i+3100),2)*2.9});
+      points.push({x:x+p.dx,y:y+p.dy,alpha:Math.pow(Math.sin(life*Math.PI),1.2)*(.48+(i%3)*.09)*intro*(desktop?1.28:1),color:p.color,r:(.85+Math.pow(random(i+3100),2)*2.9)*(desktop?1.6:1)});
     }
     if(network){
       const wanted=new Set(),radius=Math.min(165,w*.23);
@@ -177,8 +177,8 @@
         const p=points[link.i],q=points[link.j];if(!p||!q){links.delete(key);return;}
         const distance=Math.hypot(p.x-q.x,p.y-q.y);
         const gradient=ctx.createLinearGradient(p.x,p.y,q.x,q.y);gradient.addColorStop(0,p.color);gradient.addColorStop(1,q.color);
-        ctx.strokeStyle=gradient;ctx.globalAlpha=Math.max(0,1-distance/radius)*Math.min(p.alpha,q.alpha)*.68*link.weight;
-        ctx.lineWidth=.95;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+        ctx.strokeStyle=gradient;ctx.globalAlpha=Math.max(0,1-distance/radius)*Math.min(p.alpha,q.alpha)*(desktop?.9:.68)*link.weight;
+        ctx.lineWidth=desktop?1.4:.95;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
       });
     }
     for(const p of points){ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}

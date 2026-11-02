@@ -1,11 +1,15 @@
-html.portfolio-home { scrollbar-width: none; scroll-padding-top: 78px; }
+html.portfolio-home { scrollbar-width: none; scroll-padding-top: 78px; --intro-arrow-bottom: 38px; --intro-arrow-size: 52px; }
 html.portfolio-home::-webkit-scrollbar { display: none; }
 .full-page .site-header { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 22px; }
 .full-page .wordmark { justify-self: start; }
 .full-page .section-links { margin: 0; justify-self: center; }
 .full-page .socials { margin: 0; justify-self: end; }
 .full-page .compact-projects { display: none; }
-.about-section { min-height: calc(100svh - 78px); padding: 38px 0; gap: 28px; }
+.enter-work { bottom: var(--intro-arrow-bottom); width: var(--intro-arrow-size); height: var(--intro-arrow-size); left: calc(50% - var(--intro-arrow-size) / 2); }
+.about-section { min-height: calc(100svh - 78px); padding: 38px 0 var(--intro-arrow-bottom); gap: 28px; grid-template-rows: 1fr auto; align-content: stretch; }
+.about-section .about-layout { align-self: center; }
+.continue-work { min-height: var(--intro-arrow-size); }
+.step-arrow { width: var(--intro-arrow-size); height: var(--intro-arrow-size); }
 .about-section .about-right { gap: 24px; }
 .about-section .portrait { width: 325px; }
 .about-section .portrait-window { height: 335px; }
@@ -30,8 +34,9 @@ html.portfolio-home::-webkit-scrollbar { display: none; }
   .about-section { min-height: calc(100svh - 68px); }
 }
 @media (max-width: 600px) {
+  html.portfolio-home { --intro-arrow-bottom: 28px; --intro-arrow-size: 46px; }
   .hero { min-height: 0; }
-  .about-section { padding: 20px 0; gap: 18px; }
+  .about-section { padding: 20px 0 var(--intro-arrow-bottom); gap: 18px; }
   .about-section .about-layout { gap: 20px; }
   .about-section .about-title { font-size: clamp(25px,7vw,32px); }
   .about-section .about-right { gap: 18px; }
@@ -40,12 +45,10 @@ html.portfolio-home::-webkit-scrollbar { display: none; }
   .about-section .portrait img { width: 350px; }
   .about-section .about-paragraphs { gap: 12px; }
   .about-section .reactive-copy { font-size: 13px; line-height: 1.65; }
-  .continue-work { min-height: 44px; }
-  .step-arrow { width: 44px; height: 44px; }
   .motion-controls button { width: 40px; height: 40px; }
 }
 @media (max-width: 600px) and (max-height: 740px) {
-  .about-section { padding: 16px 0; gap: 12px; }
+  .about-section { padding: 16px 0 var(--intro-arrow-bottom); gap: 12px; }
   .about-section .about-layout { gap: 12px; }
   .about-section .about-title { font-size: 26px; }
   .about-section .portrait-window { height: 205px; }
