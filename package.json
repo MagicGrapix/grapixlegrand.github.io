@@ -11,7 +11,8 @@
     "test:gateway": "node tests/gateway.mjs",
     "test:dev": "node tests/dev.mjs",
     "test:readers": "node tests/readers.mjs",
-    "test:scroll": "node tests/scroll-return.cjs"
+    "test:scroll": "node tests/scroll-return.cjs",
+    "test:mobile": "node tests/mobile-interactions.mjs"
   },
   "engines": {
     "node": ">=22"

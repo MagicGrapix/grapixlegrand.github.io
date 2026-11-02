@@ -61,7 +61,9 @@
     paused = reduced.matches || document.querySelector('.motion-pause')?.getAttribute('aria-pressed') === 'true';
     if (paused) stop(); else request();
   });
-  document.addEventListener('visibilitychange', () => document.hidden ? stop() : request());
+  document.addEventListener('visibilitychange', () => { stop(); if (!document.hidden) request(); });
+  addEventListener('pagehide', stop);
+  addEventListener('pageshow', () => { stop(); resize(); });
   addEventListener('resize', resize);
   document.fonts?.ready.then(resize);
   resize();

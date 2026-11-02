@@ -321,9 +321,12 @@
     if(heroVisible)intro();
     targets.forEach(el=>{const r=el.getBoundingClientRect();if(r.bottom>headerHeight()&&r.top<innerHeight-72)reveal(el,true);});
   });
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(frame);frame=0;}else{lastFrame=0;syncScroll();requestFrame();}});
+  function suspendFrame(){cancelAnimationFrame(frame);frame=0;lastFrame=0;}
+  function resumeFrame(){suspendFrame();syncScroll();requestFrame();}
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendFrame();else resumeFrame();});
+  addEventListener('pagehide',()=>{releaseTransition();suspendFrame();});
   reduced.addEventListener('change',applyMotion);fine.addEventListener('change',measure);
-  addEventListener('resize',measure);addEventListener('pageshow',()=>{syncScroll();requestFrame();});
+  addEventListener('resize',measure);addEventListener('pageshow',()=>{releaseTransition();resumeFrame();});
   if(document.fonts)document.fonts.ready.then(measure);
   measure();intro();applyMotion();
 })();

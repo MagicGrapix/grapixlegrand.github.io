@@ -26,8 +26,10 @@
 .continue-work { display: flex; gap: 16px; justify-self: center; align-items: center; min-height: 52px; color: var(--accent); font-size: 13px; }
 .step-arrow { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--accent); border-radius: 50%; transition: background .3s, color .3s; }
 .step-arrow svg { transition: transform .4s var(--ease); }
-.continue-work:hover .step-arrow, .continue-work:focus-visible .step-arrow { background: var(--accent); color: var(--bg); }
-.continue-work:hover svg, .continue-work:focus-visible svg { transform: translateY(4px); }
+.continue-work:focus-visible .step-arrow{ background: var(--accent); color: var(--bg); }
+@media (hover: hover) and (pointer: fine) { .continue-work:hover .step-arrow{ background: var(--accent); color: var(--bg); } }
+.continue-work:focus-visible svg{ transform: translateY(4px); }
+@media (hover: hover) and (pointer: fine) { .continue-work:hover svg{ transform: translateY(4px); } }
 .contact-section .contact { margin-top: 0; border-top: 0; padding-top: 0; }
 @media (max-width: 900px) {
   .compact-projects { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent); font-size: 12px; margin-left: auto; }
