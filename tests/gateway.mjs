@@ -91,9 +91,9 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   assert.equal(await page.locator('body').evaluate(e => e.classList.contains('motion-off')), true);
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await page.waitForTimeout(200);
-  assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--progress')), '1');
+  assert.equal(await page.locator('.page-progress i').evaluate(el => el.style.width), '100%');
   await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(200);
-  assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--progress')), '0');
+  assert.equal(await page.locator('.page-progress i').evaluate(el => el.style.width), '0%');
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
   const phone = await mobile.newPage(); phone.on('pageerror', e => errors.push(e.message));
   await phone.goto(base); await ready(phone);

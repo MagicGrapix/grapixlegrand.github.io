@@ -3,6 +3,7 @@
   const effect=body.dataset.effect,full=body.classList.contains('full-page');
   const fine=matchMedia('(pointer:fine)'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
   const canvas=hero.querySelector('canvas'),ctx=canvas.getContext('2d');
+  const progressBar=document.querySelector('.page-progress i');
   const composition=hero.querySelector('.hero-composition'),name=hero.querySelector('.name');
   const colors=['#eeb9a2','#a9c6ef','#d6b9e8'];
   const random=i=>{const n=Math.sin(i*13.37+79.14)*43758.2;return n-Math.floor(n);};
@@ -234,13 +235,17 @@
     scrollFrame=0;if(!full)return;
     if(Math.abs(scrollY-lastScroll)>2)direction=scrollY>lastScroll?1:-1;lastScroll=scrollY;
     const max=Math.max(0,root.scrollHeight-innerHeight),progress=max?clamp(scrollY/max,0,1):0;
-    root.style.setProperty('--progress',scrollY<1?0:max-scrollY<1?1:progress);
+    if(progressBar)progressBar.style.width=`${(scrollY<1?0:max-scrollY<1?1:progress)*100}%`;
     let id='home';document.querySelectorAll('.content-section').forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.4)id=s.id;});
     if(max>0&&max-scrollY<2)id='contact';
     document.querySelectorAll('.section-links a').forEach(a=>{if(a.hash==='#'+id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
   }
-  addEventListener('scroll',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(syncScroll);},{passive:true});
+  addEventListener('scroll',()=>{
+    if(!scrollFrame)scrollFrame=requestAnimationFrame(syncScroll);
+    scheduleMobileSettle();
+  },{passive:true});
   let transitioning=false,transitionTarget=0,releaseTimer=0;
+  let mobileScrollFrame=0,mobileSettleTimer=0,touchActive=false,touchGesture=null,settleGesture=null;
   function headerHeight(){return document.querySelector('.site-header').offsetHeight;}
   function sectionTop(id){const el=document.getElementById(id);return Math.max(0,el.getBoundingClientRect().top+scrollY-headerHeight());}
   function aboutEnd(){
@@ -255,7 +260,43 @@
     if(canMove())crossBoundary(top,false);else scrollTo({top,behavior:'instant'});
     if(focus)el.querySelector('h1,h2')?.focus({preventScroll:true});
   }
+  function cancelMobileScroll(){
+    settleGesture=null;
+    cancelAnimationFrame(mobileScrollFrame);mobileScrollFrame=0;
+    clearTimeout(mobileSettleTimer);mobileSettleTimer=0;
+  }
+  function scrollMobileTo(target){
+    cancelMobileScroll();
+    const from=scrollY,start=performance.now(),duration=clamp(Math.abs(target-from)*.55,220,600);
+    // Stop native inertia first; only this latest navigation may move the page.
+    scrollTo({top:from,behavior:'instant'});
+    const step=now=>{
+      const progress=clamp((now-start)/duration,0,1);
+      scrollTo({top:from+(target-from)*(1-Math.pow(1-progress,3)),behavior:'instant'});
+      mobileScrollFrame=progress<1?requestAnimationFrame(step):0;
+    };
+    mobileScrollFrame=requestAnimationFrame(step);
+  }
+  function settleMobile(){
+    clearTimeout(mobileSettleTimer);mobileSettleTimer=0;
+    if(fine.matches||!canMove()||touchActive||mobileScrollFrame||overlayOpen()||document.hidden||window.visualViewport?.scale>1.01)return;
+    const y=scrollY,about=sectionTop('about'),end=aboutEnd(),projects=sectionTop('software');
+    const gesture=settleGesture;settleGesture=null;
+    const guided=gesture?boundaryFor(gesture.delta,gesture.scroll):null;
+    if(guided!==null){if(Math.abs(guided-y)>2)scrollMobileTo(guided);return;}
+    // Without an introductory swipe, never snap work after a bottom bounce or resize.
+    if(y<=0||y>=projects-1||(y>=about&&y<=end))return;
+    const nearest=[0,about,end,projects].reduce((best,point)=>Math.abs(point-y)<Math.abs(best-y)?point:best);
+    if(Math.abs(nearest-y)>2)scrollMobileTo(nearest);
+  }
+  function scheduleMobileSettle(){
+    if(fine.matches||touchActive||mobileScrollFrame)return;
+    clearTimeout(mobileSettleTimer);
+    // Fallback for browsers without scrollend; choose from the current position, never an old target.
+    mobileSettleTimer=setTimeout(settleMobile,160);
+  }
   function crossBoundary(target,lock=true){
+    if(!fine.matches){releaseTransition();scrollMobileTo(target);return;}
     releaseTransition();transitioning=lock&&fine.matches;transitionTarget=target;
     scrollTo({top:transitionTarget,behavior:'smooth'});
     releaseTimer=setTimeout(releaseTransition,1200);
@@ -279,6 +320,7 @@
     return null;
   }
   addEventListener('wheel',e=>{
+    if(!fine.matches)cancelMobileScroll();
     if(!fine.matches||!canMove()||overlayOpen()||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY)||!e.deltaY)return;
     if(e.target.closest('input,textarea,select,[contenteditable=true]'))return;
     const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
@@ -302,14 +344,28 @@
     if(delta&&transitioning){e.preventDefault();return;}
     const target=boundaryFor(delta);if(!delta||target===null)return;e.preventDefault();crossBoundary(target);
   });
-  addEventListener('scrollend',releaseTransition);
-  addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')releaseTransition();});
+  addEventListener('scrollend',()=>{releaseTransition();settleMobile();});
+  addEventListener('pointerdown',()=>{releaseTransition();cancelMobileScroll();});
+  addEventListener('touchstart',e=>{
+    touchActive=true;cancelMobileScroll();
+    touchGesture=e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,scroll:scrollY}:null;
+  },{passive:true});
+  addEventListener('touchend',e=>{
+    touchActive=e.touches.length>0;
+    const gesture=touchGesture;touchGesture=null;if(touchActive)return;
+    if(gesture&&!fine.matches&&canMove()&&!overlayOpen()){
+      const delta=gesture.y-e.changedTouches[0].clientY,dx=e.changedTouches[0].clientX-gesture.x;
+      if(Math.abs(delta)>45&&Math.abs(delta)>Math.abs(dx))settleGesture={delta,scroll:gesture.scroll};
+    }
+    scheduleMobileSettle();
+  },{passive:true});
+  addEventListener('touchcancel',()=>{touchActive=false;touchGesture=null;cancelMobileScroll();},{passive:true});
 
   function stopMotion(){
     cancelAnimationFrame(frame);frame=0;lastFrame=0;heroEntrances.splice(0).forEach(a=>a.cancel());revealAll();
     targetX=targetY=px=py=power=targetPower=0;composition.style.transform='none';name.style.transform='none';
     areas.forEach(a=>{a.target=a.power=0;[...a.letters,...a.groups].forEach(p=>{p.x=p.y=p.vx=p.vy=0;p.el.style.transform='none';p.el.style.filter='none';p.el.style.textShadow='none';});});
-    releaseTransition();drawBackground(false);
+    releaseTransition();cancelMobileScroll();drawBackground(false);
   }
   function applyMotion(){
     body.classList.toggle('motion-off',!canMove());
@@ -319,9 +375,9 @@
   function suspendFrame(){cancelAnimationFrame(frame);frame=0;lastFrame=0;}
   function resumeFrame(){suspendFrame();syncScroll();requestFrame();}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendFrame();else resumeFrame();});
-  addEventListener('pagehide',()=>{releaseTransition();suspendFrame();});
-  reduced.addEventListener('change',applyMotion);fine.addEventListener('change',measure);
-  addEventListener('resize',measure);addEventListener('pageshow',()=>{releaseTransition();resumeFrame();});
+  addEventListener('pagehide',()=>{releaseTransition();cancelMobileScroll();touchActive=false;suspendFrame();});
+  reduced.addEventListener('change',applyMotion);fine.addEventListener('change',()=>{cancelMobileScroll();measure();});
+  addEventListener('resize',measure);addEventListener('pageshow',()=>{releaseTransition();cancelMobileScroll();touchActive=false;resumeFrame();});
   if(document.fonts)document.fonts.ready.then(measure);
   measure();intro();applyMotion();
 })();

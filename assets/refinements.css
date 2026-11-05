@@ -62,10 +62,4 @@ html.portfolio-home::-webkit-scrollbar { display: none; }
   .about-section .portrait-code { width: calc(100% + 30px); left: -15px; }
 }
 
-/* One native scroller: two introduction stops, then one freely scrollable work area. */
-@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
-  html.portfolio-home { scroll-snap-type: y mandatory; }
-  .hero, .about-section, .work-sections { scroll-snap-align: start; scroll-snap-stop: always; scroll-margin: 0; }
-  .portfolio-content { padding-bottom: 0; }
-  .work-sections { padding-bottom: 70px; }
-}
+/* Mobile settling is limited to the introduction in gateway.js; work scrolling stays native. */
