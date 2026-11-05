@@ -10,7 +10,7 @@ const port = Number(process.env.PORT || 8000);
 const host = process.env.HOST || '0.0.0.0';
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Choose a PORT between 1024 and 65535.');
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.pdf': 'application/pdf', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mp3': 'audio/mpeg', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8' };
-const publicFolders = new Set(['assets', 'resources', 'pages', 'cards', 'cg22', 'SuperVoxel', 'shuffling', 'hosting']);
+const publicFolders = new Set(['projects', 'assets', 'resources', 'pages', 'cards', 'cg22', 'SuperVoxel', 'shuffling', 'hosting']);
 const clients = new Set();
 const reload = () => { for (const client of clients) client.write('data: reload\n\n'); };
 const injected = `<script>new EventSource('/_dev/events').onmessage=function(e){if(e.data==='reload')location.reload()};</script>`;

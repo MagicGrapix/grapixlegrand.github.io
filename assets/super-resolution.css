@@ -1,0 +1,38 @@
+.reader .article-content .image-compare { width: min(100%, 740px); justify-self: center; }
+.compare-labels { display: flex; justify-content: space-between; gap: 18px; margin-bottom: 10px; font: 12px/1.5 var(--display); color: var(--muted); }
+.compare-labels span:last-child { text-align: right; color: var(--accent); }
+.reader .article-content .compare-images { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px !important; background: none; position: relative; }
+.reader .article-content .compare-images img { display: block; width: 100% !important; height: auto !important; max-height: none !important; margin: 0; }
+.compare-divider { display: none; }
+.reader .article-content .is-ready .compare-images { display: block !important; aspect-ratio: 1; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: ew-resize; }
+.reader .article-content .is-ready .compare-images img { position: absolute; inset: 0; height: 100% !important; object-fit: fill; user-select: none; pointer-events: none; }
+.is-ready .compare-images .compare-after { z-index: 1; clip-path: inset(0 0 0 var(--compare,50%)); }
+.is-ready .compare-divider { display: flex; align-items: center; justify-content: center; position: absolute; inset-block: 0; left: clamp(24px,var(--compare,50%),calc(100% - 24px)); width: 48px; transform: translateX(-50%); z-index: 2; touch-action: none; cursor: ew-resize; }
+.is-ready .compare-images::after { content: ''; position: absolute; inset-block: 0; left: var(--compare,50%); width: 2px; background: var(--fg); z-index: 1; pointer-events: none; }
+.reader .article-content .compare-images img[hidden] { display: none !important; }
+.compare-divider svg { position: relative; flex: 0 0 44px; width: 44px; height: 44px; padding: 6px; color: var(--fg); background: var(--bg); border: 1px solid var(--fg); border-radius: 50%; }
+.compare-images:has(.compare-divider:focus-visible) { outline: 2px solid var(--accent); outline-offset: 4px; }
+.compare-divider:focus-visible { outline: none; }
+.compare-divider:focus-visible svg { outline: 2px solid var(--accent); outline-offset: 3px; }
+.compare-modes { display: flex; width: fit-content; max-width: 100%; margin-bottom: 18px; padding: 3px; border: 1px solid var(--line); }
+.compare-modes[hidden] { display: none; }
+.compare-modes button { min-height: 44px; padding: 8px 16px; background: transparent; color: var(--muted); border: 0; font: 12px/1.4 var(--display); cursor: pointer; }
+.compare-modes button[aria-pressed="true"] { color: var(--bg); background: var(--accent); }
+.compare-modes button:focus-visible { outline: 2px solid var(--second); outline-offset: -3px; }
+.reader .article-content .sr-pipeline { grid-column: 1/-1; list-style: none; display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; padding: 22px 0; margin: 8px 0 32px; border-block: 1px solid var(--line); }
+.sr-pipeline li { margin: 0 !important; display: grid; gap: 8px; }
+.sr-pipeline strong { font: 16px var(--display); color: var(--second); }
+.sr-pipeline span { font-size: 12px; line-height: 1.6; color: var(--muted); }
+.reader .article-content .sr-plot { grid-column: 2; display: grid; grid-template-columns: minmax(0,330px) minmax(0,1fr); align-items: center; gap: 24px; }
+.reader .article-content .sr-plot img { width: 100%; background: #fff; }
+.reader .article-content .sr-plot figcaption { margin: 0; }
+.reader .article-content .sr-example-grid { display: grid !important; grid-template-columns: repeat(3,minmax(0,1fr)) !important; gap: 16px !important; align-items: start; background: none; }
+.reader .article-content .sr-example-grid img { width: 100%; aspect-ratio: 1; object-fit: fill; }
+.reader .article-content .sr-example-grid p { font-size: 12px; line-height: 1.6; margin: 10px 0 0; }
+.sr-example-grid code { display: block; width: fit-content; margin-bottom: 6px; }
+@media(max-width:600px) {
+  .sr-pipeline { grid-template-columns: 1fr 1fr !important; gap: 24px 18px !important; }
+  .reader .article-content .sr-plot { grid-template-columns: 1fr; gap: 16px; }
+  .reader .article-content .sr-plot img { width: auto; max-width: 100%; }
+  .reader .article-content .sr-example-grid { gap: 9px !important; }
+  }

@@ -1,0 +1,156 @@
+{
+  "repository": "MagicGrapix/MFCGV23",
+  "reportDate": "2023-05-29",
+  "figures": [
+    {
+      "file": "parrot-bicubic.webp",
+      "source": "exercice6/report/plot1/1.png",
+      "crop": [
+        1509,
+        851,
+        2122,
+        1463
+      ],
+      "size": [
+        613,
+        612
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "parrot-residual.webp",
+      "source": "exercice6/report/plot1/1.png",
+      "crop": [
+        32,
+        851,
+        644,
+        1463
+      ],
+      "size": [
+        612,
+        612
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "castle-reference.webp",
+      "source": "exercice6/report/plot1/6.png",
+      "crop": [
+        32,
+        95,
+        644,
+        707
+      ],
+      "size": [
+        612,
+        612
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "castle-residual.webp",
+      "source": "exercice6/report/plot1/6.png",
+      "crop": [
+        32,
+        851,
+        644,
+        1463
+      ],
+      "size": [
+        612,
+        612
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "learning-rate-high.webp",
+      "source": "exercice6/report/plot2/1.png",
+      "crop": [
+        1509,
+        95,
+        1914,
+        500
+      ],
+      "size": [
+        405,
+        405
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "learning-rate-balanced.webp",
+      "source": "exercice6/report/plot2/1.png",
+      "crop": [
+        771,
+        584,
+        1175,
+        989
+      ],
+      "size": [
+        404,
+        405
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "learning-rate-low.webp",
+      "source": "exercice6/report/plot2/1.png",
+      "crop": [
+        32,
+        1073,
+        437,
+        1478
+      ],
+      "size": [
+        405,
+        405
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "residual-training-loss.webp",
+      "source": "exercice6/report/task5/baseline_vs_residual.png",
+      "crop": [
+        25,
+        100,
+        355,
+        309
+      ],
+      "size": [
+        330,
+        209
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "learning-rate-training-loss.webp",
+      "source": "exercice6/report/task5/l4_vs_lr5_vs_lr6.png",
+      "crop": [
+        38,
+        83,
+        307,
+        290
+      ],
+      "size": [
+        269,
+        207
+      ],
+      "processing": "Exact panel extraction; lossless WebP; no generated pixels or color adjustment."
+    },
+    {
+      "file": "parrot-low-resolution.webp",
+      "source": "exercice6/report/plot1/1.png",
+      "crop": [
+        771,
+        95,
+        1383,
+        707
+      ],
+      "size": [
+        612,
+        612
+      ],
+      "processing": "Exact low res panel extraction, already enlarged by the original report plot; lossless WebP; no generated pixels or color adjustment."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "order": [
+    "super-resolution"
+  ],
+  "projects": {
+    "super-resolution": {
+      "title": "Learning to Upscale Images with a CNN",
+      "year": "2023",
+      "summary": "Training a CNN for ×2 image super-resolution, then exploring residual learning, learning rates and input degradation.",
+      "chips": [
+        "Python",
+        "PyTorch",
+        "Computer vision"
+      ],
+      "preview": "/pages/image-super-resolution/images/parrot-residual.webp",
+      "previewFit": "cover",
+      "alt": "Parrot reconstructed by a residual convolutional network.",
+      "link": "/pages/image-super-resolution/",
+      "action": "Read the experiment"
+    }
+  }
+}

@@ -62,4 +62,11 @@ html.portfolio-home::-webkit-scrollbar { display: none; }
   .about-section .portrait-code { width: calc(100% + 30px); left: -15px; }
 }
 
-/* Mobile settling is limited to the introduction in gateway.js; work scrolling stays native. */
+/* Native touch snapping is enabled only above Projects, never across the work area. */
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  html.portfolio-home.mobile-guided:not(.mobile-navigating) { scroll-snap-type: y mandatory; }
+  .hero, .about-section, .intro-project-stop { scroll-snap-align: start; scroll-snap-stop: always; scroll-margin: 0; }
+  .intro-project-stop { position: absolute; top: 0; width: 1px; height: 1px; pointer-events: none; }
+}
+.past-title .enter-work { visibility: hidden; }
+html.intro-managed:not(.at-introduction) .continue-work { visibility: hidden; }

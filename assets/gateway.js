@@ -235,17 +235,22 @@
     scrollFrame=0;if(!full)return;
     if(Math.abs(scrollY-lastScroll)>2)direction=scrollY>lastScroll?1:-1;lastScroll=scrollY;
     const max=Math.max(0,root.scrollHeight-innerHeight),progress=max?clamp(scrollY/max,0,1):0;
-    if(progressBar)progressBar.style.width=`${(scrollY<1?0:max-scrollY<1?1:progress)*100}%`;
+    if(progressBar)progressBar.style.width=pullToRefresh?'0%':`${(scrollY<=3?0:max-scrollY<1?1:progress)*100}%`;
     let id='home';document.querySelectorAll('.content-section').forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.4)id=s.id;});
     if(max>0&&max-scrollY<2)id='contact';
     document.querySelectorAll('.section-links a').forEach(a=>{if(a.hash==='#'+id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
   }
   addEventListener('scroll',()=>{
+    finishMobileScroll();
     if(!scrollFrame)scrollFrame=requestAnimationFrame(syncScroll);
-    scheduleMobileSettle();
+    syncMobileGuidance();
   },{passive:true});
   let transitioning=false,transitionTarget=0,releaseTimer=0;
-  let mobileScrollFrame=0,mobileSettleTimer=0,touchActive=false,touchGesture=null,settleGesture=null;
+  let mobileScrollTarget=null,pullToRefresh=false,pullStart=null,mobileReady=false;
+  const projectsSection=document.getElementById('software');
+  if(full&&projectsSection){
+    const stop=document.createElement('span');stop.className='intro-project-stop';stop.setAttribute('aria-hidden','true');projectsSection.prepend(stop);
+  }
   function headerHeight(){return document.querySelector('.site-header').offsetHeight;}
   function sectionTop(id){const el=document.getElementById(id);return Math.max(0,el.getBoundingClientRect().top+scrollY-headerHeight());}
   function aboutEnd(){
@@ -260,40 +265,34 @@
     if(canMove())crossBoundary(top,false);else scrollTo({top,behavior:'instant'});
     if(focus)el.querySelector('h1,h2')?.focus({preventScroll:true});
   }
+  function syncMobileGuidance(){
+    if(!full)return;
+    root.classList.add('intro-managed');
+    const projects=sectionTop('software'),about=sectionTop('about');
+    // There are no snap targets in the work area and no delayed touch destination.
+    root.classList.toggle('mobile-guided',mobileReady&&!fine.matches&&canMove()&&!overlayOpen()&&!pullToRefresh&&scrollY<projects-2&&(window.visualViewport?.scale||1)<1.01);
+    root.classList.toggle('past-title',scrollY>about*.5);
+    root.classList.toggle('at-introduction',scrollY>=about*.5&&scrollY<projects-headerHeight());
+  }
+  function finishMobileScroll(){
+    if(mobileScrollTarget===null||Math.abs(scrollY-mobileScrollTarget)>1)return;
+    mobileScrollTarget=null;syncMobileGuidance();root.classList.remove('mobile-navigating');
+  }
   function cancelMobileScroll(){
-    settleGesture=null;
-    cancelAnimationFrame(mobileScrollFrame);mobileScrollFrame=0;
-    clearTimeout(mobileSettleTimer);mobileSettleTimer=0;
+    if(mobileScrollTarget!==null){
+      mobileScrollTarget=null;
+      // Stop the browser's current animation before restoring gesture snapping.
+      scrollTo({top:scrollY,behavior:'instant'});
+    }
+    root.classList.remove('mobile-navigating');syncMobileGuidance();
   }
   function scrollMobileTo(target){
-    cancelMobileScroll();
-    const from=scrollY,start=performance.now(),duration=clamp(Math.abs(target-from)*.55,220,600);
-    // Stop native inertia first; only this latest navigation may move the page.
-    scrollTo({top:from,behavior:'instant'});
-    const step=now=>{
-      const progress=clamp((now-start)/duration,0,1);
-      scrollTo({top:from+(target-from)*(1-Math.pow(1-progress,3)),behavior:'instant'});
-      mobileScrollFrame=progress<1?requestAnimationFrame(step):0;
-    };
-    mobileScrollFrame=requestAnimationFrame(step);
-  }
-  function settleMobile(){
-    clearTimeout(mobileSettleTimer);mobileSettleTimer=0;
-    if(fine.matches||!canMove()||touchActive||mobileScrollFrame||overlayOpen()||document.hidden||window.visualViewport?.scale>1.01)return;
-    const y=scrollY,about=sectionTop('about'),end=aboutEnd(),projects=sectionTop('software');
-    const gesture=settleGesture;settleGesture=null;
-    const guided=gesture?boundaryFor(gesture.delta,gesture.scroll):null;
-    if(guided!==null){if(Math.abs(guided-y)>2)scrollMobileTo(guided);return;}
-    // Without an introductory swipe, never snap work after a bottom bounce or resize.
-    if(y<=0||y>=projects-1||(y>=about&&y<=end))return;
-    const nearest=[0,about,end,projects].reduce((best,point)=>Math.abs(point-y)<Math.abs(best-y)?point:best);
-    if(Math.abs(nearest-y)>2)scrollMobileTo(nearest);
-  }
-  function scheduleMobileSettle(){
-    if(fine.matches||touchActive||mobileScrollFrame)return;
-    clearTimeout(mobileSettleTimer);
-    // Fallback for browsers without scrollend; choose from the current position, never an old target.
-    mobileSettleTimer=setTimeout(settleMobile,160);
+    pullToRefresh=false;root.classList.add('mobile-navigating');
+    mobileScrollTarget=clamp(target,0,Math.max(0,root.scrollHeight-innerHeight));
+    // Commit snap removal before Safari receives the single native scroll request.
+    getComputedStyle(root).scrollSnapType;
+    scrollTo({top:mobileScrollTarget,behavior:'smooth'});
+    finishMobileScroll();
   }
   function crossBoundary(target,lock=true){
     if(!fine.matches){releaseTransition();scrollMobileTo(target);return;}
@@ -339,27 +338,26 @@
     e.preventDefault();crossBoundary(target);
   },{passive:false});
   addEventListener('keydown',e=>{
+    if(!fine.matches&&['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(e.key))cancelMobileScroll();
     if(!canMove()||overlayOpen()||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('button,a,input,textarea,select,[contenteditable=true]'))return;
     const delta=['ArrowDown','PageDown'].includes(e.key)||e.key===' '&&!e.shiftKey?1:['ArrowUp','PageUp'].includes(e.key)||e.key===' '&&e.shiftKey?-1:0;
     if(delta&&transitioning){e.preventDefault();return;}
     const target=boundaryFor(delta);if(!delta||target===null)return;e.preventDefault();crossBoundary(target);
   });
-  addEventListener('scrollend',()=>{releaseTransition();settleMobile();});
+  addEventListener('scrollend',()=>{releaseTransition();syncMobileGuidance();});
   addEventListener('pointerdown',()=>{releaseTransition();cancelMobileScroll();});
   addEventListener('touchstart',e=>{
-    touchActive=true;cancelMobileScroll();
-    touchGesture=e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,scroll:scrollY}:null;
+    cancelMobileScroll();pullToRefresh=false;
+    pullStart=scrollY<=3&&e.touches.length===1?e.touches[0].clientY:null;
+    syncMobileGuidance();
   },{passive:true});
-  addEventListener('touchend',e=>{
-    touchActive=e.touches.length>0;
-    const gesture=touchGesture;touchGesture=null;if(touchActive)return;
-    if(gesture&&!fine.matches&&canMove()&&!overlayOpen()){
-      const delta=gesture.y-e.changedTouches[0].clientY,dx=e.changedTouches[0].clientX-gesture.x;
-      if(Math.abs(delta)>45&&Math.abs(delta)>Math.abs(dx))settleGesture={delta,scroll:gesture.scroll};
+  addEventListener('touchmove',e=>{
+    if(pullStart!==null&&e.touches.length===1&&e.touches[0].clientY>pullStart+12){
+      pullToRefresh=true;syncMobileGuidance();if(progressBar)progressBar.style.width='0%';
     }
-    scheduleMobileSettle();
   },{passive:true});
-  addEventListener('touchcancel',()=>{touchActive=false;touchGesture=null;cancelMobileScroll();},{passive:true});
+  addEventListener('touchend',()=>{pullStart=null;syncMobileGuidance();},{passive:true});
+  addEventListener('touchcancel',()=>{pullStart=null;cancelMobileScroll();},{passive:true});
 
   function stopMotion(){
     cancelAnimationFrame(frame);frame=0;lastFrame=0;heroEntrances.splice(0).forEach(a=>a.cancel());revealAll();
@@ -373,11 +371,11 @@
     document.dispatchEvent(new CustomEvent('portfolio:motion',{detail:{paused:!canMove()}}));
   }
   function suspendFrame(){cancelAnimationFrame(frame);frame=0;lastFrame=0;}
-  function resumeFrame(){suspendFrame();syncScroll();requestFrame();}
+  function resumeFrame(){suspendFrame();syncScroll();syncMobileGuidance();requestFrame();}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendFrame();else resumeFrame();});
-  addEventListener('pagehide',()=>{releaseTransition();cancelMobileScroll();touchActive=false;suspendFrame();});
+  addEventListener('pagehide',()=>{releaseTransition();cancelMobileScroll();pullStart=null;suspendFrame();});
   reduced.addEventListener('change',applyMotion);fine.addEventListener('change',()=>{cancelMobileScroll();measure();});
-  addEventListener('resize',measure);addEventListener('pageshow',()=>{releaseTransition();cancelMobileScroll();touchActive=false;resumeFrame();});
+  addEventListener('resize',measure);addEventListener('pageshow',()=>{mobileReady=true;releaseTransition();pullToRefresh=false;cancelMobileScroll();pullStart=null;resumeFrame();});
   if(document.fonts)document.fonts.ready.then(measure);
-  measure();intro();applyMotion();
+  measure();intro();applyMotion();syncMobileGuidance();
 })();

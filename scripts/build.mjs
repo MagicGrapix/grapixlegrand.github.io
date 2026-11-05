@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, writeFile, readdir, access } from 'node:fs/promises';
+import { readFile, writeFile, readdir, access, mkdir } from 'node:fs/promises';
 import { resolve, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -184,6 +184,17 @@ export async function generate(directory = root) {
   }
   outputs.set('index.html', addMetadata(home, '/', origin, 'website', homeImage));
   const routes = ['/'];
+  let archiveTemplate;
+  try { archiveTemplate = await read(resolve(directory, 'templates/projects.html')); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+  if (archiveTemplate) {
+    const data = JSON.parse(await read(resolve(directory, 'cards/more-projects.json')));
+    for (const id of data.order) assert.ok(data.projects[id]?.link, 'More projects use direct article links');
+    const archive = insert(archiveTemplate, '<!-- CARDS:more-projects -->', renderCards(data, 'more-projects'));
+    const image = data.projects[data.order[0]]?.preview || '/assets/portrait-selected.png';
+    outputs.set('projects/index.html', addMetadata(archive, '/projects/', origin, 'website', image));
+    routes.push('/projects/');
+  }
   for (const entry of (await readdir(resolve(directory, 'pages'), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
     if (!entry.isDirectory()) continue;
     const path = `pages/${entry.name}`;
@@ -220,7 +231,7 @@ export async function build({ directory = root, check = false } = {}) {
     catch (error) { if (error.code !== 'ENOENT') throw error; }
     if (existing === content) continue;
     changed.push(file);
-    if (!check) await writeFile(resolve(directory, file), content, 'utf8');
+    if (!check) { await mkdir(dirname(resolve(directory, file)), { recursive: true }); await writeFile(resolve(directory, file), content, 'utf8'); }
   }
   if (check && changed.length) throw new Error(`Generated files are stale. Run npm run build:\n${changed.join('\n')}`);
   return changed;

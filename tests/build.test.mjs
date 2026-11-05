@@ -124,13 +124,20 @@ test('invalid resources or template markers leave published HTML untouched', asy
   assert.equal(await readFile(output, 'utf8'), before);
 });
 
-test('real site exposes three articles and thirteen cards with canonical metadata', async () => {
+test('real site keeps six selected projects and exposes additional articles through its archive', async () => {
   const outputs = await generate();
   const home = parseHTML(outputs.get('index.html')).document;
   assert.equal(home.querySelectorAll('a.work-card').length, 3);
   assert.equal(home.querySelectorAll('button.work-card[data-detail]').length, 10);
   const articles = [...outputs].filter(([path]) => path.startsWith('pages/'));
-  assert.equal(articles.length, 3);
+  assert.equal(articles.length, 4);
+  assert.equal(home.querySelectorAll('#software-rnd-grid .work-card').length, 6);
+  assert.ok(home.querySelector('.more-projects a[href="./projects/"]'));
+  const archive = parseHTML(outputs.get('projects/index.html')).document;
+  assert.equal(archive.querySelectorAll('.project-card').length, 1);
+  assert.ok(archive.querySelector('a[href="/pages/image-super-resolution/"]'));
+  const sr = parseHTML(outputs.get('pages/image-super-resolution/index.html')).document;
+  assert.equal(sr.querySelectorAll('[data-compare] .compare-divider[aria-label]').length, 2);
   for (const [path, html] of articles) {
     const { document } = parseHTML(html);
     assert.equal(document.querySelectorAll('#article-content h1').length, 1);
@@ -143,6 +150,6 @@ test('real site exposes three articles and thirteen cards with canonical metadat
     assert.ok(document.querySelector('meta[property="og:image"]').getAttribute('content').startsWith('https://www.quentinguignard.com/'));
     assert.equal(document.querySelectorAll('script[src*="marked"]').length, 0);
   }
-  assert.equal((outputs.get('sitemap.xml').match(/<loc>/g) || []).length, 7);
+  assert.equal((outputs.get('sitemap.xml').match(/<loc>/g) || []).length, 9);
   assert.equal(outputs.get('robots.txt'), 'User-agent: *\nDisallow:\n\nSitemap: https://www.quentinguignard.com/sitemap.xml\n');
 });

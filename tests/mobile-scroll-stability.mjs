@@ -43,7 +43,10 @@ for(const engine of [webkit,chromium]){
 
   await page.locator('.continue-work').dispatchEvent('click');await page.waitForTimeout(80);
   const free=await top('software')+300;
-  await page.evaluate(y=>{document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));scrollTo({top:y,behavior:'instant'});},free);
+  await page.evaluate(y=>{document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));scrollTo({top:y,behavior:'instant'});},await top('software'));
+  await at('software');
+  await page.waitForFunction(()=>!document.documentElement.classList.contains('mobile-guided'));
+  await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),free);
   await page.waitForTimeout(1500);
   assert.ok(Math.abs(await page.evaluate(()=>scrollY)-free)<2,'A new gesture cancels navigation without a later forced return');
   await page.emulateMedia({reducedMotion:'reduce'});
